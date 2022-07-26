@@ -147,6 +147,7 @@ module.exports = {
         allowTemplateLiterals: true,
       },
     ],
+    'vue/multi-word-component-names': 'off',
   },
   // globals: {
   //   defineProps: "readonly",

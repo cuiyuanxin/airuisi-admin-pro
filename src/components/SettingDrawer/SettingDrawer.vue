@@ -120,7 +120,6 @@ const updateConf = (val: string | CheckedType | undefined, type: ConfType) => {
     ...toRaw(props.modelValue),
     [`${type}`]: val,
   }
-  console.log('newConf', newVal)
   emit('update:modelValue', newVal)
 }
 </script>

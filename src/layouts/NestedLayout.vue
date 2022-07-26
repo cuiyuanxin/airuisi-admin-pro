@@ -90,8 +90,6 @@ const cachedMap = menuData.reduce((pre, cur) => {
   return pre
 }, {} as Record<RouteRecordName, RouteRecordRaw>)
 
-console.log('cachedMap', cachedMap)
-
 const baseState = reactive<Omit<RouteContextProps, 'menuData'>>({
   selectedKeys: ['/welcome'],
   openKeys: [],
