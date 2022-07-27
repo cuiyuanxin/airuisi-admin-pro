@@ -148,6 +148,7 @@ module.exports = {
       },
     ],
     'vue/multi-word-component-names': 'off',
+    'vue/no-unused-vars': 'off',
   },
   // globals: {
   //   defineProps: "readonly",

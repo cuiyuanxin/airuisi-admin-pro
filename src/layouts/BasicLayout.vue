@@ -22,37 +22,36 @@
     <template #headerContentRender>
       <div :style="{ cursor: 'pointer', fontSize: '16px' }">
         <a-space size="middle">
-          <span @click="handleCollapsed">
+          <div @click="handleCollapsed">
             <MenuUnfoldOutlined v-if="state.collapsed" />
             <MenuFoldOutlined v-else />
-          </span>
-          <span>
+          </div>
+          <div>
             <a-tooltip title="刷新页面">
               <ReloadOutlined @click="handleRefresh" />
             </a-tooltip>
-          </span>
+          </div>
+          <div>
+            <a-breadcrumb :routes="breadcrumb">
+              <template #itemRender="{ route, params, routes, paths }">
+                <span v-if="routes.indexOf(route) === routes.length - 1">{{ route.breadcrumbName }}</span>
+                <router-link v-else :to="{ path: route.path, params }">{{ route.breadcrumbName }}</router-link>
+              </template>
+            </a-breadcrumb>
+          </div>
         </a-space>
       </div>
     </template>
     <!-- 右侧header -->
     <template #rightContentRender>
-      <RightContent
-        :top-menu="layout === 'topmenu'"
-        :is-mobile="isMobile"
-        :theme="themes"
-        :current-user="currentUser"
-      />
-    </template>
-    <!-- custom breadcrumb itemRender  -->
-    <template #breadcrumbRender="{ route, params, routes }">
-      <span v-if="routes.indexOf(route) === routes.length - 1">
-        <HeartOutlined />
-        {{ route.breadcrumbName }}
-      </span>
-      <router-link v-else :to="{ path: route.path, params }">
-        <SmileOutlined />
-        {{ route.breadcrumbName }}
-      </router-link>
+      <div :style="{ cursor: 'pointer' }">
+        <RightContent
+          :top-menu="layout === 'topmenu'"
+          :is-mobile="isMobile"
+          :theme="themes"
+          :current-user="currentUser"
+        />
+      </div>
     </template>
     <SettingDrawer v-model="settings" />
     <RouterView v-if="isRouterViewShow" v-slot="{ Component, route }">
@@ -66,30 +65,24 @@
 <script setup lang="ts">
 import { useRouter, RouterView, RouterLink } from 'vue-router'
 import { getMenuData, clearMenuItem, type RouteContextProps } from '@ant-design-vue/pro-layout'
-import {
-  SmileOutlined,
-  HeartOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  ReloadOutlined,
-} from '@ant-design/icons-vue'
+import { MenuFoldOutlined, MenuUnfoldOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 import defaultSettings from '@/config/defaultSettings'
 import LogoWhiteImg from '@/assets/logo.svg'
 import LogoBlackImg from '@/assets/logo-black.svg'
 
 // 获取默认配置
-const settings = ref(defaultSettings)
+const settings = reactive(defaultSettings)
 
 // logo
-const LogoImg = ref<string>(settings.value.navTheme === 'dark' ? LogoWhiteImg : LogoBlackImg)
+const LogoImg = ref<string>(settings.navTheme === 'dark' ? LogoWhiteImg : LogoBlackImg)
 // title
-const title = ref<string>(settings.value.title)
+const title = ref<string>(settings.title)
 // 布局
-const layout = ref<string>(settings.value.layout)
+const layout = ref<string>(settings.layout)
 // 是否手机模式
 const isMobile = ref(false)
 // 主题
-const themes = ref<string>(settings.value.navTheme)
+const themes = ref<string>(settings.navTheme)
 // 刷新视图
 let isRouterViewShow = ref(true)
 
@@ -116,7 +109,7 @@ const handleRefresh = () => {
     isRouterViewShow = ref(true)
   })
 }
-
+// 面包屑
 const breadcrumb = computed(() =>
   router.currentRoute.value.matched.concat().map(item => {
     return {
@@ -125,11 +118,12 @@ const breadcrumb = computed(() =>
     }
   }),
 )
+// 用户信息
 const currentUser = reactive({
-  nickname: 'Admin',
-  avatar: 'A',
+  nickname: 'cuiyuanxin',
+  avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
 })
-
+// 监控数据变化
 watch(
   router.currentRoute,
   () => {
