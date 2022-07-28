@@ -1,6 +1,20 @@
 <template>
   <div :class="wrpCls">
-    <a-space>
+    <a-space size="middle">
+      <div>
+        <a-dropdown :trigger="['click']" :class="prefixCls">
+          <span class="ant-dropdown-link" placement="bottomRight" @click.prevent>
+            <a-badge :dot="show">
+              <BellOutlined :style="{ fontSize: '16px' }" />
+            </a-badge>
+          </span>
+          <template #overlay>
+            <a-card style="width: 100%" :tab-list="tabList" :active-tab-key="inMesKey">
+              <p>{{ contentList[inMesKey] }}</p>
+            </a-card>
+          </template>
+        </a-dropdown>
+      </div>
       <div>
         <a-dropdown v-if="currentUsers && currentUsers.nickname" placement="bottomRight" :class="prefixCls">
           <span class="ant-pro-account-avatar">
@@ -38,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { UserOutlined, SettingOutlined, LogoutOutlined, BgColorsOutlined } from '@ant-design/icons-vue'
+import { UserOutlined, SettingOutlined, LogoutOutlined, BgColorsOutlined, BellOutlined } from '@ant-design/icons-vue'
 // import { apply, randomTheme } from '../../hooks/useTheme'
 
 // 获取父级参数
@@ -64,6 +78,38 @@ const showMenu = ref(true)
 // 头像、昵称
 const currentUsers = ref(props.currentUser)
 
+// 样式
+const wrpCls = ref({
+  'ant-pro-global-header-index-right': true,
+  [`ant-pro-global-header-index-${props.isMobile || !props.topMenu ? 'light' : props.theme}`]: true,
+})
+// 消息徽章
+const show = ref(true)
+// 消息组件
+const tabList = [
+  {
+    key: 'tab1',
+    tab: '消息',
+  },
+  {
+    key: 'tab2',
+    tab: '通知',
+  },
+  {
+    key: 'tab3',
+    tab: '待办',
+  },
+]
+let inMesKey = ref('tab1')
+const contentList = {
+  tab1: 'content1',
+  tab2: 'content2',
+  tab3: 'content3',
+}
+const onTabChange = (value: string, type: string) => {
+  inMesKey = ref(value)
+}
+
 // 个人中心 退出
 const handleToCenter = () => {
   // this.$router.push({ path: '/account/center' })
@@ -88,12 +134,6 @@ const handleLogout = () => {
   //   onCancel () {}
   // })
 }
-
-// 样式
-const wrpCls = ref({
-  'ant-pro-global-header-index-right': true,
-  [`ant-pro-global-header-index-${props.isMobile || !props.topMenu ? 'light' : props.theme}`]: true,
-})
 </script>
 <style lang="less">
 .ant-pro-drop-down {
