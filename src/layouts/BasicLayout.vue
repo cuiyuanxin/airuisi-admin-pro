@@ -50,15 +50,16 @@
           :is-mobile="isMobile"
           :theme="themes"
           :current-user="currentUser"
+          :settings="settings"
         />
       </div>
     </template>
-    <SettingDrawer v-model="settings" />
     <RouterView v-if="isRouterViewShow" v-slot="{ Component, route }">
       <transition name="slide-left" mode="out-in">
         <component :is="Component" :key="route.path" />
       </transition>
     </RouterView>
+    <SettingDrawer v-model="settings" />
   </pro-layout>
 </template>
 

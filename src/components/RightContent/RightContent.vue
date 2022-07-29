@@ -2,7 +2,7 @@
   <div :class="wrpCls">
     <a-space size="middle">
       <div class="ant-pro-global-header-notice">
-        <a-popover v-model:visible="noticeVisible" trigger="click">
+        <a-popover v-model:visible="noticeVisible" trigger="click" :class="prefixCls">
           <template #content>
             <a-tabs v-model:activeKey="activeKey">
               <a-tab-pane key="1" tab="Tab 1">
@@ -97,31 +97,29 @@
             </a-badge>
           </span>
         </a-popover>
-
-        <!-- <a-dropdown :trigger="['click']" :class="prefixCls">
-          <span class="ant-dropdown-link" placement="bottomRight" @click.prevent>
-            <a-badge :dot="show">
-              <BellOutlined :style="{ fontSize: '16px' }" />
-            </a-badge>
+      </div>
+      <div class="ant-pro-global-header-screenfull">
+        <a-tooltip title="全屏">
+          <span @click="handleFullscreenToggle">
+            <CompressOutlined v-if="isFullscreen" />
+            <ExpandOutlined v-else />
           </span>
-          <template #overlay>
-            <a-tabs v-model:activeKey="activeKey">
-              <a-tab-pane key="1" tab="Tab 1">Content of Tab Pane 1</a-tab-pane>
-              <a-tab-pane key="2" tab="Tab 2" force-render>Content of Tab Pane 2</a-tab-pane>
-              <a-tab-pane key="3" tab="Tab 3">Content of Tab Pane 3</a-tab-pane>
-            </a-tabs>
-
-
-            <a-card 
-              :style="{width: '297px'}"
-              :tab-list="tabList" 
-              :active-tab-key="inMesKey"
-              @tabChange="key => onTabChange(key)"
-            >
-              <p>{{ contentList[inMesKey] }}</p>
-            </a-card>
-          </template>
-        </a-dropdown> -->
+        </a-tooltip>
+      </div>
+      <div class="ant-pro-global-header-language">
+        <a-tooltip title="国际化">
+          <a-dropdown :trigger="['click']" :class="prefixCls">
+            <span @click.prevent>
+              <TranslationOutlined />
+            </span>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item key="zh-CN">简体中文</a-menu-item>
+                <a-menu-item key="en-US">English</a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </a-tooltip>
       </div>
       <div class="ant-pro-global-header-usercenter">
         <a-dropdown v-if="currentUsers && currentUsers.nickname" placement="bottomRight" :class="prefixCls">
@@ -135,11 +133,11 @@
                 <UserOutlined />
                 个人中心
               </a-menu-item>
-              <a-menu-item v-if="menu" key="settings" @click="handleToSettings">
+              <a-menu-item key="settings" @click="handleToSettings">
                 <SettingOutlined />
                 个人设置
               </a-menu-item>
-              <a-menu-divider v-if="menu" />
+              <a-menu-divider />
               <a-menu-item key="logout" @click="handleLogout">
                 <LogoutOutlined />
                 退出登录
@@ -160,7 +158,17 @@
 </template>
 
 <script setup lang="ts">
-import { UserOutlined, SettingOutlined, LogoutOutlined, BgColorsOutlined, BellOutlined } from '@ant-design/icons-vue'
+import {
+  UserOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+  BgColorsOutlined,
+  BellOutlined,
+  ExpandOutlined,
+  CompressOutlined,
+  TranslationOutlined,
+} from '@ant-design/icons-vue'
+import screenfull from 'screenfull'
 // import { apply, randomTheme } from '../../hooks/useTheme'
 
 // 获取父级参数
@@ -193,33 +201,31 @@ const wrpCls = ref({
 })
 // 消息徽章
 const show = ref(true)
-// 消息组件
-const tabList = [
-  {
-    key: 'tab1',
-    tab: '消息',
-  },
-  {
-    key: 'tab2',
-    tab: '通知',
-  },
-  {
-    key: 'tab3',
-    tab: '待办',
-  },
-]
-const inMesKey = ref('tab1')
-const contentList = {
-  tab1: 'content1',
-  tab2: 'content2',
-  tab3: 'content3',
-}
-const onTabChange = (value: string) => {
-  inMesKey.value = value
-}
-
 const activeKey = ref('1')
 const noticeVisible = ref(false)
+
+// 全屏
+const isFullscreen = ref(false)
+
+// 监听变化
+const fullscreenChange = () => {
+  isFullscreen.value = screenfull.isFullscreen
+}
+
+// 切换事件
+const handleFullscreenToggle = () => {
+  screenfull.toggle()
+}
+
+// 设置监听器
+onMounted(() => {
+  screenfull.on('change', fullscreenChange)
+})
+
+// 删除监听器
+onUnmounted(() => {
+  screenfull.off('change', fullscreenChange)
+})
 
 // 个人中心 退出
 const handleToCenter = () => {

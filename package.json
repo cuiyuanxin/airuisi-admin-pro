@@ -20,6 +20,7 @@
     "@ant-design/icons-vue": "^6.1.0",
     "ant-design-vue": "^3.2.10",
     "dayjs": "^1.11.4",
+    "screenfull": "^6.0.2",
     "vue": "^3.2.37",
     "vue-i18n": "^9.1.10",
     "vue-router": "^4.1.2"

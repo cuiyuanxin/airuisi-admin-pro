@@ -23,6 +23,7 @@ specifiers:
   mrm: ^4.0.0
   prettier: ^2.7.1
   rollup-plugin-visualizer: ^5.7.1
+  screenfull: ^6.0.2
   typescript: ~4.5.5
   unplugin-auto-import: ^0.5.11
   unplugin-vue-components: ^0.17.21
@@ -41,6 +42,7 @@ dependencies:
   '@ant-design/icons-vue': 6.1.0_vue@3.2.37
   ant-design-vue: 3.2.10_vue@3.2.37
   dayjs: 1.11.4
+  screenfull: 6.0.2
   vue: 3.2.37
   vue-i18n: 9.1.10_vue@3.2.37
   vue-router: 4.1.2_vue@3.2.37
@@ -4515,6 +4517,12 @@ packages:
       { integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw== }
     dev: true
     optional: true
+
+  /screenfull/6.0.2:
+    resolution:
+      { integrity: sha512-AQdy8s4WhNvUZ6P8F6PB21tSPIYKniic+Ogx0AacBMjKP1GUHN2E9URxQHtCusiwxudnCKkdy4GrHXPPJSkCCw== }
+    engines: { node: ^14.13.1 || >=16.0.0 }
+    dev: false
 
   /scroll-into-view-if-needed/2.2.29:
     resolution:
