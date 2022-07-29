@@ -1,21 +1,129 @@
 <template>
   <div :class="wrpCls">
     <a-space size="middle">
-      <div>
-        <a-dropdown :trigger="['click']" :class="prefixCls">
+      <div class="ant-pro-global-header-notice">
+        <a-popover v-model:visible="noticeVisible" trigger="click">
+          <template #content>
+            <a-tabs v-model:activeKey="activeKey">
+              <a-tab-pane key="1" tab="Tab 1">
+                <a-list>
+                  <a-list-item>
+                    <a-list-item-meta title="你收到了 14 份新周报" description="一年前">
+                      <a-avatar
+                        style="background-color: white"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"
+                      />
+                    </a-list-item-meta>
+                  </a-list-item>
+                  <a-list-item>
+                    <a-list-item-meta title="你推荐的 曲妮妮 已通过第三轮面试" description="一年前">
+                      <a-avatar
+                        style="background-color: white"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/OKJXDXrmkNshAMvwtvhu.png"
+                      />
+                    </a-list-item-meta>
+                  </a-list-item>
+                  <a-list-item>
+                    <a-list-item-meta title="这种模板可以区分多种通知类型" description="一年前">
+                      <a-avatar
+                        style="background-color: white"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/kISTdvpyTAhtGxpovNWd.png"
+                      />
+                    </a-list-item-meta>
+                  </a-list-item>
+                </a-list>
+              </a-tab-pane>
+              <a-tab-pane key="2" tab="Tab 2" force-render>
+                <a-list>
+                  <a-list-item>
+                    <a-list-item-meta title="你收到了 14 份新周报2" description="一年前">
+                      <a-avatar
+                        style="background-color: white"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"
+                      />
+                    </a-list-item-meta>
+                  </a-list-item>
+                  <a-list-item>
+                    <a-list-item-meta title="你推荐的 曲妮妮 已通过第三轮面试2" description="一年前">
+                      <a-avatar
+                        style="background-color: white"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/OKJXDXrmkNshAMvwtvhu.png"
+                      />
+                    </a-list-item-meta>
+                  </a-list-item>
+                  <a-list-item>
+                    <a-list-item-meta title="这种模板可以区分多种通知类型2" description="一年前">
+                      <a-avatar
+                        style="background-color: white"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/kISTdvpyTAhtGxpovNWd.png"
+                      />
+                    </a-list-item-meta>
+                  </a-list-item>
+                </a-list>
+              </a-tab-pane>
+              <a-tab-pane key="3" tab="Tab 3">
+                <a-list>
+                  <a-list-item>
+                    <a-list-item-meta title="你收到了 14 份新周报3" description="一年前">
+                      <a-avatar
+                        style="background-color: white"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"
+                      />
+                    </a-list-item-meta>
+                  </a-list-item>
+                  <a-list-item>
+                    <a-list-item-meta title="你推荐的 曲妮妮 已通过第三轮面试3" description="一年前">
+                      <a-avatar
+                        style="background-color: white"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/OKJXDXrmkNshAMvwtvhu.png"
+                      />
+                    </a-list-item-meta>
+                  </a-list-item>
+                  <a-list-item>
+                    <a-list-item-meta title="这种模板可以区分多种通知类型3" description="一年前">
+                      <a-avatar
+                        style="background-color: white"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/kISTdvpyTAhtGxpovNWd.png"
+                      />
+                    </a-list-item-meta>
+                  </a-list-item>
+                </a-list>
+              </a-tab-pane>
+            </a-tabs>
+          </template>
+          <span class="ant-dropdown-link" placement="bottomRight" @click.prevent>
+            <a-badge :dot="show">
+              <BellOutlined :style="{ fontSize: '16px' }" />
+            </a-badge>
+          </span>
+        </a-popover>
+
+        <!-- <a-dropdown :trigger="['click']" :class="prefixCls">
           <span class="ant-dropdown-link" placement="bottomRight" @click.prevent>
             <a-badge :dot="show">
               <BellOutlined :style="{ fontSize: '16px' }" />
             </a-badge>
           </span>
           <template #overlay>
-            <a-card style="width: 100%" :tab-list="tabList" :active-tab-key="inMesKey">
+            <a-tabs v-model:activeKey="activeKey">
+              <a-tab-pane key="1" tab="Tab 1">Content of Tab Pane 1</a-tab-pane>
+              <a-tab-pane key="2" tab="Tab 2" force-render>Content of Tab Pane 2</a-tab-pane>
+              <a-tab-pane key="3" tab="Tab 3">Content of Tab Pane 3</a-tab-pane>
+            </a-tabs>
+
+
+            <a-card 
+              :style="{width: '297px'}"
+              :tab-list="tabList" 
+              :active-tab-key="inMesKey"
+              @tabChange="key => onTabChange(key)"
+            >
               <p>{{ contentList[inMesKey] }}</p>
             </a-card>
           </template>
-        </a-dropdown>
+        </a-dropdown> -->
       </div>
-      <div>
+      <div class="ant-pro-global-header-usercenter">
         <a-dropdown v-if="currentUsers && currentUsers.nickname" placement="bottomRight" :class="prefixCls">
           <span class="ant-pro-account-avatar">
             <a-avatar size="small" :src="currentUsers.avatar" class="antd-pro-global-header-index-avatar" />
@@ -100,15 +208,18 @@ const tabList = [
     tab: '待办',
   },
 ]
-let inMesKey = ref('tab1')
+const inMesKey = ref('tab1')
 const contentList = {
   tab1: 'content1',
   tab2: 'content2',
   tab3: 'content3',
 }
-const onTabChange = (value: string, type: string) => {
-  inMesKey = ref(value)
+const onTabChange = (value: string) => {
+  inMesKey.value = value
 }
+
+const activeKey = ref('1')
+const noticeVisible = ref(false)
 
 // 个人中心 退出
 const handleToCenter = () => {

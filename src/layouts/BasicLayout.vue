@@ -84,7 +84,7 @@ const isMobile = ref(false)
 // 主题
 const themes = ref<string>(settings.navTheme)
 // 刷新视图
-let isRouterViewShow = ref(true)
+const isRouterViewShow = ref(true)
 
 // 获取路由菜单
 const router = useRouter()
@@ -103,10 +103,10 @@ const handleCollapsed = () => {
 // 刷新视图组件
 const handleRefresh = () => {
   // 先隐藏
-  isRouterViewShow = ref(false)
+  isRouterViewShow.value = false
   // nextTick() 将回调延迟到下次 DOM 更新循环之后执行
   nextTick(() => {
-    isRouterViewShow = ref(true)
+    isRouterViewShow.value = true
   })
 }
 // 面包屑
