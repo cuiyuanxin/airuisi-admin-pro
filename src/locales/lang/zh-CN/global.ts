@@ -1,0 +1,17 @@
+export default {
+  'header.reload': '刷新页面',
+  'header.screenfull': '全屏',
+  'header.language': '国际化',
+  'header.usercenter.center': '个人中心',
+  'header.usercenter.settings': '个人设置',
+  'header.usercenter.logout': '退出登录',
+  'header.noticeicon.tab1': '通知',
+  'header.noticeicon.tab2': '消息',
+  'header.noticeicon.tab3': '待办',
+  'global.lang.hint': '提示',
+  'global.lang.enmsg': '您当前的浏览器语言为英文，是否为您切换语言为英文',
+  'global.lang.zhmsg': '您当前的浏览器语言为中文，是否为您切换语言为中文',
+  'global.lang.okText': '确定',
+  'global.lang.cancelText': '取消',
+  'global.setting.drawer.title': '项目配置',
+}

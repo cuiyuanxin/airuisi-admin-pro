@@ -13,40 +13,40 @@ export default createRouter({
     {
       path: '/',
       name: 'index',
-      meta: { title: 'Home' },
+      meta: { title: 'menu.index' },
       component: BasicLayout,
       redirect: '/welcome',
       children: [
         {
           path: '/welcome',
           name: 'welcome',
-          meta: { title: '欢迎', icon: 'icon-icon-test' },
+          meta: { title: 'menu.index.welcome', icon: 'icon-icon-test' },
           component: WelcomePage,
         },
         {
           path: '/admins',
           name: 'admins',
-          meta: { title: '管理页', icon: 'icon-tuijian', flat: true },
+          meta: { title: 'menu.index.admins', icon: 'icon-tuijian', flat: true },
           component: BlankLayout,
           redirect: () => ({ name: 'page1' }),
           children: [
             {
               path: 'page-1',
               name: 'page1',
-              meta: { title: '一级页面' },
+              meta: { title: 'menu.index.admins.page1' },
               component: () => import('../views/admins/PageInfo.vue'),
             },
             {
               path: 'page-2',
               name: 'page2',
-              meta: { title: '二级页面' },
+              meta: { title: 'menu.index.admins.page2' },
               component: () => import('../views/admins/PageTypography.vue'),
             },
             {
               path: 'dynamic-match/:id(\\d+)',
               name: 'dynamic-match',
               // 路由 path 默认参数再 meta.params 里
-              meta: { title: '动态参数页面', params: { id: 1 } },
+              meta: { title: 'menu.index.admins.dynamic-match', params: { id: 1 } },
               component: () => import('../views/admins/DynamicMatch.vue'),
             },
           ],
@@ -54,7 +54,7 @@ export default createRouter({
         {
           path: '/version',
           name: 'version',
-          meta: { title: 'Version', icon: 'icon-antdesign' },
+          meta: { title: 'menu.version', icon: 'icon-antdesign' },
           component: () => import('../views/Detail.vue'),
         },
       ],

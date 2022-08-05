@@ -2,124 +2,17 @@
   <div :class="wrpCls">
     <a-space size="middle">
       <div class="ant-pro-global-header-notice">
-        <a-popover v-model:visible="noticeVisible" trigger="click" :class="prefixCls">
-          <template #content>
-            <a-tabs v-model:activeKey="activeKey">
-              <a-tab-pane key="1" tab="Tab 1">
-                <a-list>
-                  <a-list-item>
-                    <a-list-item-meta title="你收到了 14 份新周报" description="一年前">
-                      <a-avatar
-                        style="background-color: white"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"
-                      />
-                    </a-list-item-meta>
-                  </a-list-item>
-                  <a-list-item>
-                    <a-list-item-meta title="你推荐的 曲妮妮 已通过第三轮面试" description="一年前">
-                      <a-avatar
-                        style="background-color: white"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/OKJXDXrmkNshAMvwtvhu.png"
-                      />
-                    </a-list-item-meta>
-                  </a-list-item>
-                  <a-list-item>
-                    <a-list-item-meta title="这种模板可以区分多种通知类型" description="一年前">
-                      <a-avatar
-                        style="background-color: white"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/kISTdvpyTAhtGxpovNWd.png"
-                      />
-                    </a-list-item-meta>
-                  </a-list-item>
-                </a-list>
-              </a-tab-pane>
-              <a-tab-pane key="2" tab="Tab 2" force-render>
-                <a-list>
-                  <a-list-item>
-                    <a-list-item-meta title="你收到了 14 份新周报2" description="一年前">
-                      <a-avatar
-                        style="background-color: white"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"
-                      />
-                    </a-list-item-meta>
-                  </a-list-item>
-                  <a-list-item>
-                    <a-list-item-meta title="你推荐的 曲妮妮 已通过第三轮面试2" description="一年前">
-                      <a-avatar
-                        style="background-color: white"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/OKJXDXrmkNshAMvwtvhu.png"
-                      />
-                    </a-list-item-meta>
-                  </a-list-item>
-                  <a-list-item>
-                    <a-list-item-meta title="这种模板可以区分多种通知类型2" description="一年前">
-                      <a-avatar
-                        style="background-color: white"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/kISTdvpyTAhtGxpovNWd.png"
-                      />
-                    </a-list-item-meta>
-                  </a-list-item>
-                </a-list>
-              </a-tab-pane>
-              <a-tab-pane key="3" tab="Tab 3">
-                <a-list>
-                  <a-list-item>
-                    <a-list-item-meta title="你收到了 14 份新周报3" description="一年前">
-                      <a-avatar
-                        style="background-color: white"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"
-                      />
-                    </a-list-item-meta>
-                  </a-list-item>
-                  <a-list-item>
-                    <a-list-item-meta title="你推荐的 曲妮妮 已通过第三轮面试3" description="一年前">
-                      <a-avatar
-                        style="background-color: white"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/OKJXDXrmkNshAMvwtvhu.png"
-                      />
-                    </a-list-item-meta>
-                  </a-list-item>
-                  <a-list-item>
-                    <a-list-item-meta title="这种模板可以区分多种通知类型3" description="一年前">
-                      <a-avatar
-                        style="background-color: white"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/kISTdvpyTAhtGxpovNWd.png"
-                      />
-                    </a-list-item-meta>
-                  </a-list-item>
-                </a-list>
-              </a-tab-pane>
-            </a-tabs>
-          </template>
-          <span class="ant-dropdown-link" placement="bottomRight" @click.prevent>
-            <a-badge :dot="show">
-              <BellOutlined :style="{ fontSize: '16px' }" />
-            </a-badge>
-          </span>
-        </a-popover>
+        <NoticeIcon :prefix-cls="prefixCls" />
       </div>
       <div class="ant-pro-global-header-screenfull">
-        <a-tooltip title="全屏">
+        <a-tooltip :title="i18nRender('header.screenfull')">
           <span @click="handleFullscreenToggle">
-            <CompressOutlined v-if="isFullscreen" />
-            <ExpandOutlined v-else />
+            <component :is="isFullscreen ? 'CompressOutlined' : 'ExpandOutlined'" />
           </span>
         </a-tooltip>
       </div>
       <div class="ant-pro-global-header-language">
-        <a-tooltip title="国际化">
-          <a-dropdown :trigger="['click']" :class="prefixCls">
-            <span @click.prevent>
-              <TranslationOutlined />
-            </span>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item key="zh-CN">简体中文</a-menu-item>
-                <a-menu-item key="en-US">English</a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </a-tooltip>
+        <SelectLang :prefix-cls="prefixCls" />
       </div>
       <div class="ant-pro-global-header-usercenter">
         <a-dropdown v-if="currentUsers && currentUsers.nickname" placement="bottomRight" :class="prefixCls">
@@ -130,46 +23,37 @@
           <template #overlay>
             <a-menu class="ant-pro-drop-down menu" :selected-keys="[]">
               <a-menu-item v-if="showMenu" key="center" @click="handleToCenter">
-                <UserOutlined />
-                个人中心
+                <component :is="'UserOutlined'" />
+                {{ i18nRender('header.usercenter.center') }}
               </a-menu-item>
               <a-menu-item key="settings" @click="handleToSettings">
-                <SettingOutlined />
-                个人设置
+                <component :is="'SettingOutlined'" />
+                {{ i18nRender('header.usercenter.settings') }}
               </a-menu-item>
               <a-menu-divider />
               <a-menu-item key="logout" @click="handleLogout">
-                <LogoutOutlined />
-                退出登录
+                <component :is="'LogoutOutlined'" />
+                {{ i18nRender('header.usercenter.logout') }}
               </a-menu-item>
             </a-menu>
           </template>
           <a-avatar shape="square" size="small">
             <template #icon>
-              <UserOutlined />
+              <component :is="'UserOutlined'" />
             </template>
             {{ currentUser.nickname }}
           </a-avatar>
         </a-dropdown>
       </div>
-      <!-- <select-lang :class="prefixCls" /> -->
     </a-space>
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  UserOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-  BgColorsOutlined,
-  BellOutlined,
-  ExpandOutlined,
-  CompressOutlined,
-  TranslationOutlined,
-} from '@ant-design/icons-vue'
 import screenfull from 'screenfull'
-// import { apply, randomTheme } from '../../hooks/useTheme'
+import { i18nRender } from '@/locales'
+import SelectLang from '@/components/SelectLang'
+import NoticeIcon from '@/components/NoticeIcon'
 
 // 获取父级参数
 const props = withDefaults(
@@ -199,10 +83,6 @@ const wrpCls = ref({
   'ant-pro-global-header-index-right': true,
   [`ant-pro-global-header-index-${props.isMobile || !props.topMenu ? 'light' : props.theme}`]: true,
 })
-// 消息徽章
-const show = ref(true)
-const activeKey = ref('1')
-const noticeVisible = ref(false)
 
 // 全屏
 const isFullscreen = ref(false)

@@ -1,5 +1,11 @@
 <template>
-  <a-drawer v-model:visible="visible" :width="300" placement="right" :closable="false">
+  <a-drawer
+    v-model:visible="visible"
+    :width="300"
+    placement="right"
+    :closable="false"
+    :title="i18nRender('global.setting.drawer.title')"
+  >
     <template #handle>
       <div class="ant-pro-setting-drawer-handle" @click="handleShowDrawer">
         <SettingOutlined v-if="!visible" />
@@ -7,6 +13,8 @@
       </div>
     </template>
     <div class="margin-bottom: 24px">
+      <a-divider>主题</a-divider>
+
       <h3>导航模式</h3>
       <a-radio-group :value="modelValue.layout" @change="e => updateConf(e.target.value, 'layout')">
         <a-radio value="side">左侧菜单布局</a-radio>
@@ -100,6 +108,7 @@
 </template>
 
 <script setup lang="ts">
+import { i18nRender } from '@/locales'
 import { SettingOutlined, CloseOutlined } from '@ant-design/icons-vue'
 import type { CheckedType } from 'ant-design-vue/es/switch'
 

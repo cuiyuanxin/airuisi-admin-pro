@@ -4,12 +4,12 @@
     v-model:selectedKeys="state.selectedKeys"
     v-model:openKeys="state.openKeys"
     :menu-data="menuData"
-    :breadcrumb="{ routes: breadcrumb }"
     disable-content-margin
     style="min-height: 100vh"
     iconfont-url="//at.alicdn.com/t/font_2804900_2sp8hxw3ln8.js"
     v-bind="settings"
     :collapsed-button-render="false"
+    :locale="i18nRender"
   >
     <!-- 左侧菜单title/logo -->
     <template #menuHeaderRender>
@@ -20,22 +20,23 @@
     </template>
     <!-- 左侧header -->
     <template #headerContentRender>
-      <div :style="{ cursor: 'pointer', fontSize: '16px' }">
-        <a-space size="middle">
+      <div>
+        <a-space size="middle" :style="{ cursor: 'pointer', fontSize: '16px' }">
           <div @click="handleCollapsed">
-            <MenuUnfoldOutlined v-if="state.collapsed" />
-            <MenuFoldOutlined v-else />
+            <component :is="state.collapsed ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined'" />
           </div>
           <div>
-            <a-tooltip title="刷新页面">
-              <ReloadOutlined @click="handleRefresh" />
+            <a-tooltip :title="i18nRender('header.reload')">
+              <component :is="'ReloadOutlined'" @click="handleRefresh" />
             </a-tooltip>
           </div>
           <div>
             <a-breadcrumb :routes="breadcrumb">
               <template #itemRender="{ route, params, routes, paths }">
-                <span v-if="routes.indexOf(route) === routes.length - 1">{{ route.breadcrumbName }}</span>
-                <router-link v-else :to="{ path: route.path, params }">{{ route.breadcrumbName }}</router-link>
+                <span v-if="routes.indexOf(route) === routes.length - 1">{{ i18nRender(route.breadcrumbName) }}</span>
+                <router-link v-else :to="{ path: route.path, params }">
+                  {{ i18nRender(route.breadcrumbName) }}
+                </router-link>
               </template>
             </a-breadcrumb>
           </div>
@@ -60,16 +61,45 @@
       </transition>
     </RouterView>
     <SettingDrawer v-model="settings" />
+
+    <a-modal
+      v-model:visible="langVisible"
+      :title="i18nRender('global.lang.hint')"
+      :ok-text="i18nRender('global.lang.okText')"
+      :cancel-text="i18nRender('global.lang.cancelText')"
+      @ok="headleModalLang"
+    >
+      <p>{{ langmsg }}</p>
+    </a-modal>
   </pro-layout>
 </template>
 
 <script setup lang="ts">
 import { useRouter, RouterView, RouterLink } from 'vue-router'
 import { getMenuData, clearMenuItem, type RouteContextProps } from '@ant-design-vue/pro-layout'
-import { MenuFoldOutlined, MenuUnfoldOutlined, ReloadOutlined } from '@ant-design/icons-vue'
+import { i18nRender } from '@/locales'
+import { useAppStore } from '@/store/modules/app'
+import { storeToRefs } from 'pinia'
 import defaultSettings from '@/config/defaultSettings'
 import LogoWhiteImg from '@/assets/logo.svg'
 import LogoBlackImg from '@/assets/logo-black.svg'
+
+const appStore = useAppStore()
+const { lang, navigatorlang } = storeToRefs(appStore)
+
+const langVisible = ref(false)
+const langmsg = ref('')
+// 自动检查浏览器语言
+if (navigator.language && navigator.language !== lang.value && !navigatorlang.value) {
+  langVisible.value = true
+  langmsg.value = navigator.language === 'en-US' ? i18nRender('global.lang.enmsg') : i18nRender('global.lang.zhmsg')
+}
+
+const headleModalLang = () => {
+  appStore.setLang(navigator.language)
+  appStore.setNavigatorlang(true)
+  langVisible.value = false
+}
 
 // 获取默认配置
 const settings = reactive(defaultSettings)
@@ -89,7 +119,8 @@ const isRouterViewShow = ref(true)
 
 // 获取路由菜单
 const router = useRouter()
-const { menuData } = getMenuData(clearMenuItem(router.getRoutes()))
+const menuItem = clearMenuItem(router.getRoutes())
+const { menuData } = getMenuData(menuItem)
 
 const state = reactive<Omit<RouteContextProps, 'menuData'>>({
   collapsed: false, // default collapsed
@@ -134,6 +165,7 @@ watch(
   },
   {
     immediate: true,
+    deep: true,
   },
 )
 </script>

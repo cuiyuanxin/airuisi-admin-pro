@@ -1,9 +1,10 @@
 // 英文翻译
+// import antdEnUS from 'ant-design-vue/es/locale-provider/en_US'
+import global from './en-US/global'
+import menu from './en-US/menu'
+
 export default {
-  title: 'International language configuration',
-  btn: 'btn',
-  add: 'add',
-  del: 'del',
-  edit: 'edit',
-  description: 'description',
+  // 'layouts.usermenu.dialog.title': 'Message',
+  ...global,
+  ...menu,
 }

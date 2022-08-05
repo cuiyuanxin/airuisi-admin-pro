@@ -1,9 +1,9 @@
 // 中文翻译
+import global from './zh-CN/global'
+import menu from './zh-CN/menu'
+
 export default {
-  title: '国际化语言配置',
-  btn: '按钮',
-  add: '添加',
-  del: '删除',
-  edit: '编辑',
-  description: '描述',
+  // 'layouts.usermenu.dialog.title': 'Message',
+  ...global,
+  ...menu,
 }
