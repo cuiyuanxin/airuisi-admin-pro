@@ -1,46 +1,50 @@
 import { onBeforeMount } from 'vue'
 import { ConfigProvider } from 'ant-design-vue'
 
-const LOCAL_THEME = 'local_theme'
-
-export const colors: string[] = [
-  '#f5222d',
-  '#fa541c',
-  '#fa8c16',
-  '#a0d911',
-  '#13c2c2',
-  '#1890ff',
-  '#722ed1',
-  '#eb2f96',
-  '#faad14',
-  '#52c41a',
+export const colors: object[] = [
+  {
+    key: '薄暮',
+    color: '#F5222D',
+  },
+  {
+    key: '火山',
+    color: '#FA541C',
+  },
+  {
+    key: '日暮',
+    color: '#FAAD14',
+  },
+  {
+    key: '明青',
+    color: '#13C2C2',
+  },
+  {
+    key: '极光绿',
+    color: '#52C41A',
+  },
+  {
+    key: '拂晓蓝（默认）',
+    color: '#1890FF',
+  },
+  {
+    key: '极客蓝',
+    color: '#2F54EB',
+  },
+  {
+    key: '酱紫',
+    color: '#722ED1',
+  },
 ]
 
-export const useUserTheme = () => {
+export const useUserTheme = (localTheme: string) => {
   onBeforeMount(() => {
-    apply(load())
+    updateTheme(localTheme)
   })
 }
-
-export const randomTheme = (): string => {
-  const i = Math.floor(Math.random() * 10)
-  return colors[i]
-}
-
-export const load = () => {
-  const color = localStorage.getItem(LOCAL_THEME) || '#1890ff'
-  return color
-}
-
-export const save = (color: string) => {
-  localStorage.setItem(LOCAL_THEME, color)
-}
-
-export const apply = (color: string) => {
+export const updateTheme = (color: string) => {
   ConfigProvider.config({
     theme: {
       primaryColor: color,
     },
   })
-  save(color)
 }

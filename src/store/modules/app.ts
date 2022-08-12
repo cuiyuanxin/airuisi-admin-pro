@@ -5,6 +5,11 @@ export const useAppStore = defineStore('app', {
   state: () => {
     return {
       lang: '',
+      theme: '',
+      layout: '',
+      fixedHeader: false,
+      fixSiderbar: false,
+      splitMenus: true,
       navigatorlang: false,
     }
   },
@@ -14,12 +19,27 @@ export const useAppStore = defineStore('app', {
       this.lang = lang
       loadLanguageAsync(lang)
     },
+    setTheme(theme: string) {
+      this.theme = theme
+    },
+    setLayout(layout: string) {
+      this.layout = layout
+    },
+    setFixedHeader(fixedHeader = false) {
+      this.fixedHeader = fixedHeader
+    },
+    setFixSiderbar(fixSiderbar = false) {
+      this.fixSiderbar = fixSiderbar
+    },
+    setSplitMenus(splitMenus = true) {
+      this.splitMenus = splitMenus
+    },
     setNavigatorlang(status = false) {
       this.navigatorlang = status
     },
   },
   persist: {
     storage: sessionStorage,
-    paths: ['lang', 'navigatorlang'],
+    paths: ['lang', 'theme', 'layout', 'fixedHeader', 'fixSiderbar', 'splitMenus', 'navigatorlang'],
   },
 })
