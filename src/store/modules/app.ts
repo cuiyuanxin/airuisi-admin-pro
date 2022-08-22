@@ -5,6 +5,7 @@ export const useAppStore = defineStore('app', {
   state: () => {
     return {
       lang: '',
+      navTheme: 'dark',
       theme: '',
       layout: '',
       fixedHeader: false,
@@ -18,6 +19,9 @@ export const useAppStore = defineStore('app', {
     setLang(lang = 'zh-CN') {
       this.lang = lang
       loadLanguageAsync(lang)
+    },
+    setNavTheme(navTheme: string) {
+      this.navTheme = navTheme
     },
     setTheme(theme: string) {
       this.theme = theme
@@ -40,6 +44,6 @@ export const useAppStore = defineStore('app', {
   },
   persist: {
     storage: sessionStorage,
-    paths: ['lang', 'theme', 'layout', 'fixedHeader', 'fixSiderbar', 'splitMenus', 'navigatorlang'],
+    paths: ['lang', 'navTheme', 'theme', 'layout', 'fixedHeader', 'fixSiderbar', 'splitMenus', 'navigatorlang'],
   },
 })

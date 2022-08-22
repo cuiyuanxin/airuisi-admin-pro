@@ -17,6 +17,56 @@
     </template>
     <div class="setting-drawer-index-content">
       <a-divider>主题</a-divider>
+      <a-row>
+        <a-col :span="8">
+          <a-tooltip>
+            <template #title>Light Style</template>
+            <div class="setting-drawer-index-item" @click="handleNavTheme('light')">
+              <img src="https://gw.alipayobjects.com/zos/antfincdn/NQ%24zoisaD2/jpRkZQMyYRryryPNtyIC.svg" alt="light" />
+              <div
+                v-if="'light' === modelValue.navTheme"
+                class="setting-drawer-index-selectIcon"
+                :style="{ color: `${modelValue.primaryColor}` }"
+              >
+                <component :is="'CheckOutlined'" />
+              </div>
+            </div>
+          </a-tooltip>
+        </a-col>
+        <a-col :span="8">
+          <a-tooltip>
+            <template #title>Dark Style</template>
+            <div class="setting-drawer-index-item" @click="handleNavTheme('dark')">
+              <img src="https://gw.alipayobjects.com/zos/antfincdn/XwFOFbLkSM/LCkqqYNmvBEbokSDscrm.svg" alt="dark" />
+              <div
+                v-if="'dark' === modelValue.navTheme"
+                class="setting-drawer-index-selectIcon"
+                :style="{ color: `${modelValue.primaryColor}` }"
+              >
+                <component :is="'CheckOutlined'" />
+              </div>
+            </div>
+          </a-tooltip>
+        </a-col>
+        <a-col :span="8">
+          <a-tooltip>
+            <template #title>RealDark Style</template>
+            <div class="setting-drawer-index-item" @click="handleNavTheme('realDark')">
+              <img
+                src="https://gw.alipayobjects.com/zos/antfincdn/hmKaLQvmY2/LCkqqYNmvBEbokSDscrm.svg"
+                alt="realDark"
+              />
+              <div
+                v-if="'realDark' === modelValue.navTheme"
+                class="setting-drawer-index-selectIcon"
+                :style="{ color: `${modelValue.primaryColor}` }"
+              >
+                <component :is="'CheckOutlined'" />
+              </div>
+            </div>
+          </a-tooltip>
+        </a-col>
+      </a-row>
       <a-divider />
       <a-divider>主题色</a-divider>
       <div style="height: 20px">
@@ -123,54 +173,6 @@
           />
         </a-col>
       </a-row>
-
-      <a-divider />
-      <h3>内容区域</h3>
-      <a-row style="margin-bottom: 12px">
-        <a-col :span="12">顶栏</a-col>
-        <a-col :span="12" style="text-align: right">
-          <a-switch
-            checked-children="开"
-            un-checked-children="关"
-            :checked="modelValue.headerRender === undefined"
-            @change="checked => updateConf(checked === true && undefined, 'headerRender')"
-          />
-        </a-col>
-      </a-row>
-      <a-row style="margin-bottom: 12px">
-        <a-col :span="12">页脚</a-col>
-        <a-col :span="12" style="text-align: right">
-          <a-switch
-            checked-children="开"
-            un-checked-children="关"
-            :checked="modelValue.footerRender === undefined"
-            @change="checked => updateConf(checked === true && undefined, 'footerRender')"
-          />
-        </a-col>
-      </a-row>
-      <a-row style="margin-bottom: 12px">
-        <a-col :span="12">菜单</a-col>
-        <a-col :span="12" style="text-align: right">
-          <a-switch
-            disabled
-            checked-children="开"
-            un-checked-children="关"
-            :checked="modelValue.menu === undefined"
-            @change="checked => updateConf(checked === true && undefined, 'menu')"
-          />
-        </a-col>
-      </a-row>
-      <a-row style="margin-bottom: 12px">
-        <a-col :span="12">菜单头</a-col>
-        <a-col :span="12" style="text-align: right">
-          <a-switch
-            checked-children="开"
-            un-checked-children="关"
-            :checked="modelValue.menuHeaderRender === undefined"
-            @change="checked => updateConf(checked === true && undefined, 'menuHeaderRender')"
-          />
-        </a-col>
-      </a-row>
     </div>
   </a-drawer>
 </template>
@@ -202,6 +204,11 @@ const visible = ref<boolean>(false)
 const handleShowDrawer = () => {
   visible.value = !visible.value
 }
+// 主体
+const handleNavTheme = (navTheme: string) => {
+  appStore.setNavTheme(navTheme)
+  updateConf(navTheme, 'navTheme')
+}
 // 变化主题色
 const handleChangeColor = (color: string) => {
   updateTheme(color)
@@ -216,24 +223,24 @@ const handleLayout = (layout: string) => {
   handleFixSiderbar(layout !== 'top')
 }
 // 固定头部
-const handleFixedHeader = fixedHeader => {
+const handleFixedHeader = (fixedHeader: boolean) => {
   appStore.setFixedHeader(fixedHeader)
   updateConf(fixedHeader, 'fixedHeader')
 }
 // 固定侧边菜单
-const handleFixSiderbar = fixSiderbar => {
+const handleFixSiderbar = (fixSiderbar: boolean) => {
   appStore.setFixSiderbar(fixSiderbar)
   updateConf(fixSiderbar, 'fixSiderbar')
 }
 // 固定侧边菜单
-const handleSplitMenus = splitMenus => {
+const handleSplitMenus = (splitMenus: boolean) => {
   appStore.setSplitMenus(splitMenus)
   updateConf(splitMenus, 'splitMenus')
 }
 
 // 更新配置
-const updateConf = (val: string, type: string) => {
-  emit('handleSettingChange', { type: type, value: val })
+const updateConf = (val: any, type: string) => {
+  emit('handleSettingChange', type, val)
 }
 
 // type ConfType = 'layout' | 'fixedHeader' | 'fixSiderbar' | string

@@ -60,7 +60,7 @@
         <component :is="Component" :key="route.path" />
       </transition>
     </RouterView>
-    <SettingDrawer v-model="settings" />
+    <SettingDrawer v-model="settings" @handleSettingChange="handleSettingChange" />
 
     <a-modal
       v-model:visible="langVisible"
@@ -86,7 +86,7 @@ import LogoWhiteImg from '@/assets/logo.svg'
 import LogoBlackImg from '@/assets/logo-black.svg'
 // 获取appStore
 const appStore = useAppStore()
-const { lang, theme, layout, fixedHeader, fixSiderbar, splitMenus, navigatorlang } = storeToRefs(appStore)
+const { lang, navTheme, theme, layout, fixedHeader, fixSiderbar, splitMenus, navigatorlang } = storeToRefs(appStore)
 // 初始化默认值
 const langVisible = ref(false)
 const langmsg = ref('')
@@ -112,9 +112,11 @@ const headleModalLang = () => {
   langVisible.value = false
 }
 // 更新配置
-const handleSettingChange = ({ type, value }) => {
-  type && (settings[type] = value)
-  // console.log(type, value)
+const handleSettingChange = (type: string, value: any) => {
+  type &&
+    Object.assign(settings, {
+      [`${type}`]: value,
+    })
   // switch (type) {
   //   case 'contentWidth':
   //     this.settings[type] = value
@@ -169,21 +171,18 @@ const init = () => {
   // 主题配色
   useUserTheme(defaultTheme)
   appStore.setTheme(defaultTheme)
-  handleSettingChange({ type: 'primaryColor', value: defaultTheme })
+  handleSettingChange('primaryColor', defaultTheme)
 
+  const defaultNavTheme = navTheme.value ? navTheme.value : settings.navTheme
   const defaultLayout = layout.value ? layout.value : settings.layout
   const defaultFixedHeader = fixedHeader.value ? fixedHeader.value : settings.fixedHeader
   const defaultFixSiderbar = fixSiderbar.value ? fixSiderbar.value : settings.fixSiderbar
   const defaultSplitMenus = splitMenus.value ? splitMenus.value : settings.splitMenus
-  handleSettingChange({ type: 'layout', value: defaultLayout })
-  handleSettingChange({ type: 'fixedHeader', value: defaultFixedHeader })
-  handleSettingChange({ type: 'fixSiderbar', value: defaultFixSiderbar })
-  handleSettingChange({ type: 'splitMenus', value: defaultSplitMenus })
-
-  // const newVal = {
-  //   ...toRaw(props.modelValue),
-  //   [`${type}`]: val,
-  // }
+  handleSettingChange('navTheme', defaultNavTheme)
+  handleSettingChange('layout', defaultLayout)
+  handleSettingChange('fixedHeader', defaultFixedHeader)
+  handleSettingChange('fixSiderbar', defaultFixSiderbar)
+  handleSettingChange('splitMenus', defaultSplitMenus)
 
   // 自动检查浏览器语言
   if (navigator.language && navigator.language !== lang.value && !navigatorlang.value) {
