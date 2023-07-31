@@ -5,5 +5,5 @@ export const websiteConfig = Object.freeze({
   title: 'Airuisi Admin Pro',
   logo: logoImage,
   loginImage: loginbgImage,
-  loginDesc: 'Airuisi Admin Pro中后台前端/设计解决方案',
+  loginDesc: '中后台前端/设计解决方案',
 })

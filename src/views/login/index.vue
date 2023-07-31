@@ -1,6 +1,6 @@
 <template>
-  <n-row class="login-container">
-    <n-col :span="8" class="left">
+  <n-grid class="login-container login-container-maxsm" item-responsive responsive="screen">
+    <n-grid-item span="9 xs:24" class="left">
       <div class="left-item">
         <div class="left-item-logo">
           <n-image class="left-item-logo-img" :src="websiteConfig.logo" />
@@ -11,8 +11,8 @@
           <n-image :src="websiteConfig.loginImage" preview-disabled />
         </div>
       </div>
-    </n-col>
-    <n-col :span="16" class="right">
+    </n-grid-item>
+    <n-grid-item span="15 xs:24" class="right">
       <n-card title="登录你的账户" :bordered="false" class="right-item">
         <n-tabs
           :default-value="tagDefaultValue"
@@ -86,8 +86,8 @@
           </div>
         </template>
       </n-card>
-    </n-col>
-  </n-row>
+    </n-grid-item>
+  </n-grid>
 </template>
 
 <script setup lang="ts">
@@ -178,6 +178,10 @@ const handleSubmit = (e: MouseEvent) => {
   & {
     @apply min-h-screen bg-login-bg;
   }
+  //sm:max-lg:flex sm:max-lg:flex-col sm:max-lg:justify-center sm:max-lg:items-start
+  //&.login-container-maxsm {
+  //  @apply xs:max-sm:flex-col xs:max-sm:justify-center xs:max-sm:items-start;
+  //}
 
   .left,
   .right {
@@ -201,13 +205,16 @@ const handleSubmit = (e: MouseEvent) => {
       & > .left-item-title {
         @apply h-20 font-semibold text-2xl/20 text-center;
       }
+      & > .coding-img {
+        @apply xs:max-sm:hidden;
+      }
     }
   }
 
   .right {
     @apply bg-white flex-col;
     & > .right-item {
-      @apply w-2/5;
+      @apply lg:w-2/4 xl:w-2/5 2xl:w-1/3;
     }
   }
 
