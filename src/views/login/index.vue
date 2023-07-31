@@ -1,18 +1,20 @@
 <template>
   <n-grid class="login-container login-container-maxsm" item-responsive responsive="screen">
-    <n-grid-item span="9 xs:24" class="left">
+    <n-grid-item span="9 xs:24 s:24 l:9" class="left">
       <div class="left-item">
-        <div class="left-item-logo">
-          <n-image class="left-item-logo-img" :src="websiteConfig.logo" />
-          <div class="left-item-logo-title">{{ websiteConfig.title }}</div>
+        <div class="left-item-lt">
+          <div class="left-item-logo">
+            <n-image class="left-item-logo-img" :src="websiteConfig.logo" />
+            <div class="left-item-logo-title">{{ websiteConfig.title }}</div>
+          </div>
+          <div class="left-item-title">{{ websiteConfig.loginDesc }}</div>
         </div>
-        <div class="left-item-title">{{ websiteConfig.loginDesc }}</div>
         <div class="coding-img">
           <n-image :src="websiteConfig.loginImage" preview-disabled />
         </div>
       </div>
     </n-grid-item>
-    <n-grid-item span="15 xs:24" class="right">
+    <n-grid-item span="15 xs:24 s:24 l:15" class="right">
       <n-card title="登录你的账户" :bordered="false" class="right-item">
         <n-tabs
           :default-value="tagDefaultValue"
@@ -80,12 +82,20 @@
             登 录
           </n-button>
         </template>
-        <template #action>
-          <div>
-            <n-divider dashed>其他登录方式</n-divider>
-          </div>
-        </template>
       </n-card>
+      <n-space justify="center">
+        <div>
+          <n-divider dashed>其他登录方式</n-divider>
+          <n-space justify="space-around" size="large">
+            <n-button text style="font-size: 32px">
+              <n-icon :component="LogoWechat" color="#0DA052"
+            /></n-button>
+            <n-button text style="font-size: 32px">
+              <n-icon :component="LogoAlipay" color="#089EE3" />
+            </n-button>
+          </n-space>
+        </div>
+      </n-space>
     </n-grid-item>
   </n-grid>
 </template>
@@ -99,6 +109,8 @@ import {
   LockClosedOutline,
   PhonePortraitOutline,
   ShieldCheckmarkOutline,
+  LogoWechat,
+  LogoAlipay,
 } from '@vicons/ionicons5'
 
 const tagDefaultValue = ref('accountSignin')
@@ -178,10 +190,6 @@ const handleSubmit = (e: MouseEvent) => {
   & {
     @apply min-h-screen bg-login-bg;
   }
-  //sm:max-lg:flex sm:max-lg:flex-col sm:max-lg:justify-center sm:max-lg:items-start
-  //&.login-container-maxsm {
-  //  @apply xs:max-sm:flex-col xs:max-sm:justify-center xs:max-sm:items-start;
-  //}
 
   .left,
   .right {
@@ -192,21 +200,27 @@ const handleSubmit = (e: MouseEvent) => {
     @apply bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200;
     & > .left-item {
       @apply py-5 px-0;
-      & > .left-item-logo {
-        @apply flex items-center justify-center;
-        & > .left-item-logo-img {
-          @apply w-9 h-9;
-          margin-right: 0.375rem;
+      @apply lg:max-xl:flex lg:max-xl:items-center lg:max-xl:justify-center;
+      & > .left-item-lt {
+        @apply lg:max-xl:basis-1/2;
+
+        .left-item-logo {
+          @apply flex items-center justify-center;
+          & > .left-item-logo-img {
+            @apply w-9 h-9;
+            margin-right: 0.375rem;
+          }
+          & > .left-item-logo-title {
+            @apply text-2xl font-semibold bg-gradient-to-r bg-clip-text text-transparent from-sky-500 via-indigo-500 to-blue-500;
+          }
         }
-        & > .left-item-logo-title {
-          @apply text-2xl font-semibold bg-gradient-to-r bg-clip-text text-transparent from-sky-500 via-indigo-500 to-blue-500;
+        & > .left-item-title {
+          @apply h-20 font-semibold text-2xl/20 text-center;
         }
-      }
-      & > .left-item-title {
-        @apply h-20 font-semibold text-2xl/20 text-center;
       }
       & > .coding-img {
-        @apply xs:max-sm:hidden;
+        @apply xs:max-sm:hidden sm:max-md:hidden md:max-lg:hidden;
+        @apply lg:max-xl:basis-1/2;
       }
     }
   }
@@ -214,36 +228,8 @@ const handleSubmit = (e: MouseEvent) => {
   .right {
     @apply bg-white flex-col;
     & > .right-item {
-      @apply lg:w-2/4 xl:w-2/5 2xl:w-1/3;
+      @apply sm:max-lg:w-2/3 lg:w-2/4 xl:w-2/5 2xl:w-1/3;
     }
   }
-
-  //.left > div > div:first-child {
-  //  @apply font-bold text-5xl text-white mb-4;
-  //}
-  //
-  //.left > div > div:last-child {
-  //  @apply text-gray-200 text-2xl;
-  //}
-  //
-  //.right .title {
-  //  @apply font-bold text-3xl text-gray-800;
-  //}
-  //
-  //.right > div {
-  //  @apply flex items-center justify-center my-5 text-gray-300 space-x-2;
-  //}
-  //
-  //.right .line {
-  //  @apply h-1px w-16 bg-gray-300;
-  //}
-  //
-  //.right > el-form {
-  //  @apply w-250px;
-  //}
-  //
-  //.login-button {
-  //  @apply w-250px bg-indigo-500;
-  //}
 }
 </style>

@@ -25,6 +25,7 @@ declare module 'vue' {
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
     NNotificationProvider: typeof import('naive-ui')['NNotificationProvider']
     NRow: typeof import('naive-ui')['NRow']
+    NSpace: typeof import('naive-ui')['NSpace']
     NTabPane: typeof import('naive-ui')['NTabPane']
     NTabs: typeof import('naive-ui')['NTabs']
     ParentLayout: typeof import('./src/components/layout/parentLayout.vue')['default']
