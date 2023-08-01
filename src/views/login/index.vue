@@ -228,7 +228,7 @@ const handleSubmit = (e: MouseEvent) => {
   .right {
     @apply bg-white flex-col;
     & > .right-item {
-      @apply sm:max-lg:w-2/3 lg:w-2/4 xl:w-2/5 2xl:w-1/3;
+      @apply sm:max-md:w-2/4 sm:max-lg:w-2/3 md:max-lg:w-2/5 lg:max-xl:w-2/5 xl:w-2/5 2xl:w-1/3;
     }
   }
 }
