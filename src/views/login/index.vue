@@ -70,7 +70,13 @@
                     <n-icon :component="ShieldCheckmarkOutline" />
                   </template>
                   <template #suffix>
-                    <n-button text type="info">获取验证码</n-button>
+                    <n-button
+                      text
+                      type="info"
+                      :disabled="disabled"
+                      @click="handleGetVerificationCode"
+                      >获取验证码</n-button
+                    >
                   </template>
                 </n-input>
               </n-form-item>
@@ -101,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { FormInst } from 'naive-ui'
 import { websiteConfig } from '@/config/website.config'
 import {
@@ -115,6 +121,7 @@ import {
 
 const tagDefaultValue = ref('accountSignin')
 const loading = ref(false)
+const disabled = ref(true)
 const formRefAccount = ref<FormInst | null>(null)
 const formRefMobile = ref<FormInst | null>(null)
 
@@ -168,6 +175,14 @@ const handleUpdateValue = (value: string) => {
   }
 }
 
+const handleGetVerificationCode = () => {
+  if (!formMobileValue.value.mobile) {
+    window['$message'].error('请输入手机号码')
+    return false
+  }
+  console.log('获取验证码')
+}
+
 const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
 
@@ -183,6 +198,20 @@ const handleSubmit = (e: MouseEvent) => {
     }
   })
 }
+
+watch(
+  formMobileValue,
+  (newValue) => {
+    if (newValue.mobile.length === 11) {
+      const mobileRegex = /^0?(13|14|15|16|17|18|19)[0-9]{9}$/
+      const isValidMobile = mobileRegex.test(newValue.mobile)
+      if (isValidMobile) {
+        disabled.value = false
+      }
+    }
+  },
+  { deep: true },
+)
 </script>
 
 <style scoped lang="less">

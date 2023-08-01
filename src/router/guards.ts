@@ -40,9 +40,7 @@ export function createRouterGuards(router: Router) {
     next()
     LoadingBar && LoadingBar.finish()
   })
-  router.afterEach((to, _, failure) => {
-    console.log(to, failure)
-
+  router.afterEach(() => {
     LoadingBar && LoadingBar.finish()
   })
 
