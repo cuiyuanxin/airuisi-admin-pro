@@ -1,5 +1,5 @@
 // Read all environment variable configuration files to process.env
-export function wrapperEnv(envConf: Recordable): ViteEnv {
+export const wrapperEnv = (envConf: Recordable): ViteEnv => {
   const ret: any = {}
 
   for (const envName of Object.keys(envConf)) {

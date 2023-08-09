@@ -33,6 +33,6 @@ export const useDesignSettingStore = defineStore({
   },
 })
 
-export function useDesignSetting() {
+export const useDesignSetting = () => {
   return useDesignSettingStore(store)
 }

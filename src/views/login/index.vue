@@ -75,7 +75,7 @@
                       type="info"
                       :disabled="disabled"
                       @click="handleGetVerificationCode"
-                      >获取验证码</n-button
+                      >{{ getCodeBtn.btnText }}</n-button
                     >
                   </template>
                 </n-input>
@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { FormInst } from 'naive-ui'
 import { websiteConfig } from '@/config/website.config'
 import {
@@ -118,10 +118,17 @@ import {
   LogoWechat,
   LogoAlipay,
 } from '@vicons/ionicons5'
+import { isChinesePhoneNumber } from '@/utils/is'
+import { GetCodeBtn } from '/#/config'
 
 const tagDefaultValue = ref('accountSignin')
 const loading = ref(false)
 const disabled = ref(true)
+const getCodeBtn = reactive<GetCodeBtn>({
+  timer: null,
+  seconds: 60,
+  btnText: '获取验证码',
+})
 const formRefAccount = ref<FormInst | null>(null)
 const formRefMobile = ref<FormInst | null>(null)
 
@@ -176,11 +183,33 @@ const handleUpdateValue = (value: string) => {
 }
 
 const handleGetVerificationCode = () => {
-  if (!formMobileValue.value.mobile) {
+  if (!formMobileValue.value.mobile && isChinesePhoneNumber(formMobileValue.value.mobile)) {
     window['$message'].error('请输入手机号码')
     return false
   }
-  console.log('获取验证码')
+  console.log(getCodeBtn.timer)
+  initgetCodeTimer()
+}
+
+const initgetCodeTimer = () => {
+  if (getCodeBtn.timer) {
+    window.clearInterval(getCodeBtn.timer)
+    getCodeBtn.timer = null
+  }
+  let count = getCodeBtn.seconds
+  getCodeBtn.btnText = `重新获取(${count})`
+  getCodeBtn.timer = window.setInterval(() => {
+    count--
+    if (count === 0) {
+      if (getCodeBtn.timer) {
+        window.clearInterval(getCodeBtn.timer)
+        getCodeBtn.timer = null
+        getCodeBtn.btnText = '获取验证码'
+      }
+      return
+    }
+    getCodeBtn.btnText = `重新获取(${count})`
+  }, 1000)
 }
 
 const handleSubmit = (e: MouseEvent) => {

@@ -122,7 +122,7 @@ export default class LocalStorage {
     }
   }
 
-  clear(cacheType?: string): void {
+  static clear(cacheType?: string): void {
     if (cacheType === 'cookie') {
       LocalStorage.clearCookie()
     } else {

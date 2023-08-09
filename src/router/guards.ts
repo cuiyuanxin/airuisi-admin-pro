@@ -5,7 +5,7 @@ import { ACCESS_TOKEN } from '@/config/constant/storeConst'
 
 const whitelistRoute = [PageEnum.BASE_LOGIN]
 
-export function createRouterGuards(router: Router) {
+export const createRouterGuards = (router: Router) => {
   const LoadingBar = window['$loading'] || null
 
   router.beforeEach(async (to, from, next) => {

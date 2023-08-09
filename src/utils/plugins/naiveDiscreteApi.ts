@@ -3,7 +3,7 @@ import { createDiscreteApi, darkTheme } from 'naive-ui'
 import { useDesignSettingStore } from '@/store/modules/designSetting'
 import { lighten } from '@/utils'
 
-export function setupNaiveDiscreteApi() {
+export const setupNaiveDiscreteApi = () => {
   const designSettingStore = useDesignSettingStore()
   const configProviderPropsRef = computed(() => ({
     theme: designSettingStore.darkTheme ? darkTheme : undefined,

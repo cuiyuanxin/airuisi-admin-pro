@@ -15,7 +15,7 @@ const routeModuleList: RouteRecordRaw[] = Object.keys(modules).reduce((list, key
   return [...list, ...modList]
 }, [])
 
-function sortRoute(a, b) {
+const sortRoute = (a, b) => {
   return (a.meta?.sort ?? 0) - (b.meta?.sort ?? 0)
 }
 
@@ -32,7 +32,7 @@ const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 }),
 })
 
-export function setupRouter(app: App<Element>) {
+export const setupRouter = (app: App<Element>) => {
   app.use(router)
   // 创建路由守卫
   createRouterGuards(router)

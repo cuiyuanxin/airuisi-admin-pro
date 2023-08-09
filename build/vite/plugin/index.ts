@@ -4,12 +4,12 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import { configHtmlPlugin } from './html'
+import { configCompressPlugin } from './compress'
+import { viteMockServe } from 'vite-plugin-mock'
 
-// rollup打包分析插件
-import visualizer from 'rollup-plugin-visualizer'
-
-export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
-  // const { VITE_USE_MOCK, VITE_BUILD_COMPRESS, VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE } = viteEnv
+export const createVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
+  const { VITE_USE_MOCK, VITE_BUILD_COMPRESS, VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE } = viteEnv
+  const prodMock: boolean = VITE_USE_MOCK
 
   const vitePlugins: (Plugin | Plugin[] | PluginOption)[] = [
     // have to
@@ -27,17 +27,24 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   // vite-plugin-html
   vitePlugins.push(configHtmlPlugin(viteEnv, isBuild))
 
-  // vite-plugin-mock
-  // VITE_USE_MOCK && vitePlugins.push(configMockPlugin(isBuild, prodMock));
+  if (prodMock) {
+    viteMockServe({
+      ignore: /^_/,
+      mockPath: 'mock',
+      localEnabled: !isBuild,
+      prodEnabled: isBuild && prodMock,
+      watchFiles: true,
+      injectCode: `
+      import { setupProdMockServer } from '../mock/createProdMockServer'
+      setupProdMockServer()
+      `,
+    })
+  }
 
   if (isBuild) {
     // rollup-plugin-gzip
     vitePlugins.push(
-      visualizer({
-        open: true,
-        gzipSize: true,
-        brotliSize: true,
-      }),
+      configCompressPlugin(VITE_BUILD_COMPRESS, VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE),
     )
   }
 
