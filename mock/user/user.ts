@@ -1,27 +1,28 @@
 import { MockMethod } from 'vite-plugin-mock'
-
-const generateRandomNumber = (): number => {
-  return Math.floor(Math.random() * 1000000) // 生成 0 到 999999 之间的随机整数
-}
-
-const generateSixDigitCode = (): string => {
-  const randomNumber = generateRandomNumber()
-  const sixDigitCode = randomNumber.toString().padStart(6, '0') // 将随机数转换为字符串，并在前面补充零直到长度为 6
-  return sixDigitCode
-}
+import { resultSuccess, resultError } from '../_utils'
+import { isChinesePhoneNumber } from '@/utils/is'
+import Mock from 'mockjs'
 
 export default [
   {
     url: '/api/getVerificationCode',
     method: 'post',
-    response: () => {
-      const code: string = generateSixDigitCode()
-      return {
-        code: 0,
-        msg: '获取验证码成功',
-        data: {
-          code: code,
-        },
+    response: ({ body }) => {
+      console.log(body, '=--')
+      const { mobile } = body || {}
+
+      if (mobile && isChinesePhoneNumber(mobile)) {
+        const code = Mock.Random.integer(111111, 999999)
+        return resultSuccess(
+          {
+            code: code,
+          },
+          {
+            message: '获取验证码成功',
+          },
+        )
+      } else {
+        return resultError('请输入正确的手机号码')
       }
     },
   },

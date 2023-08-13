@@ -29,4 +29,5 @@ export interface GetCodeBtn {
   timer: number | null
   seconds: number
   btnText: string
+  disabled: boolean
 }

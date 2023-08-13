@@ -18,6 +18,7 @@ import { joinTimestamp, formatRequestDate } from './helper'
 // import { useUserStoreWithOut } from '/@/store/modules/user'
 import { AxiosRetry } from './axiosRetry'
 import axios from 'axios'
+import { useUser } from '@/store/modules/user'
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix || ''
@@ -171,7 +172,8 @@ const transform: AxiosTransform = {
    */
   requestInterceptors: (config, options) => {
     // 请求之前处理config
-    const token = getToken()
+    const userStore = useUser()
+    const token = userStore.getToken
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
       ;(config as Recordable).headers.Authorization = options.authenticationScheme
@@ -192,14 +194,12 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: (axiosInstance: AxiosInstance, error: any) => {
-    const { t } = useI18n()
-    const errorLogStore = useErrorLogStoreWithOut()
-    errorLogStore.addAjaxErrorInfo(error)
+    // const { t } = useI18n()
+    const $dialog = window['$dialog']
+    const $message = window['$message']
     const { response, code, message, config } = error || {}
-    const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none'
     const msg: string = response?.data?.error?.message ?? ''
     const err: string = error?.toString?.() ?? ''
-    let errMessage = ''
 
     if (axios.isCancel(error)) {
       return Promise.reject(error)
@@ -207,25 +207,29 @@ const transform: AxiosTransform = {
 
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
-        errMessage = t('sys.api.apiTimeoutMessage')
+        // errMessage = t('sys.api.apiTimeoutMessage')
+        $message.error('接口请求超时，请刷新页面重试!')
+        return
       }
       if (err?.includes('Network Error')) {
-        errMessage = t('sys.api.networkExceptionMsg')
-      }
-
-      if (errMessage) {
-        // if (errorMessageMode === 'modal') {
-        //   createErrorModal({ title: t('sys.api.errorTip'), content: errMessage })
-        // } else if (errorMessageMode === 'message') {
-        //   createMessage.error(errMessage)
-        // }
+        // errMessage = t('sys.api.networkExceptionMsg')
+        $dialog.info({
+          title: '网络异常',
+          content: '请检查您的网络连接是否正常',
+          positiveText: '确定',
+          //negativeText: '取消',
+          closable: false,
+          maskClosable: false,
+          onPositiveClick: () => {},
+          onNegativeClick: () => {},
+        })
         return Promise.reject(error)
       }
     } catch (error) {
       throw new Error(error as unknown as string)
     }
 
-    checkStatus(error?.response?.status, msg, errorMessageMode)
+    checkStatus(error?.response?.status, msg)
 
     // 添加自动重试机制 保险起见 只针对GET请求
     const retryRequest = new AxiosRetry()
@@ -291,12 +295,4 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
     ),
   )
 }
-export const defHttp = createAxios()
-
-// other api url
-// export const otherHttp = createAxios({
-//   requestOptions: {
-//     apiUrl: 'xxx',
-//     urlPrefix: 'xxx',
-//   },
-// });
+export const http = createAxios()

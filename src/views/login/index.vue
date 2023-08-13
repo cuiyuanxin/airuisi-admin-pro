@@ -73,7 +73,7 @@
                     <n-button
                       text
                       type="info"
-                      :disabled="disabled"
+                      :disabled="getCodeBtn.disabled"
                       @click="handleGetVerificationCode"
                       >{{ getCodeBtn.btnText }}</n-button
                     >
@@ -120,14 +120,15 @@ import {
 } from '@vicons/ionicons5'
 import { isChinesePhoneNumber } from '@/utils/is'
 import { GetCodeBtn } from '/#/config'
+import { getVerificationCode } from '@/api/user/user'
 
 const tagDefaultValue = ref('accountSignin')
 const loading = ref(false)
-const disabled = ref(true)
 const getCodeBtn = reactive<GetCodeBtn>({
   timer: null,
   seconds: 60,
   btnText: '获取验证码',
+  disabled: true,
 })
 const formRefAccount = ref<FormInst | null>(null)
 const formRefMobile = ref<FormInst | null>(null)
@@ -183,12 +184,30 @@ const handleUpdateValue = (value: string) => {
 }
 
 const handleGetVerificationCode = () => {
-  if (!formMobileValue.value.mobile && isChinesePhoneNumber(formMobileValue.value.mobile)) {
+  if (!formMobileValue.value.mobile) {
     window['$message'].error('请输入手机号码')
     return false
   }
-  console.log(getCodeBtn.timer)
-  initgetCodeTimer()
+  if (!isChinesePhoneNumber(formMobileValue.value.mobile)) {
+    window['$message'].error('请输入正确的手机号码')
+    return false
+  }
+
+  getVerificationCode({
+    mobile: formMobileValue.value.mobile,
+  }).then((res) => {
+    const { code, result } = res
+    if (code === 0) {
+      initgetCodeTimer()
+      // 对接正式程序可删除该程序
+      window['$notification'].info({
+        content: '提示信息',
+        meta: `验证码: ${result.code}`,
+        duration: 2500,
+        keepAliveOnHover: true,
+      })
+    }
+  })
 }
 
 const initgetCodeTimer = () => {
@@ -235,7 +254,7 @@ watch(
       const mobileRegex = /^0?(13|14|15|16|17|18|19)[0-9]{9}$/
       const isValidMobile = mobileRegex.test(newValue.mobile)
       if (isValidMobile) {
-        disabled.value = false
+        getCodeBtn.disabled = false
       }
     }
   },
