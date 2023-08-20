@@ -1,13 +1,16 @@
 import { RouteRecordRaw } from 'vue-router'
-import { PageEnum } from '@/config/constant/pageEnum'
+import { PageEnum } from '@/constants/pageEnum'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 export const RedirectName = 'Redirect'
 
 export const ErrorPage = () => import('@/views/exception/404.vue')
 
-export const Layout = () => import('@/components/layout/index.vue')
+export const Layout = () => import('@/layouts/layout.vue')
 
-export const ParentLayout = () => import('@/components/layout/parentLayout.vue')
+export const ParentLayout = () => import('@/layouts/parentLayout.vue')
 
 export const constantRoutes: RouteRecordRaw[] = [
   {
@@ -23,7 +26,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: 'Login',
     meta: {
       hidden: true,
-      title: '登录',
+      title: t('login.title'),
     },
     component: () => import('@/views/login/index.vue'),
   },

@@ -1,3 +1,6 @@
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 export function checkStatus(status: number, msg: string): void {
   // const { t } = useI18n()
   const $message = window['$message']
@@ -10,38 +13,38 @@ export function checkStatus(status: number, msg: string): void {
     // 未登录则跳转登录页面，并携带当前页面的路径
     // 在登录成功后返回当前页面，这一步需要在登录页操作。
     case 401:
-      $message.error('用户没有权限（令牌、用户名、密码错误）!')
+      $message.error(t('system.api.errMsg401'))
       break
     case 403:
-      $message.error('用户得到授权，但是访问是被禁止的。!')
+      $message.error(t('system.api.errMsg403'))
       break
     // 404请求不存在
     case 404:
-      $message.error('网络请求错误，未找到该资源!')
+      $message.error(t('system.api.errMsg404'))
       break
     case 405:
-      $message.error('网络请求错误，请求方法未允许!')
+      $message.error(t('system.api.errMsg405'))
       break
     case 408:
-      $message.error('网络请求超时')
+      $message.error(t('system.api.errMsg408'))
       break
     case 500:
-      $message.error('服务器错误,请联系管理员!')
+      $message.error(t('system.api.errMsg500'))
       break
     case 501:
-      $message.error('网络未实现')
+      $message.error(t('system.api.errMsg501'))
       break
     case 502:
-      $message.error('网络错误')
+      $message.error(t('system.api.errMsg502'))
       break
     case 503:
-      $message.error('服务不可用，服务器暂时过载或维护!')
+      $message.error(t('system.api.errMsg503'))
       break
     case 504:
-      $message.error('网络超时')
+      $message.error(t('system.api.errMsg504'))
       break
     case 505:
-      $message.error('http版本不支持该请求!')
+      $message.error(t('system.api.errMsg505'))
       break
     default:
       $message.error(msg)

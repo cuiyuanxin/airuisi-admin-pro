@@ -12,7 +12,7 @@ import qs from 'qs'
 import { AxiosCanceler } from './axiosCancel'
 import { isFunction } from '@/utils/is'
 import { cloneDeep } from 'lodash-es'
-import { ContentTypeEnum, RequestEnum } from '@/config/constant/httpEnum'
+import { ContentTypeEnum, RequestEnum } from '@/constants/httpEnum'
 
 export * from './axiosTransform'
 

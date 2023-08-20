@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
-import { ACCESS_TOKEN, CURRENT_USER } from '@/config/constant/storeConst'
+import { ACCESS_TOKEN, CURRENT_USER } from '@/constants/constant'
 // import { ResultEnum } from '@/enums/httpEnum'
 
 // import { getUserInfo as getUserInfoApi, login } from '@/api/system/user'

@@ -4,25 +4,25 @@
       <div class="left-item">
         <div class="left-item-lt">
           <div class="left-item-logo">
-            <n-image class="left-item-logo-img" :src="websiteConfig.logo" />
-            <div class="left-item-logo-title">{{ websiteConfig.title }}</div>
+            <n-image class="left-item-logo-img" :src="appConfig.logo" />
+            <div class="left-item-logo-title">{{ appConfig.title }}</div>
           </div>
-          <div class="left-item-title">{{ websiteConfig.loginDesc }}</div>
+          <div class="left-item-title">{{ appConfig.loginDesc }}</div>
         </div>
         <div class="coding-img">
-          <n-image :src="websiteConfig.loginImage" preview-disabled />
+          <n-image :src="appConfig.loginImage" preview-disabled />
         </div>
       </div>
     </n-grid-item>
     <n-grid-item span="15 xs:24 s:24 l:15" class="right">
-      <n-card title="登录你的账户" :bordered="false" class="right-item">
+      <n-card :title="$t('login.card.title')" :bordered="false" class="right-item">
         <n-tabs
           :default-value="tagDefaultValue"
           @update:value="handleUpdateValue"
           size="large"
           pane-style="margin-top: 0.625rem;"
         >
-          <n-tab-pane name="accountSignin" tab="账号密码登录">
+          <n-tab-pane name="accountSignin" :tab="$t('login.card.tag1')">
             <n-form
               ref="formRefAccount"
               :model="formAccountValue"
@@ -30,7 +30,10 @@
               label-placement="left"
             >
               <n-form-item path="username">
-                <n-input v-model:value="formAccountValue.username" placeholder="请输入用户名">
+                <n-input
+                  v-model:value="formAccountValue.username"
+                  :placeholder="$t('login.usernamePlaceholder')"
+                >
                   <template #prefix>
                     <n-icon :component="PersonOutline" />
                   </template>
@@ -40,7 +43,7 @@
                 <n-input
                   v-model:value="formAccountValue.password"
                   type="password"
-                  placeholder="请输入密码"
+                  :placeholder="$t('login.passwordPlaceholder')"
                   show-password-on="click"
                 >
                   <template #prefix>
@@ -50,7 +53,7 @@
               </n-form-item-row>
             </n-form>
           </n-tab-pane>
-          <n-tab-pane name="mobileSignin" tab="手机验证码登录">
+          <n-tab-pane name="mobileSignin" :tab="$t('login.card.tag2')">
             <n-form
               ref="formRefMobile"
               :model="formMobileValue"
@@ -58,14 +61,20 @@
               label-placement="left"
             >
               <n-form-item path="mobile">
-                <n-input v-model:value="formMobileValue.mobile" placeholder="请输入手机号码">
+                <n-input
+                  v-model:value="formMobileValue.mobile"
+                  :placeholder="$t('login.mobilePlaceholder')"
+                >
                   <template #prefix>
                     <n-icon :component="PhonePortraitOutline" />
                   </template>
                 </n-input>
               </n-form-item>
               <n-form-item path="verification">
-                <n-input v-model:value="formMobileValue.verification" placeholder="输入验证码">
+                <n-input
+                  v-model:value="formMobileValue.verification"
+                  :placeholder="$t('login.verificationPlaceholder')"
+                >
                   <template #prefix>
                     <n-icon :component="ShieldCheckmarkOutline" />
                   </template>
@@ -85,13 +94,13 @@
         </n-tabs>
         <template #footer>
           <n-button type="primary" block strong @click="handleSubmit" :loading="loading">
-            登 录
+            {{ $t('login.signInFormTitle') }}
           </n-button>
         </template>
       </n-card>
       <n-space justify="center">
         <div>
-          <n-divider dashed>其他登录方式</n-divider>
+          <n-divider dashed>{{ $t('login.otherSignIn') }}</n-divider>
           <n-space justify="space-around" size="large">
             <n-button text style="font-size: 32px">
               <n-icon :component="LogoWechat" color="#0DA052"
@@ -109,7 +118,7 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
 import { FormInst } from 'naive-ui'
-import { websiteConfig } from '@/config/website.config'
+import { appConfig } from '@/config/app.config'
 import {
   PersonOutline,
   LockClosedOutline,
@@ -121,13 +130,16 @@ import {
 import { isChinesePhoneNumber } from '@/utils/is'
 import { GetCodeBtn } from '/#/config'
 import { getVerificationCode } from '@/api/user/user'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const tagDefaultValue = ref('accountSignin')
 const loading = ref(false)
 const getCodeBtn = reactive<GetCodeBtn>({
   timer: null,
   seconds: 60,
-  btnText: '获取验证码',
+  btnText: t('login.verificationBtn'),
   disabled: true,
 })
 const formRefAccount = ref<FormInst | null>(null)
@@ -144,30 +156,30 @@ const formMobileValue = ref({
 
 const accountRules = ref({
   username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 5, message: '用户名不能小于5个字符', trigger: 'blur' },
-    { max: 32, message: '用户名不能大于32个字符', trigger: 'blur' },
-    { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名只能是英文、数字和_', trigger: 'blur' },
+    { required: true, message: t('login.usernamePlaceholder'), trigger: 'blur' },
+    { min: 5, message: t('login.usernameRulesMin'), trigger: 'blur' },
+    { max: 32, message: t('login.usernameRulesMax'), trigger: 'blur' },
+    { pattern: /^[a-zA-Z0-9_]+$/, message: t('login.usernameRulesRepg'), trigger: 'blur' },
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 5, message: '密码不能小于5个字符', trigger: 'blur' },
-    { max: 32, message: '密码不能大于32个字符', trigger: 'blur' },
-    { pattern: /^[a-zA-Z0-9_]+$/, message: '密码只能是英文、数字和_', trigger: 'blur' },
+    { required: true, message: t('login.passwordPlaceholder'), trigger: 'blur' },
+    { min: 5, message: t('login.passwordRulesMin'), trigger: 'blur' },
+    { max: 32, message: t('login.passwordRulesMax'), trigger: 'blur' },
+    { pattern: /^[a-zA-Z0-9_]+$/, message: t('login.passwordRulesRepg'), trigger: 'blur' },
   ],
 })
 const mobileRules = ref({
   mobile: [
-    { required: true, message: '请输入手机号码', trigger: 'blur' },
+    { required: true, message: t('login.mobilePlaceholder'), trigger: 'blur' },
     {
       pattern: /^0?(13|14|15|16|17|18|19)[0-9]{9}$/,
-      message: '请输入11位手机号码',
+      message: t('login.mobileRulesRepg'),
       trigger: 'blur',
     },
   ],
   verification: [
-    { required: true, message: '请输入验证码', trigger: 'blur' },
-    { pattern: /^[0-9]{6}$/, message: '请输入6位验证码', trigger: 'blur' },
+    { required: true, message: t('login.verificationPlaceholder'), trigger: 'blur' },
+    { pattern: /^[0-9]{6}$/, message: t('login.verificationRulesRepg'), trigger: 'blur' },
   ],
 })
 
@@ -185,11 +197,11 @@ const handleUpdateValue = (value: string) => {
 
 const handleGetVerificationCode = () => {
   if (!formMobileValue.value.mobile) {
-    window['$message'].error('请输入手机号码')
+    window['$message'].error(t('login.mobilePlaceholder'))
     return false
   }
   if (!isChinesePhoneNumber(formMobileValue.value.mobile)) {
-    window['$message'].error('请输入正确的手机号码')
+    window['$message'].error(t('login.mobileRules'))
     return false
   }
 
@@ -201,8 +213,8 @@ const handleGetVerificationCode = () => {
       initgetCodeTimer()
       // 对接正式程序可删除该程序
       window['$notification'].info({
-        content: '提示信息',
-        meta: `验证码: ${result.code}`,
+        content: t('system.common.infoTip'),
+        meta: t('login.smsCode') + `: ${result.code}`,
         duration: 2500,
         keepAliveOnHover: true,
       })
@@ -216,18 +228,18 @@ const initgetCodeTimer = () => {
     getCodeBtn.timer = null
   }
   let count = getCodeBtn.seconds
-  getCodeBtn.btnText = `重新获取(${count})`
+  getCodeBtn.btnText = t('login.verificationNewBtn') + `(${count})`
   getCodeBtn.timer = window.setInterval(() => {
     count--
     if (count === 0) {
       if (getCodeBtn.timer) {
         window.clearInterval(getCodeBtn.timer)
         getCodeBtn.timer = null
-        getCodeBtn.btnText = '获取验证码'
+        getCodeBtn.btnText = t('login.verificationBtn')
       }
       return
     }
-    getCodeBtn.btnText = `重新获取(${count})`
+    getCodeBtn.btnText = t('login.verificationNewBtn') + `(${count})`
   }, 1000)
 }
 
@@ -263,50 +275,5 @@ watch(
 </script>
 
 <style scoped lang="less">
-.login-container {
-  & {
-    @apply min-h-screen bg-login-bg;
-  }
-
-  .left,
-  .right {
-    @apply flex items-center justify-center;
-  }
-
-  .left {
-    @apply bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200;
-    & > .left-item {
-      @apply py-5 px-0;
-      @apply lg:max-xl:flex lg:max-xl:items-center lg:max-xl:justify-center;
-      & > .left-item-lt {
-        @apply lg:max-xl:basis-1/2;
-
-        .left-item-logo {
-          @apply flex items-center justify-center;
-          & > .left-item-logo-img {
-            @apply w-9 h-9;
-            margin-right: 0.375rem;
-          }
-          & > .left-item-logo-title {
-            @apply text-2xl font-semibold bg-gradient-to-r bg-clip-text text-transparent from-sky-500 via-indigo-500 to-blue-500;
-          }
-        }
-        & > .left-item-title {
-          @apply h-20 font-semibold text-2xl/20 text-center;
-        }
-      }
-      & > .coding-img {
-        @apply xs:max-sm:hidden sm:max-md:hidden md:max-lg:hidden;
-        @apply lg:max-xl:basis-1/2;
-      }
-    }
-  }
-
-  .right {
-    @apply bg-white flex-col;
-    & > .right-item {
-      @apply sm:max-md:w-2/4 sm:max-lg:w-2/3 md:max-lg:w-2/5 lg:max-xl:w-2/5 xl:w-2/5 2xl:w-1/3;
-    }
-  }
-}
+@import '@/styles/login';
 </style>

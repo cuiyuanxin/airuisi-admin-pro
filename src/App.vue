@@ -1,7 +1,7 @@
 <template>
   <n-config-provider
-    :locale="zhCN"
-    :date-locale="dateZhCN"
+    :locale="getLocale"
+    :date-locale="getDateLocale"
     :theme="getDarkTheme"
     :theme-overrides="getThemeOverrides"
   >
@@ -17,19 +17,19 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { darkTheme, dateZhCN, zhCN } from 'naive-ui'
-import { useDesignSettingStore } from '@/store/modules/designSetting'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
 import { lighten } from '@/utils'
 
-const designSettingStore = useDesignSettingStore()
+const appStore = useAppStore()
+const { appTheme, getDarkTheme, getDateLocale, getLocale } = storeToRefs(appStore)
+const appThemeVal = appTheme.value
 
-const getDarkTheme = computed(() => (designSettingStore.darkTheme ? darkTheme : undefined))
 const getThemeOverrides = computed(() => {
-  const appTheme = designSettingStore.appTheme
-  const lightenStr = lighten(designSettingStore.appTheme, 6)
+  const lightenStr = lighten(appThemeVal, 6)
   return {
     common: {
-      primaryColor: appTheme,
+      primaryColor: appThemeVal,
       primaryColorHover: lightenStr,
       primaryColorPressed: lightenStr,
     },
@@ -41,5 +41,5 @@ const getThemeOverrides = computed(() => {
 </script>
 
 <style lang="less">
-@import './styles/index.less';
+@import './styles/index';
 </style>

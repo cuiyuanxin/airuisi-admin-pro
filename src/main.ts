@@ -1,10 +1,11 @@
 import { createApp } from 'vue'
 import router, { setupRouter } from './router'
-import { setupNaiveDiscreteApi } from './utils/plugins/naiveDiscreteApi'
-import { setupDirectives } from './utils/plugins/directives'
+import { setupNaiveDiscreteApi } from '@/plugins/naiveDiscreteApi'
+import { setupDirectives } from '@/plugins/directives'
 import { setupStore } from './store'
 import App from './App.vue'
 import './styles/tailwind.css'
+import { setupLocale } from '@/locales'
 
 async function setupApp() {
   const app = createApp(App)
@@ -15,6 +16,8 @@ async function setupApp() {
   setupNaiveDiscreteApi()
   // 注册全局自定义指令，如：v-permission权限指令
   setupDirectives(app)
+  // 挂载国际语言
+  await setupLocale(app)
   // 挂载路由
   setupRouter(app)
 

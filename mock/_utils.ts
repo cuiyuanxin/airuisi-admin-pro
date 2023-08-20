@@ -1,4 +1,4 @@
-import { ResultEnum } from '@/config/constant/httpEnum'
+import { ResultEnum } from '@/constants/httpEnum'
 
 export function resultSuccess<T = Recordable>(result: T, { message = 'success' } = {}) {
   return {

@@ -8,7 +8,7 @@ import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
 import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
 import { useGlobSetting } from '@/hooks/setting'
-import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/config/constant/httpEnum'
+import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/constants/httpEnum'
 import { isString, isUnDef, isNull, isEmpty } from '@/utils/is'
 // import { getToken } from '/@/utils/auth'
 import { setObjToUrlParams, deepMerge } from '@/utils'
@@ -19,6 +19,9 @@ import { joinTimestamp, formatRequestDate } from './helper'
 import { AxiosRetry } from './axiosRetry'
 import axios from 'axios'
 import { useUser } from '@/store/modules/user'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix || ''
@@ -52,8 +55,7 @@ const transform: AxiosTransform = {
 
     if (!data) {
       // return '[HTTP] Request has no return value';
-      // throw new Error(t('sys.api.apiRequestFailed'))
-      throw new Error('请求出错，请稍候重试')
+      throw new Error(t('system.api.apiRequestFailed'))
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
     const { code, result, message } = data
@@ -64,15 +66,14 @@ const transform: AxiosTransform = {
       let successMsg = message
 
       if (isNull(successMsg) || isUnDef(successMsg) || isEmpty(successMsg)) {
-        // successMsg = t(`sys.api.operationSuccess`)
-        successMsg = '操作成功！'
+        successMsg = t(`system.common.operationSuccess`)
       }
 
       if (successMessageMode === 'modal') {
         $dialog.success({
-          title: '成功提示',
+          title: t(`system.common.successTip`),
           content: successMsg,
-          positiveText: '知道了',
+          positiveText: t(`system.common.btnSuccess`),
           onPositiveClick: () => {},
         })
       } else if (successMessageMode === 'message') {
@@ -86,8 +87,7 @@ const transform: AxiosTransform = {
     let timeoutMsg = ''
     switch (code) {
       case ResultEnum.TIMEOUT:
-        // timeoutMsg = t('sys.api.timeoutMessage')
-        timeoutMsg = '登录超时,请重新登录!'
+        timeoutMsg = t('sys.api.timeoutMessage')
         //     const userStore = useUserStoreWithOut()
         //     userStore.setToken(undefined)
         //     userStore.logout(true)
@@ -102,16 +102,16 @@ const transform: AxiosTransform = {
     // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
     if (errorMessageMode === 'modal') {
       $dialog.error({
-        title: '错误提示',
+        title: t('sys.common.errorTip'),
         content: timeoutMsg,
-        positiveText: '知道了',
+        positiveText: t(`system.common.btnSuccess`),
         onPositiveClick: () => {},
       })
     } else if (errorMessageMode === 'message') {
       $message.error(timeoutMsg)
     }
 
-    throw new Error(timeoutMsg || '请求出错，请稍候重试')
+    throw new Error(timeoutMsg || t(`system.api.apiRequestFailed`))
   },
 
   // 请求之前处理config
@@ -207,16 +207,15 @@ const transform: AxiosTransform = {
 
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
-        // errMessage = t('sys.api.apiTimeoutMessage')
-        $message.error('接口请求超时，请刷新页面重试!')
+        $message.error(t(`system.api.apiTimeoutMessage`))
         return
       }
       if (err?.includes('Network Error')) {
         // errMessage = t('sys.api.networkExceptionMsg')
         $dialog.info({
-          title: '网络异常',
-          content: '请检查您的网络连接是否正常',
-          positiveText: '确定',
+          title: t(`system.api.networkException`),
+          content: t(`system.api.networkExceptionMsg`),
+          positiveText: t(`system.common.btn2Success`),
           //negativeText: '取消',
           closable: false,
           maskClosable: false,
@@ -253,7 +252,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         authenticationScheme: '',
         timeout: 10 * 1000,
         // 基础接口地址
-        // baseURL: globSetting.apiUrl,
+        baseURL: globSetting.apiUrl,
 
         headers: { 'Content-Type': ContentTypeEnum.JSON },
         // 如果是form-data格式

@@ -31,6 +31,5 @@ export const createProxy = (list: ProxyList = []) => {
     }
   }
 
-  console.log(ret)
   return ret
 }

@@ -1,7 +1,7 @@
 import { Router } from 'vue-router'
-import { PageEnum } from '@/config/constant/pageEnum'
+import { PageEnum } from '@/constants/pageEnum'
 import LocalStorage from '@/utils/storage'
-import { ACCESS_TOKEN } from '@/config/constant/storeConst'
+import { ACCESS_TOKEN } from '@/constants/constant'
 
 const whitelistRoute = [PageEnum.BASE_LOGIN]
 

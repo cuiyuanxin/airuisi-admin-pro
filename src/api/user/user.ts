@@ -1,6 +1,6 @@
 import { http } from '@/utils/http/axios'
 import { Result } from '/#/axios'
-import { RequestEnum } from '@/config/constant/httpEnum'
+import { RequestEnum } from '@/constants/httpEnum'
 
 enum Api {
   VerificationCode = '/getVerificationCode',

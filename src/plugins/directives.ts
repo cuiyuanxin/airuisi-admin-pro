@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import noSideSpace from '@/directives/form'
+// import noSideSpace from '@/directives/form'
 
 // import { permission } from '@/directives/permission'
 // import copy from '@/directives/copy'

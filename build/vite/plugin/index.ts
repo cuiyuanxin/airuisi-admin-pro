@@ -5,7 +5,7 @@ import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import { configHtmlPlugin } from './html'
 import { configCompressPlugin } from './compress'
-import { viteMockServe } from 'vite-plugin-mock'
+import { configMockPlugin } from './mock'
 
 export const createVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
   const { VITE_USE_MOCK, VITE_BUILD_COMPRESS, VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE } = viteEnv
@@ -28,17 +28,7 @@ export const createVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
   vitePlugins.push(configHtmlPlugin(viteEnv, isBuild))
 
   if (prodMock) {
-    viteMockServe({
-      ignore: /^_/,
-      mockPath: 'mock',
-      localEnabled: !isBuild,
-      prodEnabled: isBuild && prodMock,
-      watchFiles: true,
-      injectCode: `
-      import { setupProdMockServer } from '../mock/createProdMockServer'
-      setupProdMockServer()
-      `,
-    })
+    vitePlugins.push(configMockPlugin(isBuild, prodMock))
   }
 
   if (isBuild) {

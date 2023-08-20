@@ -1,0 +1,10 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "workplace": {
+      "title": "工作台"
+    }
+  },
+  "hello": "Hello",
+  "welcome": "Welcome to my app"
+}
