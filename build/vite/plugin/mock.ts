@@ -1,6 +1,6 @@
 import { viteMockServe } from 'vite-plugin-mock'
 
-export const configMockPlugin = (isBuild: boolean, prodMock: boolean) => {
+export function configMockPlugin(isBuild: boolean, prodMock: boolean) {
   const mockPlugin = viteMockServe({
     ignore: /^_/,
     mockPath: 'mock',

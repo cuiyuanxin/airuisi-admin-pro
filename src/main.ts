@@ -17,7 +17,7 @@ async function setupApp() {
   // 注册全局自定义指令，如：v-permission权限指令
   setupDirectives(app)
   // 挂载国际语言
-  await setupLocale(app)
+  setupLocale(app)
   // 挂载路由
   setupRouter(app)
 

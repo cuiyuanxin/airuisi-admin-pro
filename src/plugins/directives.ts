@@ -12,6 +12,7 @@ import { App } from 'vue'
  * @param app
  */
 export const setupDirectives = (app: App<Element>) => {
+  console.log(app)
   // 权限控制指令（演示）
   // app.directive('permission', permission)
   // 复制指令

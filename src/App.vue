@@ -18,10 +18,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useAppStore } from '@/store/modules/app'
+import { useApp } from '@/store/modules/app'
 import { lighten } from '@/utils'
 
-const appStore = useAppStore()
+const appStore = useApp()
 const { appTheme, getDarkTheme, getDateLocale, getLocale } = storeToRefs(appStore)
 const appThemeVal = appTheme.value
 

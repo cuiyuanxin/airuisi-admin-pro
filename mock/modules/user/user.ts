@@ -1,4 +1,4 @@
-import { MockMethod } from 'vite-plugin-mock'
+import type { MockMethod } from 'vite-plugin-mock'
 import { resultSuccess, resultError } from '../../_utils'
 import { isChinesePhoneNumber } from '@/utils/is'
 import Mock from 'mockjs'

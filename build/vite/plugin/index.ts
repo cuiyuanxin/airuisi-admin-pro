@@ -27,9 +27,7 @@ export const createVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
   // vite-plugin-html
   vitePlugins.push(configHtmlPlugin(viteEnv, isBuild))
 
-  if (prodMock) {
-    vitePlugins.push(configMockPlugin(isBuild, prodMock))
-  }
+  prodMock && vitePlugins.push(configMockPlugin(isBuild, prodMock))
 
   if (isBuild) {
     // rollup-plugin-gzip

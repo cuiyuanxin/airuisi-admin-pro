@@ -47,7 +47,7 @@ export const lighten = (color: string, amount: number) => {
  */
 export const setObjToUrlParams = (baseUrl: string, obj: object): string => {
   let parameters = ''
-  let url = ''
+  let url: string
   for (const key in obj) {
     parameters += key + '=' + encodeURIComponent(obj[key]) + '&'
   }

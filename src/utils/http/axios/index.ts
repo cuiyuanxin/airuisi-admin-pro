@@ -19,9 +19,8 @@ import { joinTimestamp, formatRequestDate } from './helper'
 import { AxiosRetry } from './axiosRetry'
 import axios from 'axios'
 import { useUser } from '@/store/modules/user'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
+import i18n from '@/locales'
+const { t } = i18n.global
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix || ''

@@ -1,6 +1,5 @@
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
+import i18n from '@/locales'
+const { t } = i18n.global
 export function checkStatus(status: number, msg: string): void {
   // const { t } = useI18n()
   const $message = window['$message']

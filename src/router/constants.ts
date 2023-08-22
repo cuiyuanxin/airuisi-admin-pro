@@ -1,8 +1,10 @@
 import { RouteRecordRaw } from 'vue-router'
 import { PageEnum } from '@/constants/pageEnum'
-import { useI18n } from 'vue-i18n'
+import i18n from '@/locales'
 
-const { t } = useI18n()
+console.log(i18n)
+
+const { t } = i18n.global
 
 export const RedirectName = 'Redirect'
 
