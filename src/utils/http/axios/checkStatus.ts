@@ -1,5 +1,5 @@
-import i18n from '@/locales'
-const { t } = i18n.global
+import { t } from '@/hooks/web/useI18n'
+
 export function checkStatus(status: number, msg: string): void {
   // const { t } = useI18n()
   const $message = window['$message']

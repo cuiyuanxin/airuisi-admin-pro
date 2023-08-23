@@ -19,8 +19,7 @@ import { joinTimestamp, formatRequestDate } from './helper'
 import { AxiosRetry } from './axiosRetry'
 import axios from 'axios'
 import { useUser } from '@/store/modules/user'
-import i18n from '@/locales'
-const { t } = i18n.global
+import { t } from '@/hooks/web/useI18n'
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix || ''

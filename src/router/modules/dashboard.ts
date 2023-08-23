@@ -3,8 +3,6 @@ import { Layout } from '@/router/constants'
 import { PageEnum } from '@/constants/pageEnum'
 // import { DashboardOutlined } from '@vicons/antd'
 // import { renderIcon } from '@/utils/index'
-import i18n from '@/locales'
-const { t } = i18n.global
 
 const routeName = 'dashboard'
 
@@ -25,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     redirect: PageEnum.BASE_HOME_REDIRECT,
     component: Layout,
     meta: {
-      title: t('dashboard.title'),
+      title: 'dashboard.title',
       // icons: renderIcon(DashboardOutlined),
       // permissions: ['dashboard_console', 'dashboard_console', 'dashboard_workplace'],
       // sort: 0,
@@ -35,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'workplace',
         name: `${routeName}_workplace`,
         meta: {
-          title: t('dashboard.workplace.title'),
+          title: 'dashboard.workplace.title',
           keepAlive: true,
           // permissions: ['dashboard_workplace'],
         },

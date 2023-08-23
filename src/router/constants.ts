@@ -1,10 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
 import { PageEnum } from '@/constants/pageEnum'
-import i18n from '@/locales'
-
-console.log(i18n)
-
-const { t } = i18n.global
 
 export const RedirectName = 'Redirect'
 
@@ -28,7 +23,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: 'Login',
     meta: {
       hidden: true,
-      title: t('login.title'),
+      title: 'login.title',
     },
     component: () => import('@/views/login/index.vue'),
   },
@@ -38,7 +33,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     redirect: PageEnum.BASE_HOME_REDIRECT,
     component: Layout,
     meta: {
-      title: 'Dashboard',
+      title: 'dashboard.title',
       // icons: renderIcon(DashboardOutlined),
       // permissions: ['dashboard_console', 'dashboard_console', 'dashboard_workplace'],
       // sort: 0,
@@ -48,7 +43,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         path: 'workplace',
         name: 'dashboard_workplace',
         meta: {
-          title: '工作台',
+          title: 'dashboard.workplace.title',
           keepAlive: true,
           // permissions: ['dashboard_workplace'],
         },
