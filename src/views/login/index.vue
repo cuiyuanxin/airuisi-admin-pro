@@ -130,7 +130,7 @@ import {
 import { isChinesePhoneNumber } from '@/utils/is'
 import { GetCodeBtn } from '/#/config'
 import { getVerificationCode } from '@/api/user/user'
-import { useI18n } from 'vue-i18n'
+import { useI18n } from '@/hooks/web/useI18n'
 
 const { t } = useI18n()
 
