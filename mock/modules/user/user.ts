@@ -81,30 +81,34 @@ export default [
     },
   },
   {
-    url: '/api/post',
+    url: '/api/login',
     method: 'post',
-    timeout: 2000,
-    response: {
-      code: 0,
-      data: {
-        name: 'vben',
-      },
-    },
-  },
-  {
-    url: '/api/text',
-    method: 'post',
-    rawResponse: async (req, res) => {
-      let reqbody = ''
-      await new Promise((resolve) => {
-        req.on('data', (chunk) => {
-          reqbody += chunk
-        })
-        req.on('end', () => resolve(undefined))
-      })
-      res.setHeader('Content-Type', 'text/plain')
-      res.statusCode = 200
-      res.end(`hello, ${reqbody}`)
+    response: ({ body }) => {
+      const { mobile, verification, username, password } = body || {}
+
+      // 判断存在手机号默认为手机登录
+      if (mobile && verification) {
+      } else return resultError('请输入手机号或者验证码')
+      // 账号登录
+      if (username && password) {
+      } else return resultError('请输入账号或者密码')
+
+      if (mobile && isChinesePhoneNumber(mobile)) {
+        if (searchArray(userList, mobile)) {
+          const code = Mock.Random.integer(111111, 999999)
+          return resultSuccess(
+            {
+              code: code,
+            },
+            {
+              message: '获取验证码成功',
+            },
+          )
+        }
+        return resultError('手机号码不存在')
+      } else {
+        return resultError('请输入正确的手机号码')
+      }
     },
   },
 ] as MockMethod[]

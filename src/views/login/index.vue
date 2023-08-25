@@ -4,13 +4,13 @@
       <div class="left-item">
         <div class="left-item-lt">
           <div class="left-item-logo">
-            <n-image class="left-item-logo-img" :src="appConfig.logo" />
-            <div class="left-item-logo-title">{{ appConfig.title }}</div>
+            <n-image class="left-item-logo-img" :src="config.logo" />
+            <div class="left-item-logo-title">{{ config.title }}</div>
           </div>
-          <div class="left-item-title">{{ appConfig.loginDesc }}</div>
+          <div class="left-item-title">{{ config.loginDesc }}</div>
         </div>
         <div class="coding-img">
-          <n-image :src="appConfig.loginImage" preview-disabled />
+          <n-image :src="config.loginImage" preview-disabled />
         </div>
       </div>
     </n-grid-item>
@@ -117,8 +117,8 @@
 
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
-import { FormInst } from 'naive-ui'
-import { appConfig } from '@/config/app.config'
+import { FormInst, useMessage, useNotification } from 'naive-ui'
+import { useRoute, useRouter } from 'vue-router'
 import {
   PersonOutline,
   LockClosedOutline,
@@ -127,12 +127,21 @@ import {
   LogoWechat,
   LogoAlipay,
 } from '@vicons/ionicons5'
-import { isChinesePhoneNumber } from '@/utils/is'
-import { GetCodeBtn } from '/#/config'
-import { getVerificationCode } from '@/api/user/user'
+import { useUser } from '@/store/modules/user'
 import { useI18n } from '@/hooks/web/useI18n'
+import { getVerificationCode } from '@/api/user/user'
+import { GetCodeBtn } from '/#/config'
+import { config } from '@/config/config'
+import { isChinesePhoneNumber } from '@/utils/is'
+import { ResultEnum } from '@/constants/httpEnum'
+import { PageEnum } from '@/constants/pageEnum'
 
 const { t } = useI18n()
+const { login } = useUser()
+const $message = useMessage()
+const $notification = useNotification()
+const router = useRouter()
+const route = useRoute()
 
 const tagDefaultValue = ref('accountSignin')
 const loading = ref(false)
@@ -197,11 +206,11 @@ const handleUpdateValue = (value: string) => {
 
 const handleGetVerificationCode = () => {
   if (!formMobileValue.value.mobile) {
-    window['$message'].error(t('login.mobilePlaceholder'))
+    $message.error(t('login.mobilePlaceholder'))
     return false
   }
   if (!isChinesePhoneNumber(formMobileValue.value.mobile)) {
-    window['$message'].error(t('login.mobileRules'))
+    $message.error(t('login.mobileRules'))
     return false
   }
 
@@ -209,10 +218,10 @@ const handleGetVerificationCode = () => {
     mobile: formMobileValue.value.mobile,
   }).then((res) => {
     const { code, result } = res
-    if (code === 0) {
+    if (code === ResultEnum.SUCCESS) {
       initgetCodeTimer()
       // 对接正式程序可删除该程序
-      window['$notification'].info({
+      $notification.info({
         content: t('system.common.infoTip'),
         meta: t('login.smsCode') + `: ${result.code}`,
         duration: 2500,
@@ -250,11 +259,21 @@ const handleSubmit = (e: MouseEvent) => {
 
   formRef.value?.validate((errors) => {
     if (!errors) {
-      console.log('我被点击了')
-      // message.success('Valid')
+      const params = tagDefaultValue.value === 'accountSignin' ? formAccountValue : formMobileValue
+      login(params).then((res) => {
+        const { code, message } = res
+        if (code === ResultEnum.SUCCESS) {
+          const toPath = decodeURIComponent((route.query?.redirect || '/') as string)
+          $message.success(t('login.loginSuccess'))
+          if (route.name === PageEnum.BASE_LOGIN_NAME) {
+            router.replace('/')
+          } else router.replace(toPath)
+        } else {
+          $message.error(message || t('login.loginError'))
+        }
+      })
     } else {
       console.log(errors)
-      // message.error('Invalid')
     }
   })
 }

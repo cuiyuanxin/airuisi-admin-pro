@@ -30,7 +30,9 @@
     "signInFormTitle": "登 录",
     "otherSignIn": "其他登录方式",
     "verificationBtn": "获取验证码",
-    "verificationNewBtn": "重新获取"
+    "verificationNewBtn": "重新获取",
+    "loginSuccess": "登录成功，即将进入系统",
+    "loginError": "登录失败"
   },
   "system": {
     "api": {

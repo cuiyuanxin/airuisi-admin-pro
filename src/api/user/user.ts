@@ -4,18 +4,7 @@ import { RequestEnum } from '@/constants/httpEnum'
 
 enum Api {
   VerificationCode = '/getVerificationCode',
-}
-
-export interface BasicResponseModel<T = any> {
-  code: number
-  message: string
-  result: T
-}
-
-export interface BasicPageParams {
-  pageNumber: number
-  pageSize: number
-  total: number
+  Login = '/login',
 }
 
 export function getVerificationCode(params) {
@@ -45,10 +34,10 @@ export function getVerificationCode(params) {
  * @description: 用户登录
  */
 export function login(params) {
-  return http.request<BasicResponseModel>(
+  return http.request<Result>(
     {
-      url: '/login',
-      method: 'POST',
+      url: Api.Login,
+      method: RequestEnum.POST,
       params,
     },
     {
