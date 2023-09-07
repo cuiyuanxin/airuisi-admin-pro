@@ -1,40 +1,5 @@
 {
-  "dashboard": {
-    "title": "Dashboard",
-    "workplace": {
-      "title": "工作台"
-    }
-  },
-  "login": {
-    "title": "登录",
-    "card": {
-      "title": "登录你的账户",
-      "tag1": "账号密码登录",
-      "tag2": "手机验证码登录"
-    },
-    "smsCode": "验证码",
-    "usernamePlaceholder": "请输入用户名",
-    "passwordPlaceholder": "请输入密码",
-    "mobilePlaceholder": "请输入手机号码",
-    "verificationPlaceholder": "输入验证码",
-    "usernameRulesMin": "用户名不能小于5个字符",
-    "usernameRulesMax": "用户名不能大于32个字符",
-    "usernameRulesRepg": "用户名只能是英文、数字和_",
-    "passwordRulesMin": "密码不能小于5个字符",
-    "passwordRulesMax": "密码不能大于32个字符",
-    "passwordRulesRepg": "密码只能是英文、数字和_",
-    "mobileRulesRepg": "请输入11位手机号码",
-    "mobileRules": "请输入正确的手机号码",
-    "verificationRulesRepg": "请输入6位验证码",
-
-    "signInFormTitle": "登 录",
-    "otherSignIn": "其他登录方式",
-    "verificationBtn": "获取验证码",
-    "verificationNewBtn": "重新获取",
-    "loginSuccess": "登录成功，即将进入系统",
-    "loginError": "登录失败"
-  },
-  "system": {
+  "sys": {
     "api": {
       "timeoutMessage": "登录超时,请重新登录!",
       "apiTimeoutMessage": "接口请求超时,请刷新页面重试!",
@@ -63,5 +28,56 @@
       "btnSuccess": "知道了",
       "btn2Success": "确定"
     }
+  },
+  "login": {
+    "title": "登录",
+    "card": {
+      "title": "登录你的账户",
+      "tag1": "账号密码登录",
+      "tag2": "手机验证码登录"
+    },
+    "smsCode": "验证码",
+    "usernamePlaceholder": "请输入用户名",
+    "passwordPlaceholder": "请输入密码",
+    "mobilePlaceholder": "请输入手机号码",
+    "verificationPlaceholder": "输入验证码",
+    "usernameRulesMin": "用户名不能小于5个字符",
+    "usernameRulesMax": "用户名不能大于32个字符",
+    "usernameRulesRepg": "用户名只能是英文、数字和_",
+    "passwordRulesMin": "密码不能小于5个字符",
+    "passwordRulesMax": "密码不能大于32个字符",
+    "passwordRulesRepg": "密码只能是英文、数字和_",
+    "mobileRulesRepg": "请输入11位手机号码",
+    "mobileRules": "请输入正确的手机号码",
+    "verificationRulesRepg": "请输入6位验证码",
+
+    "signInFormTitle": "登 录",
+    "otherSignIn": "其他登录方式",
+    "verificationBtn": "获取验证码",
+    "verificationNewBtn": "重新获取",
+
+    "loginSuccess": "登录成功，即将进入系统",
+    "loginError": "登录失败"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "workplace": {
+      "title": "工作台"
+    }
+  },
+  "system": {
+    "title": "系统",
+    "setting": {
+      "title": "系统设置"
+    }
+  },
+  "error": {
+    "title": "错误页面",
+    "errorPage404": "404",
+    "errorPage403": "403",
+    "errorPage502": "502"
+  },
+  "redirect": {
+    "title": "重定向"
   }
 }

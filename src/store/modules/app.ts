@@ -1,36 +1,75 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
-import designSetting from '@/settings/designSetting'
-import { darkTheme, dateEnUS, enUS, dateZhCN, zhCN } from 'naive-ui'
+import { designSetting, projectSetting, websiteSetting } from '@/config/config'
+import { darkTheme, dateEnUS, dateZhCN, enUS, zhCN } from 'naive-ui'
 import { LocaleEnum } from '@/constants/localeEnum'
 
+const { title, logo, loginImage, loginDesc } = websiteSetting
 const { appDarkTheme, appTheme, appThemeList, locale } = designSetting
+const { tokenExpire, permission, permissionMode, header, menu } = projectSetting
 
 interface AppState {
-  // 深色主题
-  appDarkTheme: boolean
-  // 系统风格
-  appTheme: string
-  // 系统内置风格
-  appThemeList: string[]
-  // 国际语言
-  locale: string
+  websiteSetting: {
+    // 网站标题
+    title: string
+    // 网站logo
+    logo: any
+    // 登录背景图
+    loginImage: any
+    // 登录文字描述
+    loginDesc: string
+  }
+  designSetting: {
+    // 深色主题
+    appDarkTheme: boolean
+    // 系统风格
+    appTheme: string
+    // 系统内置风格
+    appThemeList: string[]
+    // 国际语言
+    locale: string
+  }
+  projectSetting: {
+    // token有效期
+    tokenExpire: number
+    // 开启权限验证
+    permission: boolean
+    // 权限使用方式,菜单权限模式 FIXED 前端固定路由  Dynamic 动态获取
+    permissionMode: string
+    header: object
+    menu: object
+  }
 }
 
 export const useAppStore = defineStore({
   id: 'app',
   state: (): AppState => ({
-    appDarkTheme,
-    appTheme,
-    appThemeList,
-    locale,
+    websiteSetting: {
+      title,
+      logo,
+      loginImage,
+      loginDesc,
+    },
+    designSetting: {
+      appDarkTheme,
+      appTheme,
+      appThemeList,
+      locale,
+    },
+    projectSetting: {
+      tokenExpire,
+      permission,
+      permissionMode,
+      header,
+      menu,
+    },
   }),
   getters: {
     getDarkTheme(state) {
-      return state.appDarkTheme ? darkTheme : undefined
+      return state.designSetting.appDarkTheme ? darkTheme : undefined
     },
     getDateLocale(state) {
-      switch (state.locale) {
+      switch (state.designSetting.locale) {
         case LocaleEnum.EN:
           return dateEnUS
         case LocaleEnum.ZHCN:
@@ -40,7 +79,7 @@ export const useAppStore = defineStore({
       }
     },
     getLocale(state) {
-      switch (state.locale) {
+      switch (state.designSetting.locale) {
         case LocaleEnum.EN:
           return enUS
         case LocaleEnum.ZHCN:

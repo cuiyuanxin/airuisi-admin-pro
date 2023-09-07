@@ -1,25 +1,23 @@
 import { computed } from 'vue'
 import { createDiscreteApi, darkTheme } from 'naive-ui'
-import { storeToRefs } from 'pinia'
-import { useApp } from '@/store/modules/app'
+import { useApp } from '@/hooks/setting/useApp'
 import { lighten } from '@/utils'
 
 export const setupNaiveDiscreteApi = () => {
-  const appStore = useApp()
-  const { appDarkTheme, appTheme } = storeToRefs(appStore)
-  const appDarkThemeVal = appDarkTheme.value
-  const appThemeVal = appTheme.value
+  const { getDesignSetting } = useApp()
+  const appDarkTheme = getDesignSetting.value.appDarkTheme
+  const appTheme = getDesignSetting.value.appTheme
 
   const configProviderPropsRef = computed(() => ({
-    theme: appDarkThemeVal ? darkTheme : undefined,
+    theme: appDarkTheme ? darkTheme : undefined,
     themeOverrides: {
       common: {
-        primaryColor: appThemeVal,
-        primaryColorHover: lighten(appThemeVal, 6),
-        primaryColorPressed: lighten(appThemeVal, 6),
+        primaryColor: appTheme,
+        primaryColorHover: lighten(appTheme, 6),
+        primaryColorPressed: lighten(appTheme, 6),
       },
       loadingBar: {
-        colorLoading: appThemeVal,
+        colorLoading: appTheme,
       },
     },
   }))

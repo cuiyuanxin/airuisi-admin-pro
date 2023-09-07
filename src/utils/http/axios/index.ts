@@ -2,6 +2,7 @@
 // The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
 
 import type { AxiosInstance, AxiosResponse } from 'axios'
+import axios from 'axios'
 import { clone } from 'lodash-es'
 import type { RequestOptions, Result } from '/#/axios'
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
@@ -15,9 +16,8 @@ import { setObjToUrlParams, deepMerge } from '@/utils'
 // import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog'
 // import { useI18n } from '/@/hooks/web/useI18n'
 import { joinTimestamp, formatRequestDate } from './helper'
-// import { useUserStoreWithOut } from '/@/store/modules/user'
+// import { useUserStoreWithOut } from '/@/store/modules/system'
 import { AxiosRetry } from './axiosRetry'
-import axios from 'axios'
 import { useUser } from '@/store/modules/user'
 import { t } from '@/hooks/web/useI18n'
 
@@ -53,7 +53,7 @@ const transform: AxiosTransform = {
 
     if (!data) {
       // return '[HTTP] Request has no return value';
-      throw new Error(t('system.api.apiRequestFailed'))
+      throw new Error(t('sys.api.apiRequestFailed'))
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
     const { code, result, message } = data
@@ -64,14 +64,14 @@ const transform: AxiosTransform = {
       let successMsg = message
 
       if (isNull(successMsg) || isUnDef(successMsg) || isEmpty(successMsg)) {
-        successMsg = t(`system.common.operationSuccess`)
+        successMsg = t(`sys.common.operationSuccess`)
       }
 
       if (successMessageMode === 'modal') {
         $dialog.success({
-          title: t(`system.common.successTip`),
+          title: t(`sys.common.successTip`),
           content: successMsg,
-          positiveText: t(`system.common.btnSuccess`),
+          positiveText: t(`sys.common.btnSuccess`),
           onPositiveClick: () => {},
         })
       } else if (successMessageMode === 'message') {
@@ -102,14 +102,14 @@ const transform: AxiosTransform = {
       $dialog.error({
         title: t('sys.common.errorTip'),
         content: timeoutMsg,
-        positiveText: t(`system.common.btnSuccess`),
+        positiveText: t(`sys.common.btnSuccess`),
         onPositiveClick: () => {},
       })
     } else if (errorMessageMode === 'message') {
       $message.error(timeoutMsg)
     }
 
-    throw new Error(timeoutMsg || t(`system.api.apiRequestFailed`))
+    throw new Error(timeoutMsg || t(`sys.api.apiRequestFailed`))
   },
 
   // 请求之前处理config
@@ -170,8 +170,8 @@ const transform: AxiosTransform = {
    */
   requestInterceptors: (config, options) => {
     // 请求之前处理config
-    const userStore = useUser()
-    const token = userStore.getToken
+    const { getToken } = useUser()
+    const token: string = getToken
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
       ;(config as Recordable).headers.Authorization = options.authenticationScheme
@@ -205,15 +205,15 @@ const transform: AxiosTransform = {
 
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
-        $message.error(t(`system.api.apiTimeoutMessage`))
+        $message.error(t(`sys.api.apiTimeoutMessage`))
         return
       }
       if (err?.includes('Network Error')) {
         // errMessage = t('sys.api.networkExceptionMsg')
         $dialog.info({
-          title: t(`system.api.networkException`),
-          content: t(`system.api.networkExceptionMsg`),
-          positiveText: t(`system.common.btn2Success`),
+          title: t(`sys.api.networkException`),
+          content: t(`sys.api.networkExceptionMsg`),
+          positiveText: t(`sys.common.btn2Success`),
           //negativeText: '取消',
           closable: false,
           maskClosable: false,

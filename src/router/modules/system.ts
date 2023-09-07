@@ -1,10 +1,9 @@
 import { RouteRecordRaw } from 'vue-router'
 import { BasicLayout } from '@/router/constant'
-import { PageEnum } from '@/constants/pageEnum'
 // import { DashboardOutlined } from '@vicons/antd'
 // import { renderIcon } from '@/utils/index'
 
-const routeName = 'dashboard'
+const routeName = 'system'
 
 /**
  * @param name 路由名称, 必须设置,且不能重名
@@ -17,25 +16,24 @@ const routeName = 'dashboard'
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/dashboard',
+    path: '/system',
     name: routeName,
-    redirect: PageEnum.BASE_HOME_REDIRECT,
     component: BasicLayout,
     meta: {
-      title: 'dashboard.title',
+      title: 'system.title',
       // icons: renderIcon(DashboardOutlined),
-      permissions: ['super', 'admin', 'editor'],
+      permissions: ['super', 'admin'],
     },
     children: [
       {
-        path: 'workplace',
-        name: `${routeName}_workplace`,
+        path: 'setting',
+        name: `${routeName}_setting`,
         meta: {
-          title: 'dashboard.workplace.title',
+          title: 'system.setting.title',
           keepAlive: true,
-          permissions: ['super', 'admin', 'editor'],
+          permissions: ['super', 'admin'],
         },
-        component: () => import('@/views/dashboard/workplace.vue'),
+        component: () => import('@/views/system/setting.vue'),
       },
     ],
   },

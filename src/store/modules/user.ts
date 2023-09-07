@@ -3,14 +3,24 @@ import { store } from '@/store'
 import { ACCESS_TOKEN, CURRENT_USER } from '@/constants/constant'
 import { ResultEnum } from '@/constants/httpEnum'
 import LocalStorage from '@/utils/storage'
-import { loginConf } from '@/config/config'
+import { useApp } from '@/hooks/setting/useApp'
 
-import { login } from '@/api/user/user'
+const { getTokenExpire } = useApp()
+import { login, getUserInfo } from '@/api/system/user'
+
+interface settingType {
+  locale?: string
+}
 
 export type UserInfoType = {
-  // TODO: add your own data
-  name: string
-  email: string
+  id: number
+  username: string
+  password: string
+  mobile: string
+  nickname: string
+  setting: settingType
+  token: string
+  role: string[]
 }
 
 export interface IUserState {
@@ -23,7 +33,7 @@ export interface IUserState {
 }
 
 export const useUserStore = defineStore({
-  id: 'app-user',
+  id: 'app-system',
   state: (): IUserState => ({
     token: LocalStorage.get(ACCESS_TOKEN, ''),
     username: '',
@@ -33,21 +43,21 @@ export const useUserStore = defineStore({
     info: LocalStorage.get(CURRENT_USER, {}),
   }),
   getters: {
-    // getToken(): string {
-    //   return this.token
+    getToken(state): string {
+      return state.token
+    },
+    // getAvatar(state): string {
+    //   return state.avatar
     // },
-    // getAvatar(): string {
-    //   return this.avatar
+    // getNickname(state): string {
+    //   return state.username
     // },
-    // getNickname(): string {
-    //   return this.username
+    // getPermissions(state): [any][] {
+    //   return state.permissions
     // },
-    // getPermissions(): [any][] {
-    //   return this.permissions
-    // },
-    // getUserInfo(): UserInfoType {
-    //   return this.info
-    // },
+    getInfo(state): UserInfoType {
+      return state.info
+    },
   },
   actions: {
     setToken(token: string) {
@@ -59,42 +69,58 @@ export const useUserStore = defineStore({
     // setPermissions(permissions) {
     //   this.permissions = permissions
     // },
-    // setUserInfo(info: UserInfoType) {
-    //   this.info = info
-    // },
+    setUserInfo(info: UserInfoType) {
+      this.info = info
+    },
     // 登录
     async login(params: any) {
-      const response = await login(params)
-      const { result, code } = response
+      const res = await login(params).catch((err) => {
+        console.log(err)
+      })
+      console.log('login data:', res)
+      const { result, code } = res
       if (code === ResultEnum.SUCCESS) {
-        const ex = loginConf.expire
+        const ex = getTokenExpire.value
         LocalStorage.set(ACCESS_TOKEN, result.token, ex)
         this.setToken(result.token)
       }
-      return response
+
+      return res
     },
 
     // 获取用户信息
-    // async getInfo() {
-    //   const result = await getUserInfoApi()
-    //   if (result.permissions && result.permissions.length) {
-    //     const permissionsList = result.permissions
-    //     this.setPermissions(permissionsList)
-    //     this.setUserInfo(result)
-    //   } else {
-    //     throw new Error('getInfo: permissionsList must be a non-null array !')
-    //   }
-    //   this.setAvatar(result.avatar)
-    //   return result
-    // },
+    async getUserInfo() {
+      const res = await getUserInfo().catch((err) => {
+        // throw new Error('getInfo: permissionsList must be a non-null array !')
+        console.log(err)
+      })
+      console.log('getUserInfo data:', res)
+      const { result, code } = res
+      if (code === ResultEnum.SUCCESS) {
+        const ex = getTokenExpire.value
+        LocalStorage.set(CURRENT_USER, result, ex)
+        this.setUserInfo(result)
+      }
+
+      return res
+    },
 
     // 退出
-    // async logout() {
-    //   this.setPermissions([])
-    //   this.setUserInfo({ name: '', email: '' })
-    //   LocalStorage.remove(ACCESS_TOKEN)
-    //   LocalStorage.remove(CURRENT_USER)
-    // },
+    logout() {
+      const userInfo: UserInfoType = {
+        id: 0,
+        username: '',
+        password: '',
+        mobile: '',
+        nickname: '',
+        setting: {},
+        token: '',
+        role: [],
+      }
+      this.setUserInfo(userInfo)
+      LocalStorage.remove(ACCESS_TOKEN)
+      LocalStorage.remove(CURRENT_USER)
+    },
   },
 })
 

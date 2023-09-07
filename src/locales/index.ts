@@ -7,8 +7,8 @@ import { useApp } from '@/store/modules/app'
 
 const appStore = useApp()
 
-const { locale } = storeToRefs(appStore)
-const localeVal = locale.value
+const { designSetting } = storeToRefs(appStore)
+const localeVal = designSetting.value.locale
 
 export const i18n = createI18n({
   locale: localeVal,

@@ -61,6 +61,14 @@ export const isEmpty = <T = unknown>(val: T): val is T => {
   return false
 }
 
+export function isNullAndUnDef(val: unknown): val is null | undefined {
+  return isUnDef(val) && isNull(val)
+}
+
+export function isNullOrUnDef(val: unknown): val is null | undefined {
+  return isUnDef(val) || isNull(val)
+}
+
 export const isChinesePhoneNumber = (phoneNumber: string): boolean => {
   // 定义中国大陆手机号的正则表达式
   const regex = /^0?(13|14|15|16|17|18|19)[0-9]{9}$/

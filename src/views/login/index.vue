@@ -4,13 +4,13 @@
       <div class="left-item">
         <div class="left-item-lt">
           <div class="left-item-logo">
-            <n-image class="left-item-logo-img" :src="config.logo" />
-            <div class="left-item-logo-title">{{ config.title }}</div>
+            <n-image class="left-item-logo-img" :src="getWebsiteSetting.logo" />
+            <div class="left-item-logo-title">{{ getWebsiteSetting.title }}</div>
           </div>
-          <div class="left-item-title">{{ config.loginDesc }}</div>
+          <div class="left-item-title">{{ getWebsiteSetting.loginDesc }}</div>
         </div>
         <div class="coding-img">
-          <n-image :src="config.loginImage" preview-disabled />
+          <n-image :src="getWebsiteSetting.loginImage" preview-disabled />
         </div>
       </div>
     </n-grid-item>
@@ -83,9 +83,9 @@
                       text
                       type="info"
                       :disabled="getCodeBtn.disabled"
-                      @click="handleGetVerificationCode"
-                      >{{ getCodeBtn.btnText }}</n-button
-                    >
+                      @click="handleGetSmsCaptcha"
+                      >{{ getCodeBtn.btnText }}
+                    </n-button>
                   </template>
                 </n-input>
               </n-form-item>
@@ -103,8 +103,8 @@
           <n-divider dashed>{{ $t('login.otherSignIn') }}</n-divider>
           <n-space justify="space-around" size="large">
             <n-button text style="font-size: 32px">
-              <n-icon :component="LogoWechat" color="#0DA052"
-            /></n-button>
+              <n-icon :component="LogoWechat" color="#0DA052" />
+            </n-button>
             <n-button text style="font-size: 32px">
               <n-icon :component="LogoAlipay" color="#089EE3" />
             </n-button>
@@ -120,23 +120,24 @@ import { reactive, ref, watch } from 'vue'
 import { FormInst, useMessage, useNotification } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  PersonOutline,
   LockClosedOutline,
+  LogoAlipay,
+  LogoWechat,
+  PersonOutline,
   PhonePortraitOutline,
   ShieldCheckmarkOutline,
-  LogoWechat,
-  LogoAlipay,
 } from '@vicons/ionicons5'
 import { useUser } from '@/store/modules/user'
 import { useI18n } from '@/hooks/web/useI18n'
-import { getVerificationCode } from '@/api/user/user'
+import { useApp } from '@/hooks/setting/useApp'
+import { getSmsCaptcha } from '@/api/system/user'
 import { GetCodeBtn } from '/#/config'
-import { config } from '@/config/config'
 import { isChinesePhoneNumber } from '@/utils/is'
 import { ResultEnum } from '@/constants/httpEnum'
 import { PageEnum } from '@/constants/pageEnum'
 
 const { t } = useI18n()
+const { getWebsiteSetting } = useApp()
 const { login } = useUser()
 const $message = useMessage()
 const $notification = useNotification()
@@ -204,7 +205,7 @@ const handleUpdateValue = (value: string) => {
   }
 }
 
-const handleGetVerificationCode = () => {
+const handleGetSmsCaptcha = () => {
   if (!formMobileValue.value.mobile) {
     $message.error(t('login.mobilePlaceholder'))
     return false
@@ -214,7 +215,7 @@ const handleGetVerificationCode = () => {
     return false
   }
 
-  getVerificationCode({
+  getSmsCaptcha({
     mobile: formMobileValue.value.mobile,
   }).then((res) => {
     const { code, result } = res
@@ -222,7 +223,7 @@ const handleGetVerificationCode = () => {
       initgetCodeTimer()
       // 对接正式程序可删除该程序
       $notification.info({
-        content: t('system.common.infoTip'),
+        content: t('sys.common.infoTip'),
         meta: t('login.smsCode') + `: ${result.code}`,
         duration: 2500,
         keepAliveOnHover: true,
@@ -259,7 +260,9 @@ const handleSubmit = (e: MouseEvent) => {
 
   formRef.value?.validate((errors) => {
     if (!errors) {
-      const params = tagDefaultValue.value === 'accountSignin' ? formAccountValue : formMobileValue
+      const params =
+        tagDefaultValue.value === 'accountSignin' ? formAccountValue.value : formMobileValue.value
+
       login(params).then((res) => {
         const { code, message } = res
         if (code === ResultEnum.SUCCESS) {
@@ -293,6 +296,6 @@ watch(
 )
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 @import '@/styles/login';
 </style>

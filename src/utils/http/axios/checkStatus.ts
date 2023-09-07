@@ -12,38 +12,38 @@ export function checkStatus(status: number, msg: string): void {
     // 未登录则跳转登录页面，并携带当前页面的路径
     // 在登录成功后返回当前页面，这一步需要在登录页操作。
     case 401:
-      $message.error(t('system.api.errMsg401'))
+      $message.error(t('sys.api.errMsg401'))
       break
     case 403:
-      $message.error(t('system.api.errMsg403'))
+      $message.error(t('sys.api.errMsg403'))
       break
     // 404请求不存在
     case 404:
-      $message.error(t('system.api.errMsg404'))
+      $message.error(t('sys.api.errMsg404'))
       break
     case 405:
-      $message.error(t('system.api.errMsg405'))
+      $message.error(t('sys.api.errMsg405'))
       break
     case 408:
-      $message.error(t('system.api.errMsg408'))
+      $message.error(t('sys.api.errMsg408'))
       break
     case 500:
-      $message.error(t('system.api.errMsg500'))
+      $message.error(t('sys.api.errMsg500'))
       break
     case 501:
-      $message.error(t('system.api.errMsg501'))
+      $message.error(t('sys.api.errMsg501'))
       break
     case 502:
-      $message.error(t('system.api.errMsg502'))
+      $message.error(t('sys.api.errMsg502'))
       break
     case 503:
-      $message.error(t('system.api.errMsg503'))
+      $message.error(t('sys.api.errMsg503'))
       break
     case 504:
-      $message.error(t('system.api.errMsg504'))
+      $message.error(t('sys.api.errMsg504'))
       break
     case 505:
-      $message.error(t('system.api.errMsg505'))
+      $message.error(t('sys.api.errMsg505'))
       break
     default:
       $message.error(msg)

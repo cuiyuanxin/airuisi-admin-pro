@@ -22,14 +22,14 @@ import { useApp } from '@/store/modules/app'
 import { lighten } from '@/utils'
 
 const appStore = useApp()
-const { appTheme, getDarkTheme, getDateLocale, getLocale } = storeToRefs(appStore)
-const appThemeVal = appTheme.value
+const { designSetting, getDarkTheme, getDateLocale, getLocale } = storeToRefs(appStore)
+const appTheme = designSetting.value.appTheme
 
 const getThemeOverrides = computed(() => {
-  const lightenStr = lighten(appThemeVal, 6)
+  const lightenStr = lighten(appTheme, 6)
   return {
     common: {
-      primaryColor: appThemeVal,
+      primaryColor: appTheme,
       primaryColorHover: lightenStr,
       primaryColorPressed: lightenStr,
     },
