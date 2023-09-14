@@ -1,126 +1,126 @@
 <template>
   <n-space vertical>
-    <n-layout class="ars-layout">
-      <n-layout-header>
-        <div class="ars-layout-header">
-          <div class="ars-layout-header-logo" :style="headerLogoWidth">
+    <n-layout has-sider class="ars-layout">
+      <n-layout-sider
+        bordered
+        collapse-mode="width"
+        :collapsed-width="minMenuWidth"
+        :width="menuWidth"
+        :collapsed="collapsed"
+        show-trigger
+        @collapse="collapsed = true"
+        @expand="collapsed = false"
+      >
+        <div class="ars-layout-menu">
+          <div class="ars-layout-header-logo">
             <n-image width="40" preview-disabled :src="getWebsiteSetting.logo" />
             <span>{{ getWebsiteSetting.title }}</span>
           </div>
-          <div class="ars-layout-header-breadcrumb" :style="headerBreadcrumbWidth">
-            <div class="ars-layout-header-breadcrumb-left">
-              <div class="pl-3" @click="handleMenuCollapse">
-                <n-icon size="20" :component="List" />
-              </div>
-              <div v-if="getProjectSetting.header.isReload" @click="reloadPage">
-                <n-icon size="20" :component="ReloadOutline" />
-              </div>
-              <div>
-                <n-breadcrumb>
-                  <template v-for="routeItem in breadcrumbList" :key="routeItem.name">
-                    <n-breadcrumb-item v-if="routeItem.breadcrumbName">
-                      {{ routeItem.breadcrumbName }}
-                    </n-breadcrumb-item>
-                  </template>
-                </n-breadcrumb>
-              </div>
-            </div>
-            <div class="ars-layout-header-breadcrumb-right">
-              <div v-if="false">
-                <n-icon size="20" :component="SearchOutline" />
-              </div>
-              <div>
-                <n-icon size="20">
-                  <component :is="fullscreenIcon" @click="toggleFullScreen" />
-                </n-icon>
-              </div>
-              <div>
-                <n-dropdown
-                  trigger="click"
-                  :options="languages"
-                  :show-arrow="true"
-                  @select="handleLanguageSelect"
-                >
-                  <n-icon size="20" :component="LanguageOutline" />
-                </n-dropdown>
-              </div>
-              <div>
-                <n-popover trigger="click">
-                  <template #trigger>
-                    <n-badge :value="messageTotal" :max="50" v-if="messageTotal > 0">
-                      <n-icon size="20" :component="Alert28Regular" />
-                    </n-badge>
-                    <n-icon size="20" :component="Alert28Regular" v-else />
-                  </template>
-                  <n-card placement="bottom-start" :bordered="false" content-style="padding: 0;">
-                    <n-tabs type="line">
-                      <n-tab-pane
-                        v-for="(item, index) in messageList"
-                        :key="index"
-                        :name="`${item.title} (${item.total})`"
-                      >
-                        <template v-if="item.total > 0">
-                          <n-list>
-                            <n-list-item v-for="(item2, index2) in item.list" :key="index2">
-                              <template #prefix>
-                                <n-avatar round>
-                                  {{ item2.nickname }}
-                                </n-avatar>
-                              </template>
-                              <template #suffix>
-                                <!--                                <n-button>Suffix</n-button>-->
-                              </template>
-                              <n-thing :title="item2.title" :description="item2.time" />
-                            </n-list-item>
-                            <template #footer>
-                              <n-icon size="20" :component="TrashOutline" />清空{{ item.title }}
-                            </template>
-                          </n-list>
-                        </template>
-                        <n-empty description="没有可处理信息" v-else />
-                      </n-tab-pane>
-                    </n-tabs>
-                  </n-card>
-                </n-popover>
-              </div>
-              <div>
-                <n-dropdown
-                  trigger="click"
-                  :show-arrow="true"
-                  :options="userOptions"
-                  @select="handleUserSelect"
-                >
-                  <n-avatar round>
-                    {{ getNickname }}
-                  </n-avatar>
-                </n-dropdown>
-              </div>
-              <div class="pr-8">
-                <n-icon size="20" :component="SettingsOutline" />
-              </div>
-            </div>
-          </div>
+          <AsideMenu v-model:collapsed="collapsed" />
         </div>
-      </n-layout-header>
+      </n-layout-sider>
       <n-layout>
-        <n-layout-sider
-          bordered
-          collapse-mode="width"
-          :collapsed-width="getProjectSetting.menu.minMenuWidth"
-          :width="getProjectSetting.menu.menuWidth"
-          :collapsed="collapsed"
-          show-trigger
-          @collapse="collapsed = true"
-          @expand="collapsed = false"
-        >
-          <div class="ars-layout-menu">
-            <AsideMenu v-model:collapsed="collapsed" />
+        <n-layout-header>
+          <div class="ars-layout-header">
+            <div class="ars-layout-header-breadcrumb">
+              <div class="ars-layout-header-breadcrumb-left">
+                <div class="pl-3" @click="handleMenuCollapse">
+                  <n-icon size="20" :component="List" />
+                </div>
+                <div v-if="getProjectSetting.header.isReload" @click="reloadPage">
+                  <n-icon size="20" :component="ReloadOutline" />
+                </div>
+                <div>
+                  <n-breadcrumb>
+                    <template v-for="routeItem in breadcrumbList" :key="routeItem.name">
+                      <n-breadcrumb-item v-if="routeItem.breadcrumbName">
+                        {{ routeItem.breadcrumbName }}
+                      </n-breadcrumb-item>
+                    </template>
+                  </n-breadcrumb>
+                </div>
+              </div>
+              <div class="ars-layout-header-breadcrumb-right">
+                <div v-if="false">
+                  <n-icon size="20" :component="SearchOutline" />
+                </div>
+                <div>
+                  <n-icon size="20">
+                    <component :is="fullscreenIcon" @click="toggleFullScreen" />
+                  </n-icon>
+                </div>
+                <div>
+                  <n-dropdown
+                    trigger="click"
+                    :options="languages"
+                    :show-arrow="true"
+                    @select="handleLanguageSelect"
+                  >
+                    <n-icon size="20" :component="LanguageOutline" />
+                  </n-dropdown>
+                </div>
+                <div>
+                  <n-popover trigger="click">
+                    <template #trigger>
+                      <n-badge :value="messageTotal" :max="50" v-if="messageTotal > 0">
+                        <n-icon size="20" :component="Alert28Regular" />
+                      </n-badge>
+                      <n-icon size="20" :component="Alert28Regular" v-else />
+                    </template>
+                    <n-card placement="bottom-start" :bordered="false" content-style="padding: 0;">
+                      <n-tabs type="line">
+                        <n-tab-pane
+                          v-for="(item, index) in messageList"
+                          :key="index"
+                          :name="`${item.title} (${item.total})`"
+                        >
+                          <template v-if="item.total > 0">
+                            <n-list>
+                              <n-list-item v-for="(item2, index2) in item.list" :key="index2">
+                                <template #prefix>
+                                  <n-avatar round>
+                                    {{ item2.nickname }}
+                                  </n-avatar>
+                                </template>
+                                <template #suffix>
+                                  <!--                                <n-button>Suffix</n-button>-->
+                                </template>
+                                <n-thing :title="item2.title" :description="item2.time" />
+                              </n-list-item>
+                              <template #footer>
+                                <n-icon size="20" :component="TrashOutline" />清空{{ item.title }}
+                              </template>
+                            </n-list>
+                          </template>
+                          <n-empty description="没有可处理信息" v-else />
+                        </n-tab-pane>
+                      </n-tabs>
+                    </n-card>
+                  </n-popover>
+                </div>
+                <div>
+                  <n-dropdown
+                    trigger="click"
+                    :show-arrow="true"
+                    :options="userOptions"
+                    @select="handleUserSelect"
+                  >
+                    <n-avatar round>
+                      {{ getNickname }}
+                    </n-avatar>
+                  </n-dropdown>
+                </div>
+                <div class="pr-8">
+                  <n-icon size="20" :component="SettingsOutline" />
+                </div>
+              </div>
+            </div>
           </div>
-        </n-layout-sider>
+        </n-layout-header>
         <n-layout-content>
           <router-view v-if="flag" />
         </n-layout-content>
-        <n-layout-footer bordered> 成府路 </n-layout-footer>
+        <n-layout-footer>#footer</n-layout-footer>
       </n-layout>
     </n-layout>
   </n-space>
@@ -214,14 +214,14 @@ const minMenuWidth = getProjectSetting.value.menu.minMenuWidth
 // 展开后样式
 const menuWidth = getProjectSetting.value.menu.menuWidth
 
-const headerLogoWidth = computed(() => {
-  return collapsed.value ? `width: ${minMenuWidth}px` : `width: ${menuWidth}px`
-})
-const headerBreadcrumbWidth = computed(() => {
-  return collapsed.value
-    ? `min-width: calc(100% - ${minMenuWidth}px)`
-    : `min-width: calc(100% - ${menuWidth}px)`
-})
+// const headerLogoWidth = computed(() => {
+//   return collapsed.value ? `width: ${minMenuWidth}px` : `width: ${menuWidth}px`
+// })
+// const headerBreadcrumbWidth = computed(() => {
+//   return collapsed.value
+//     ? `min-width: calc(100% - ${minMenuWidth}px)`
+//     : `min-width: calc(100% - ${menuWidth}px)`
+// })
 
 // dom渲染后初始化数据和组件
 onMounted(() => {
@@ -310,16 +310,8 @@ const handleUserSelect = (key: string) => {
   & .ars-layout-header {
     @apply h-16 flex flex-nowrap items-center;
 
-    & > .ars-layout-header-logo {
-      @apply h-16 w-full flex items-center justify-center;
-
-      & > span {
-        @apply ml-2 text-lg;
-      }
-    }
-
     & > .ars-layout-header-breadcrumb {
-      @apply h-16 flex justify-between;
+      @apply h-16 w-full flex justify-between;
 
       & > .ars-layout-header-breadcrumb-left,
       & > .ars-layout-header-breadcrumb-right {
@@ -327,6 +319,15 @@ const handleUserSelect = (key: string) => {
         & > div {
           @apply h-16 flex items-center justify-center;
         }
+      }
+    }
+  }
+  & .ars-layout-menu {
+    & > .ars-layout-header-logo {
+      @apply h-16 w-full flex items-center justify-center;
+
+      & > span {
+        @apply ml-2 text-lg;
       }
     }
   }
