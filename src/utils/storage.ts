@@ -118,7 +118,7 @@ export default class LocalStorage {
       LocalStorage.removeCookie(name)
     } else {
       cacheType && LocalStorage.getStorage(cacheType)
-      LocalStorage.localCache.removeItem(key)
+      LocalStorage.localCache.removeItem(name)
     }
   }
 

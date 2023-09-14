@@ -1,4 +1,4 @@
-export const BasicLayout = () => import('@/layout/layout.vue')
+export const BasicLayout = () => import('@/layouts/layout.vue')
 
 export const ParentLayout = () => import('@/layouts/parentLayout.vue')
 

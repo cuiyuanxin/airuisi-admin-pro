@@ -3,6 +3,8 @@ import { store } from '@/store'
 import { designSetting, projectSetting, websiteSetting } from '@/config/config'
 import { darkTheme, dateEnUS, dateZhCN, enUS, zhCN } from 'naive-ui'
 import { LocaleEnum } from '@/constants/localeEnum'
+import LocalStorage from '@/utils/storage'
+import { LANGUAGES } from '@/constants/constant'
 
 const { title, logo, loginImage, loginDesc } = websiteSetting
 const { appDarkTheme, appTheme, appThemeList, locale } = designSetting
@@ -54,7 +56,7 @@ export const useAppStore = defineStore({
       appDarkTheme,
       appTheme,
       appThemeList,
-      locale,
+      locale: LocalStorage.get(LANGUAGES) ?? locale,
     },
     projectSetting: {
       tokenExpire,
@@ -97,6 +99,12 @@ export const useAppStore = defineStore({
     // getLocale(): string {
     //     return this.locale
     // },
+  },
+  actions: {
+    setLocale(locale: string) {
+      this.designSetting.locale = locale
+      LocalStorage.set(LANGUAGES, locale)
+    },
   },
 })
 

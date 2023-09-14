@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
-import { ACCESS_TOKEN, CURRENT_USER } from '@/constants/constant'
+import { ACCESS_TOKEN, CURRENT_USER, LANGUAGES } from '@/constants/constant'
 import { ResultEnum } from '@/constants/httpEnum'
 import LocalStorage from '@/utils/storage'
 import { useApp } from '@/hooks/setting/useApp'
+import { changeLocale } from '@/hooks/web/useI18n'
+import { getUserInfo, login } from '@/api/system/user'
 
-const { getTokenExpire } = useApp()
-import { login, getUserInfo } from '@/api/system/user'
+const { getProjectSetting } = useApp()
 
 interface settingType {
   locale?: string
@@ -25,9 +26,6 @@ export type UserInfoType = {
 
 export interface IUserState {
   token: string
-  username: string
-  welcome: string
-  avatar: string
   permissions: any[]
   info: UserInfoType
 }
@@ -36,9 +34,6 @@ export const useUserStore = defineStore({
   id: 'app-system',
   state: (): IUserState => ({
     token: LocalStorage.get(ACCESS_TOKEN, ''),
-    username: '',
-    welcome: '',
-    avatar: '',
     permissions: [],
     info: LocalStorage.get(CURRENT_USER, {}),
   }),
@@ -49,9 +44,9 @@ export const useUserStore = defineStore({
     // getAvatar(state): string {
     //   return state.avatar
     // },
-    // getNickname(state): string {
-    //   return state.username
-    // },
+    getNickname(state): string {
+      return state.info.nickname ?? state.info.username
+    },
     // getPermissions(state): [any][] {
     //   return state.permissions
     // },
@@ -80,9 +75,13 @@ export const useUserStore = defineStore({
       console.log('login data:', res)
       const { result, code } = res
       if (code === ResultEnum.SUCCESS) {
-        const ex = getTokenExpire.value
+        const ex = getProjectSetting.value.tokenExpire
         LocalStorage.set(ACCESS_TOKEN, result.token, ex)
         this.setToken(result.token)
+
+        if (result?.locale) {
+          changeLocale(result?.locale)
+        }
       }
 
       return res
@@ -97,7 +96,7 @@ export const useUserStore = defineStore({
       console.log('getUserInfo data:', res)
       const { result, code } = res
       if (code === ResultEnum.SUCCESS) {
-        const ex = getTokenExpire.value
+        const ex = getProjectSetting.value.tokenExpire
         LocalStorage.set(CURRENT_USER, result, ex)
         this.setUserInfo(result)
       }
@@ -106,7 +105,7 @@ export const useUserStore = defineStore({
     },
 
     // 退出
-    logout() {
+    async logout() {
       const userInfo: UserInfoType = {
         id: 0,
         username: '',
@@ -120,6 +119,7 @@ export const useUserStore = defineStore({
       this.setUserInfo(userInfo)
       LocalStorage.remove(ACCESS_TOKEN)
       LocalStorage.remove(CURRENT_USER)
+      LocalStorage.remove(LANGUAGES)
     },
   },
 })

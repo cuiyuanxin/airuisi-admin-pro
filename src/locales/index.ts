@@ -17,7 +17,7 @@ export const i18n = createI18n({
   messages,
 }) as I18n
 
-const setI18nLanguage = (locale) => {
+export const setI18nLanguage = (locale) => {
   const htmlDom = document.querySelector('html')
   if (htmlDom) {
     htmlDom.setAttribute('lang', locale)

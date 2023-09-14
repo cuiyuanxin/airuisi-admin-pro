@@ -96,13 +96,6 @@ export const projectSetting = Object.freeze({
     fixed: true,
   },
 
-  //面包屑
-  crumbsSetting: {
-    //是否显示
-    show: true,
-    //显示图标
-    showIcon: false,
-  },
   //路由动画类型
   pageAnimateType: 'zoom-fade',
 })

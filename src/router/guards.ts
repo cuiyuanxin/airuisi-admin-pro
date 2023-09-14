@@ -35,9 +35,7 @@ export const createRouterGuards = (router: Router) => {
           isUnDef(userInfo.id) ||
           (isDef(userInfo.id) && userInfo.id === 0)
         ) {
-          const res = await getUserInfo().catch((err) => {
-            console.log(err)
-          })
+          const res = await getUserInfo()
 
           const { code, result } = res
           if (code === ResultEnum.SUCCESS) {
@@ -63,14 +61,10 @@ export const createRouterGuards = (router: Router) => {
 
         const { generateRoutes, getIsDynamicRouteAdded, setDynamicRouteAdded } = useAsyncRoute()
 
-        console.log(getIsDynamicRouteAdded)
-
         if (getIsDynamicRouteAdded) {
           next()
           return
         }
-
-        console.log(router.getRoutes())
 
         // 开启权限管控
         if (getProjectSetting.value.permission) {

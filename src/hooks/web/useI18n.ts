@@ -1,4 +1,5 @@
-import { i18n } from '@/locales'
+import { i18n, setI18nLanguage } from '@/locales'
+import { useApp } from '@/store/modules/app'
 
 type I18nGlobalTranslation = {
   (key: string): string
@@ -35,7 +36,6 @@ export function useI18n(namespace?: string): {
   }
 
   const { t, ...methods } = i18n.global
-
   const tFn: I18nGlobalTranslation = (key: string, ...arg: any[]) => {
     if (!key) return ''
     if (!key.includes('.') && !namespace) return key
@@ -45,6 +45,14 @@ export function useI18n(namespace?: string): {
     ...methods,
     t: tFn,
   }
+}
+
+export const changeLocale = (locale: string) => {
+  const { setLocale } = useApp()
+
+  i18n.global.locale = locale
+  setI18nLanguage(locale)
+  setLocale(locale)
 }
 
 // Why write this function？

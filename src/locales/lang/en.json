@@ -1,10 +1,83 @@
 {
+  "sys": {
+    "api": {
+      "timeoutMessage": "Login timeout, please login again!",
+      "apiTimeoutMessage": "Interface request timed out, please refresh the page and try again!",
+      "apiRequestFailed": "The request failed. Please try again later",
+      "networkException": "Network exception",
+      "networkExceptionMsg": "The network is abnormal, please check whether your network connection is normal!",
+
+      "errMsg401": "User has no rights (wrong token, username, password)!",
+      "errMsg403": "The user is authorized, but access is forbidden!",
+      "errMsg404": "Network request error, resource not found!",
+      "errMsg405": "Network request error, request method is not allowed!",
+      "errMsg408": "Network request timed out!",
+      "errMsg500": "Server error, please contact administrator!",
+      "errMsg501": "Network not implemented!",
+      "errMsg502": "Network error!",
+      "errMsg503": "Service unavailable, server temporarily overloaded or under maintenance!",
+      "errMsg504": "Network timeout!",
+      "errMsg505": "http version does not support this request!"
+    },
+    "common": {
+      "operationSuccess": "Successful operation",
+      "operationFailed": "Operation failure",
+      "errorTip": "Error prompt",
+      "successTip": "Success tip",
+      "infoTip": "Prompt message",
+      "btnSuccess": "I got it",
+      "btn2Success": "OK"
+    }
+  },
+  "login": {
+    "title": "Login",
+    "card": {
+      "title": "Login to your account",
+      "tag1": "Account password login",
+      "tag2": "Mobile verification code login"
+    },
+    "smsCode": "Verification code",
+    "usernamePlaceholder": "Please enter your username",
+    "passwordPlaceholder": "Please enter password",
+    "mobilePlaceholder": "Please enter your mobile number",
+    "verificationPlaceholder": "Enter verification code",
+    "usernameRulesMin": "The user name cannot be less than 5 characters",
+    "usernameRulesMax": "The user name cannot be longer than 32 characters",
+    "usernameRulesRepg": "The user name can only be English, digits, and _",
+    "passwordRulesMin": "The password cannot be less than 5 characters",
+    "passwordRulesMax": "The password cannot be longer than 32 characters",
+    "passwordRulesRepg": "The password can only be English, digits, and _",
+    "mobileRulesRepg": "Please enter 11-digit mobile number",
+    "mobileRules": "Please enter the correct mobile number",
+    "verificationRulesRepg": "Please enter a 6-digit verification code",
+
+    "signInFormTitle": "Login",
+    "otherSignIn": "Other login methods",
+    "verificationBtn": "Get verification code",
+    "verificationNewBtn": "reacquire",
+
+    "loginSuccess": "Login successful, about to enter the system",
+    "loginError": "Login failure"
+  },
   "dashboard": {
     "title": "Dashboard",
     "workplace": {
-      "title": "工作台"
+      "title": "workbench"
     }
   },
-  "hello": "Hello",
-  "welcome": "Welcome to my app"
+  "system": {
+    "title": "System",
+    "setting": {
+      "title": "System setting"
+    }
+  },
+  "error": {
+    "title": "Error page",
+    "errorPage404": "404",
+    "errorPage403": "403",
+    "errorPage502": "502"
+  },
+  "redirect": {
+    "title": "redirection"
+  }
 }
