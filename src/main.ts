@@ -3,9 +3,10 @@ import router, { setupRouter } from './router'
 import { setupNaiveDiscreteApi } from '@/plugins/naiveDiscreteApi'
 import { setupDirectives } from '@/plugins/directives'
 import { setupStore } from './store'
-import App from './App.vue'
-import './styles/tailwind.css'
 import { setupLocale } from '@/locales'
+import App from './App.vue'
+import '@/styles/global.less'
+import 'virtual:uno.css'
 
 async function setupApp() {
   const app = createApp(App)

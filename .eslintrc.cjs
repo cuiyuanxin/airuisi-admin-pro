@@ -21,6 +21,7 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:prettier/recommended',
         'prettier',
+        '@unocss'
     ],
     plugins: ["vue", "@typescript-eslint", "prettier"],
     rules: {
@@ -102,5 +103,6 @@ module.exports = {
         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         // 关闭驼峰命名规则
         'vue/multi-word-component-names': 0,
+        '@unocss/blocklist': "warn"
     },
 }
