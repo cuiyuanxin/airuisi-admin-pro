@@ -1,335 +1,145 @@
 <template>
-  <n-space vertical>
-    <n-layout has-sider class="ars-layout">
-      <n-layout-sider
-        bordered
-        collapse-mode="width"
-        :collapsed-width="minMenuWidth"
-        :width="menuWidth"
-        :collapsed="collapsed"
-        show-trigger
-        @collapse="collapsed = true"
-        @expand="collapsed = false"
+  <n-layout class="ars-layout" :position="fixedMenu" has-sider>
+    <n-layout-sider
+      class="ars-layout-sider"
+      show-trigger="arrow-circle"
+      collapse-mode="width"
+      :position="fixedMenu"
+      :collapsed="collapsed"
+      :collapsed-width="minMenuWidth"
+      :width="menuWidth"
+      :native-scrollbar="false"
+      :inverted="inverted"
+      @collapse="collapsed = true"
+      @expand="collapsed = false"
+    >
+      <div class="ars-layout-left-logo">
+        <n-image width="40" preview-disabled :src="logo" />
+        <span v-if="!collapsed">{{ title }}</span>
+      </div>
+      <div class="ars-layout-menu">
+        <AsideMenu v-model:collapsed="collapsed" v-model:inverted="inverted" />
+      </div>
+    </n-layout-sider>
+
+    <!--    <n-drawer-->
+    <!--      v-model:show="showSideDrawer"-->
+    <!--      :width="menuWidth"-->
+    <!--      :placement="'left'"-->
+    <!--      class="layout-side-drawer"-->
+    <!--    >-->
+    <!--      <Logo :collapsed="collapsed" />-->
+    <!--      <AsideMenu @clickMenuItem="collapsed = false" />-->
+    <!--    </n-drawer>-->
+
+    <n-layout :inverted="inverted">
+      <n-layout-header :inverted="getHeaderInverted" :position="fixedHeader">
+        <Header v-model:collapsed="collapsed" v-model:flag="flag" :inverted="inverted" />
+      </n-layout-header>
+
+      <n-layout-content
+        class="ars-layout-content"
+        :class="{ 'ars-layout-default-background': appDarkTheme === false }"
       >
-        <div class="ars-layout-menu">
-          <div class="ars-layout-header-logo">
-            <n-image width="40" preview-disabled :src="getWebsiteSetting.logo" />
-            <span>{{ getWebsiteSetting.title }}</span>
-          </div>
-          <AsideMenu v-model:collapsed="collapsed" />
-        </div>
-      </n-layout-sider>
-      <n-layout>
-        <n-layout-header>
-          <div class="ars-layout-header">
-            <div class="ars-layout-header-breadcrumb">
-              <div class="ars-layout-header-breadcrumb-left">
-                <div class="pl-3" @click="handleMenuCollapse">
-                  <n-icon size="20" :component="List" />
-                </div>
-                <div v-if="getProjectSetting.header.isReload" @click="reloadPage">
-                  <n-icon size="20" :component="ReloadOutline" />
-                </div>
-                <div>
-                  <n-breadcrumb>
-                    <template v-for="routeItem in breadcrumbList" :key="routeItem.name">
-                      <n-breadcrumb-item v-if="routeItem.breadcrumbName">
-                        {{ routeItem.breadcrumbName }}
-                      </n-breadcrumb-item>
-                    </template>
-                  </n-breadcrumb>
-                </div>
-              </div>
-              <div class="ars-layout-header-breadcrumb-right">
-                <div v-if="false">
-                  <n-icon size="20" :component="SearchOutline" />
-                </div>
-                <div>
-                  <n-icon size="20">
-                    <component :is="fullscreenIcon" @click="toggleFullScreen" />
-                  </n-icon>
-                </div>
-                <div>
-                  <n-dropdown
-                    trigger="click"
-                    :options="languages"
-                    :show-arrow="true"
-                    @select="handleLanguageSelect"
-                  >
-                    <n-icon size="20" :component="LanguageOutline" />
-                  </n-dropdown>
-                </div>
-                <div>
-                  <n-popover trigger="click">
-                    <template #trigger>
-                      <n-badge :value="messageTotal" :max="50" v-if="messageTotal > 0">
-                        <n-icon size="20" :component="Alert28Regular" />
-                      </n-badge>
-                      <n-icon size="20" :component="Alert28Regular" v-else />
-                    </template>
-                    <n-card placement="bottom-start" :bordered="false" content-style="padding: 0;">
-                      <n-tabs type="line">
-                        <n-tab-pane
-                          v-for="(item, index) in messageList"
-                          :key="index"
-                          :name="`${item.title} (${item.total})`"
-                        >
-                          <template v-if="item.total > 0">
-                            <n-list>
-                              <n-list-item v-for="(item2, index2) in item.list" :key="index2">
-                                <template #prefix>
-                                  <n-avatar round>
-                                    {{ item2.nickname }}
-                                  </n-avatar>
-                                </template>
-                                <template #suffix>
-                                  <!--                                <n-button>Suffix</n-button>-->
-                                </template>
-                                <n-thing :title="item2.title" :description="item2.time" />
-                              </n-list-item>
-                              <template #footer>
-                                <n-icon size="20" :component="TrashOutline" />清空{{ item.title }}
-                              </template>
-                            </n-list>
-                          </template>
-                          <n-empty description="没有可处理信息" v-else />
-                        </n-tab-pane>
-                      </n-tabs>
-                    </n-card>
-                  </n-popover>
-                </div>
-                <div>
-                  <n-dropdown
-                    trigger="click"
-                    :show-arrow="true"
-                    :options="userOptions"
-                    @select="handleUserSelect"
-                  >
-                    <n-avatar round>
-                      {{ getNickname }}
-                    </n-avatar>
-                  </n-dropdown>
-                </div>
-                <div class="pr-8">
-                  <n-icon size="20" :component="SettingsOutline" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </n-layout-header>
-        <n-layout-content>
-          <router-view v-if="flag" />
-        </n-layout-content>
-        <n-layout-footer>#footer</n-layout-footer>
-      </n-layout>
+        <!--        <div-->
+        <!--          class="layout-content-main"-->
+        <!--          :class="{-->
+        <!--            'layout-content-main-fix': fixedMulti,-->
+        <!--            'fluid-header': fixedHeader === 'static',-->
+        <!--          }"-->
+        <!--        >-->
+        <!--          <TabsView v-if="isMultiTabs" v-model:collapsed="collapsed" />-->
+        <!--          <div-->
+        <!--            class="main-view"-->
+        <!--            :class="{-->
+        <!--              'main-view-fix': fixedMulti,-->
+        <!--              noMultiTabs: !isMultiTabs,-->
+        <!--              'mt-3': !isMultiTabs,-->
+        <!--            }"-->
+        <!--          >-->
+        <router-view v-if="flag">
+          <!--              <template #default="{ Component, route }">-->
+          <!--                <transition :name="getTransitionName" mode="out-in" appear>-->
+          <!--                  <keep-alive v-if="keepAliveComponents.length" :include="keepAliveComponents">-->
+          <!--                    <component :is="Component" :key="route.fullPath" />-->
+          <!--                  </keep-alive>-->
+          <!--                  <component v-else :is="Component" :key="route.fullPath" />-->
+          <!--                </transition>-->
+          <!--              </template>-->
+        </router-view>
+        <!--          </div>-->
+        <!--        </div>-->
+      </n-layout-content>
+      <!--      <n-back-top :right="100" />-->
     </n-layout>
-  </n-space>
+  </n-layout>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, reactive, ref, shallowRef } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useUser } from '@/store/modules/user'
+import { computed, ref, unref } from 'vue'
 import { useApp } from '@/hooks/setting/useApp'
-import { changeLocale, useI18n } from '@/hooks/web/useI18n'
-import { Languages } from '@/constants/localeEnum'
-import { PageEnum } from '@/constants/pageEnum'
-import {
-  ContractOutline,
-  ExpandOutline,
-  LanguageOutline,
-  List,
-  ReloadOutline,
-  SearchOutline,
-  SettingsOutline,
-  TrashOutline,
-} from '@vicons/ionicons5'
-import { Alert28Regular } from '@vicons/fluent'
 import { AsideMenu } from './components/Menu'
+import { Header } from './components/Header'
 
-const { getNickname, logout } = useUser()
 const { getWebsiteSetting, getProjectSetting, getDesignSetting } = useApp()
-const router = useRouter()
-const route = useRoute()
-const { t } = useI18n()
 
 // 展开收缩菜单
 const collapsed = ref(false)
-// 全屏图标
-const fullscreenIcon = shallowRef(ExpandOutline)
-// 国际化语言
-const languages = reactive([])
 // 刷新组件
 const flag = ref(true)
-// 消息通知总数
-const messageTotal = ref(0)
-// 消息通知数据列表
-const messageList = reactive([
-  {
-    title: '通知',
-    total: 1,
-    list: [
-      {
-        nickname: '张龙',
-        title: '张龙回复了你的邮件',
-        time: '2023-09-10 18:14:30',
-      },
-      {
-        nickname: '赵虎',
-        title: '赵虎邀请您参加会议',
-        time: '2023-09-10 18:15:30',
-      },
-      {
-        nickname: '王五',
-        title: '王五邀请您头脑风暴',
-        time: '2023-09-10 18:16:30',
-      },
-      {
-        nickname: '艾迪森',
-        title: '艾迪森给您发送了信息',
-        time: '2023-09-10 18:17:30',
-      },
-    ],
-  },
-  { title: '关注', total: 0, list: [] },
-  { title: '待办', total: 0, list: [] },
-])
-// 用户信息
-const userOptions = [
-  {
-    label: '个人设置',
-    key: 'personalSettings',
-  },
-  {
-    label: '修改密码',
-    key: 'changePassword',
-  },
-  {
-    label: '退出登录',
-    key: 'logout',
-  },
-]
+// 翻转样式
+const inverted = computed(() => {
+  return ['dark', 'header-dark'].includes(unref(getProjectSetting.value.navTheme))
+})
+
+const logo = getWebsiteSetting.value?.logo
+const title = getWebsiteSetting.value?.title
 // 收缩后样式
-const minMenuWidth = getProjectSetting.value.menu.minMenuWidth
+const minMenuWidth = getProjectSetting.value?.menu.minMenuWidth
 // 展开后样式
-const menuWidth = getProjectSetting.value.menu.menuWidth
+const menuWidth = getProjectSetting.value?.menu.menuWidth
+const appDarkTheme = getDesignSetting.value?.appDarkTheme
 
-// const headerLogoWidth = computed(() => {
-//   return collapsed.value ? `width: ${minMenuWidth}px` : `width: ${menuWidth}px`
-// })
-// const headerBreadcrumbWidth = computed(() => {
-//   return collapsed.value
-//     ? `min-width: calc(100% - ${minMenuWidth}px)`
-//     : `min-width: calc(100% - ${menuWidth}px)`
-// })
-
-// dom渲染后初始化数据和组件
-onMounted(() => {
-  // 国际化语言
-  for (let key in Languages) {
-    languages.push({
-      label: Languages[key],
-      key: key,
-      disabled: getDesignSetting.value.locale === key,
-    })
-  }
+const fixedMenu = computed(() => {
+  const { fixed } = unref(getProjectSetting.value.menu)
+  return fixed ? 'absolute' : 'static'
+})
+const fixedHeader = computed(() => {
+  const { fixed } = unref(getProjectSetting.value.header)
+  return fixed ? 'absolute' : 'static'
 })
 
-// 收缩/展开菜单
-const handleMenuCollapse = () => {
-  collapsed.value = !collapsed.value
-}
-
-// 刷新页面
-const reloadPage = () => {
-  flag.value = false
-  nextTick(() => {
-    flag.value = true
-  })
-}
-
-// 面包屑
-const breadcrumbList = computed(() => {
-  let breadcrumbs = []
-  route.matched.concat().map((item: any) => {
-    breadcrumbs.push({
-      path: item.path,
-      name: item.name,
-      breadcrumbName: t(item.meta.title) || '',
-    })
-  })
-
-  return breadcrumbs
+const getHeaderInverted = computed(() => {
+  return ['light', 'header-dark'].includes(unref(getProjectSetting.value.menu))
+    ? unref(inverted)
+    : !unref(inverted)
 })
-
-// 切换全屏图标
-const toggleFullscreenIcon = () =>
-  (fullscreenIcon.value = document.fullscreenElement !== null ? ContractOutline : ExpandOutline)
-
-// 监听全屏切换事件
-document.addEventListener('fullscreenchange', toggleFullscreenIcon)
-
-// 全屏切换
-const toggleFullScreen = () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen()
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen()
-    }
-  }
-}
-
-// 国际化语言切换
-const handleLanguageSelect = (key: string) => {
-  changeLocale(key)
-  router.go(0)
-}
-
-// 用户中心
-const handleUserSelect = (key: string) => {
-  switch (key) {
-    case 'personalSettings':
-      console.log('个人中心')
-      break
-    case 'changePassword':
-      console.log('修改密码')
-      break
-    case 'logout':
-      logout()
-      router.push(PageEnum.BASE_LOGIN)
-      break
-  }
-}
 </script>
 
 <style lang="less" scoped>
 .ars-layout {
-  height: 100%;
-
-  & .ars-layout-header {
-    @apply h-16 flex flex-nowrap items-center;
-
-    & > .ars-layout-header-breadcrumb {
-      @apply h-16 w-full flex justify-between;
-
-      & > .ars-layout-header-breadcrumb-left,
-      & > .ars-layout-header-breadcrumb-right {
-        @apply h-16 flex space-x-6;
-        & > div {
-          @apply h-16 flex items-center justify-center;
-        }
-      }
+  @apply flex flex-row flex-auto;
+  &-sider {
+    min-height: 100vh;
+    box-shadow: 2px 0 8px 0 rgb(29 35 41 / 5%);
+    position: relative;
+    z-index: 13;
+    transition: all 0.2s ease-in-out;
+  }
+  &-left-logo {
+    @apply h-16 w-full flex items-center justify-center;
+    & > span {
+      @apply ml-2 text-lg;
     }
   }
-  & .ars-layout-menu {
-    & > .ars-layout-header-logo {
-      @apply h-16 w-full flex items-center justify-center;
-
-      & > span {
-        @apply ml-2 text-lg;
-      }
-    }
+  &-menu {
+  }
+  &-content {
+    @apply flex-auto;
+    min-height: 100vh;
+  }
+  &-default-background {
+    @apply bg-slate-50;
   }
 }
 </style>

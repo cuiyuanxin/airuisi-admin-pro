@@ -3,7 +3,6 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
-import ViteIconsResolver from 'unplugin-icons/resolver'
 import UnoCSS from 'unocss/vite'
 import { configHtmlPlugin } from './html'
 import { configCompressPlugin } from './compress'
@@ -23,17 +22,8 @@ export const createVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
     // 按需引入NaiveUi且自动创建组件声明
     Components({
       dts: true,
-      resolvers: [
-        NaiveUiResolver(),
-        ViteIconsResolver({
-          // 添加需要的图标集
-          validSets: ['ionicons5', 'fluent'],
-          // 将 @vicons 中的图标名转换为 PascalCase 形式
-          transformer: (name) => `V${name.replace(/(^\w|-\w)/g, (_, c) => c.toUpperCase())}`,
-        }),
-      ],
+      resolvers: [NaiveUiResolver()],
     }),
-
     UnoCSS({
       configFile: 'uno.config.ts',
     }),

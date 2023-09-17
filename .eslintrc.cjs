@@ -103,6 +103,6 @@ module.exports = {
         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         // 关闭驼峰命名规则
         'vue/multi-word-component-names': 0,
-        '@unocss/blocklist': "warn"
+        '@unocss/blocklist': 'warn'
     },
 }

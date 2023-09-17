@@ -8,7 +8,7 @@ import { LANGUAGES } from '@/constants/constant'
 
 const { title, logo, loginImage, loginDesc } = websiteSetting
 const { appDarkTheme, appTheme, appThemeList, locale } = designSetting
-const { tokenExpire, permission, permissionMode, header, menu } = projectSetting
+const { tokenExpire, permission, permissionMode, header, menu, navMode, navTheme } = projectSetting
 
 interface AppState {
   websiteSetting: {
@@ -38,8 +38,10 @@ interface AppState {
     permission: boolean
     // 权限使用方式,菜单权限模式 FIXED 前端固定路由  Dynamic 动态获取
     permissionMode: string
-    header: object
-    menu: object
+    header: any
+    menu: any
+    navMode: string
+    navTheme: string
   }
 }
 
@@ -64,6 +66,8 @@ export const useAppStore = defineStore({
       permissionMode,
       header,
       menu,
+      navMode,
+      navTheme,
     },
   }),
   getters: {

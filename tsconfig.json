@@ -30,7 +30,8 @@
       "vite/client",
       "node",
       "naive-ui/volar",
-      "@intlify/unplugin-vue-i18n/messages"
+      "@intlify/unplugin-vue-i18n/messages",
+      "unplugin-icons/types/vue3"
     ],                                      /* Specify type package names to be included without being referenced in a source file. */
     "typeRoots": [
       "./node_modules/@types",

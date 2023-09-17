@@ -1,5 +1,8 @@
 <template>
   <n-menu
+    class="ars-menu"
+    mode="vertical"
+    :inverted="inverted"
     v-model:value="activeKey"
     :collapsed="collapsed"
     :collapsed-width="64"
@@ -17,14 +20,15 @@ import {
   WineOutline as WineIcon,
 } from '@vicons/ionicons5'
 import { renderIcon } from '@/utils'
+// import { useApp } from '@/hooks/setting/useApp'
 
 const props = defineProps({
-  collapsed: {
-    type: Boolean,
-  },
+  collapsed: Boolean,
+  inverted: Boolean,
 })
-const { collapsed } = toRefs(props)
 
+// const { getProjectSetting } = useApp()
+const { collapsed, inverted } = toRefs(props)
 const activeKey = ref<string | null>(null)
 const menuOptions: MenuOption[] = [
   {
@@ -99,7 +103,103 @@ const menuOptions: MenuOption[] = [
       },
     ],
   },
+  {
+    label: '寻羊冒险记2',
+    key: 'a-wild-sheep-chase2',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记3',
+    key: 'a-wild-sheep-chase3',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记4',
+    key: 'a-wild-sheep-chase4',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记5',
+    key: 'a-wild-sheep-chase5',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记6',
+    key: 'a-wild-sheep-chase6',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记7',
+    key: 'a-wild-sheep-chase7',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记8',
+    key: 'a-wild-sheep-chase8',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记9',
+    key: 'a-wild-sheep-chase9',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记10',
+    key: 'a-wild-sheep-chase10',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记11',
+    key: 'a-wild-sheep-chase11',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记12',
+    key: 'a-wild-sheep-chase12',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记13',
+    key: 'a-wild-sheep-chase13',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记14',
+    key: 'a-wild-sheep-chase14',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记15',
+    key: 'a-wild-sheep-chase15',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: '寻羊冒险记16',
+    key: 'a-wild-sheep-chase16',
+    disabled: true,
+    icon: renderIcon(BookIcon),
+  },
 ]
+// 布局
+// const navMode = getProjectSetting.value.navMode
 </script>
 
-<style scoped></style>
+<style lang="less" scoped>
+.ars-menu {
+  //height: calc(100vh - 64px);
+}
+</style>
