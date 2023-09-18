@@ -1,10 +1,9 @@
 <template>
-  <n-layout class="ars-layout" :position="fixedMenu" has-sider>
+  <n-layout class="ars-layout" has-sider>
     <n-layout-sider
       class="ars-layout-sider"
       show-trigger="arrow-circle"
       collapse-mode="width"
-      :position="fixedMenu"
       :collapsed="collapsed"
       :collapsed-width="minMenuWidth"
       :width="menuWidth"
@@ -18,7 +17,9 @@
         <span v-if="!collapsed">{{ title }}</span>
       </div>
       <div class="ars-layout-menu">
-        <AsideMenu v-model:collapsed="collapsed" v-model:inverted="inverted" />
+        <n-scrollbar>
+          <AsideMenu v-model:collapsed="collapsed" v-model:inverted="inverted" />
+        </n-scrollbar>
       </div>
     </n-layout-sider>
 

@@ -9,17 +9,13 @@ import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
 import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
 import { useGlobSetting } from '@/hooks/setting'
-import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/constants/httpEnum'
-import { isString, isUnDef, isNull, isEmpty } from '@/utils/is'
-// import { getToken } from '/@/utils/auth'
-import { setObjToUrlParams, deepMerge } from '@/utils'
-// import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog'
-// import { useI18n } from '/@/hooks/web/useI18n'
-import { joinTimestamp, formatRequestDate } from './helper'
-// import { useUserStoreWithOut } from '/@/store/modules/system'
+import { ContentTypeEnum, RequestEnum, ResultEnum } from '@/constants/httpEnum'
+import { isEmpty, isNull, isString, isUnDef } from '@/utils/is'
+import { deepMerge, setObjToUrlParams } from '@/utils'
+import { useI18n } from '@/hooks/web/useI18n'
+import { formatRequestDate, joinTimestamp } from './helper'
 import { AxiosRetry } from './axiosRetry'
 import { useUser } from '@/store/modules/user'
-import { t } from '@/hooks/web/useI18n'
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix || ''
@@ -32,7 +28,7 @@ const transform: AxiosTransform = {
    * @description: 处理响应数据。如果数据不是预期格式，可直接抛出错误
    */
   transformResponseHook: (res: AxiosResponse<Result>, options: RequestOptions) => {
-    // const { t } = useI18n()
+    const { t } = useI18n()
     const { isTransformResponse, isReturnNativeResponse, successMessageMode, errorMessageMode } =
       options
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
@@ -83,12 +79,11 @@ const transform: AxiosTransform = {
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
     let timeoutMsg = ''
+    const { logout } = useUser()
     switch (code) {
       case ResultEnum.TIMEOUT:
         timeoutMsg = t('sys.api.timeoutMessage')
-        //     const userStore = useUserStoreWithOut()
-        //     userStore.setToken(undefined)
-        //     userStore.logout(true)
+        logout()
         break
       default:
         if (message) {
@@ -192,7 +187,7 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: (axiosInstance: AxiosInstance, error: any) => {
-    // const { t } = useI18n()
+    const { t } = useI18n()
     const $dialog = window['$dialog']
     const $message = window['$message']
     const { response, code, message, config } = error || {}

@@ -86,11 +86,13 @@
           </n-dropdown>
         </div>
         <div class="pr-8">
-          <n-icon size="20" :component="SettingsOutline" />
+          <n-icon size="20" :component="SettingsOutline" @click="handleOpenSetting" />
         </div>
       </div>
     </div>
   </div>
+  <!--项目配置-->
+  <Setting ref="drawerSetting" />
 </template>
 
 <script setup lang="ts">
@@ -174,6 +176,8 @@ const userOptions = [
     key: 'logout',
   },
 ]
+// 项目设置
+const drawerSetting = ref()
 
 const router = useRouter()
 const { getNickname, logout } = useUser()
@@ -251,6 +255,9 @@ const handleUserSelect = (key: string) => {
       router.push(PageEnum.BASE_LOGIN)
       break
   }
+}
+const handleOpenSetting = () => {
+  const { openDrawer } = drawerSetting.value
 }
 </script>
 

@@ -439,7 +439,7 @@ watch(
       }
     }
     & > .ars-right {
-      @apply w-2/5 w-full bg-white pt-10 sm:w-auto md:w-full md:flex md:items-center md:justify-center xl:w-2/5 xl:p-14;
+      @apply w-2/5 w-full h-full bg-white pt-10 sm:w-auto md:w-full md:flex md:items-center md:justify-center xl:w-2/5 xl:p-14;
       & > .ars-right-item {
         @apply md:max-w-md w-full space-y-8;
         & .ars-right-logo {
@@ -453,7 +453,7 @@ watch(
           }
         }
         & .ars-right-card {
-          @apply mt-8 space-y-6 md:w-9/12 md:m-auto;
+          @apply mt-8 space-y-6 w-72 m-auto sm:w-76 md:w-80 xl:w-90;
         }
         & .signinbtn {
           @apply w-full flex justify-center bg-gradient-to-r from-indigo-500 to-blue-600  hover:bg-gradient-to-l hover:from-blue-500 hover:to-indigo-600 text-gray-100 p-4  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500;

@@ -192,10 +192,10 @@ export default [
     method: 'post',
     response: ({ body }) => {
       const { mobile } = body || {}
-
       if (mobile && isChinesePhoneNumber(mobile)) {
         if (searchArray(userList, 'mobile', mobile)) {
           const code = Mock.Random.integer(111111, 999999)
+
           return resultSuccess(
             {
               code: code,
