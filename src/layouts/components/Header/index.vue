@@ -114,6 +114,7 @@ import {
   TrashOutline,
 } from '@vicons/ionicons5'
 import { Alert28Regular } from '@vicons/fluent'
+import Setting from './setting.vue'
 
 const props = defineProps({
   collapsed: Boolean,
@@ -177,7 +178,7 @@ const userOptions = [
   },
 ]
 // 项目设置
-const drawerSetting = ref()
+const drawerSetting = ref<InstanceType<typeof Setting>>()
 
 const router = useRouter()
 const { getNickname, logout } = useUser()
@@ -258,6 +259,7 @@ const handleUserSelect = (key: string) => {
 }
 const handleOpenSetting = () => {
   const { openDrawer } = drawerSetting.value
+  openDrawer()
 }
 </script>
 
