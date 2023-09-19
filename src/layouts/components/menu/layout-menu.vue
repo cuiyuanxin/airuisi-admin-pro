@@ -21,15 +21,12 @@ import {
 import { renderIcon } from '@/utils'
 import { useApp } from '@/hooks/setting/useApp'
 
-const {
-  mode,
-  collapsed = false,
-  inverted = false,
-} = defineProps<{
-  mode: 'vertical' | 'horizontal'
-  collapsed: boolean
-  inverted: boolean
-}>()
+const props = defineProps({
+  mode: String as PropType<'horizontal' | 'vertical'>,
+  collapsed: Boolean,
+  inverted: Boolean,
+})
+const { mode, collapsed, inverted } = toRefs(props)
 
 const { getProjectSetting } = useApp()
 // 布局
@@ -189,7 +186,7 @@ const menuOptions: MenuOption[] = [
 </script>
 
 <style lang="less" scoped>
-.ars-menu {
-  //height: calc(100vh - 64px);
-}
+//.ars-menu {
+//height: calc(100vh - 64px);
+//}
 </style>

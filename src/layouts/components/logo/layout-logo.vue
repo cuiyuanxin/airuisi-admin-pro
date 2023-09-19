@@ -12,7 +12,7 @@ const props = defineProps({
   collapsed: Boolean,
 })
 
-const { collapsed } = props
+const { collapsed } = toRefs(props)
 
 const { getWebsiteSetting } = useApp()
 const { logo, title } = getWebsiteSetting.value

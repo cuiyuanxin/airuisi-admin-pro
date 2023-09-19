@@ -1,13 +1,12 @@
 <template>
-  <n-layout class="ars-layout" has-sider>
-    <!-- 菜单sider  -->
+  <n-layout class="ars-layout" :position="fixedMenu" has-sider>
     <template v-if="navMode === 'vertical'">
       <n-layout-sider
         bordered
-        :position="fixedMenu"
-        :show-trigger="showTrigger"
         collapse-mode="width"
-        :collapsed="collapsed"
+        v-model:collapsed="collapsed"
+        :show-trigger="showTrigger"
+        :position="fixedMenu"
         :inverted="inverted"
         :collapsed-width="minMenuWidth"
         :width="menuWidth"
@@ -24,9 +23,10 @@
     <template v-if="navMode === 'vertical' || navMode === 'vertical-mix'"> </template>
 
     <n-layout>
-      <n-layout-header>
-        <!-- 顶部菜单内容 -->
-        <div>顶部</div>
+      <n-layout-header :position="fixedHeader">
+        <template v-if="navMode === 'vertical'">
+          <layout-header v-model:collapsed="collapsed" />
+        </template>
       </n-layout-header>
       <n-layout-content class="ars-layout-content">
         <router-view v-if="flag" />
@@ -40,27 +40,21 @@
 
 <script setup lang="ts">
 import { useApp } from '@/hooks/setting/useApp'
-import { MenuOption } from 'naive-ui'
-import { renderIcon } from '@/utils'
-import {
-  BookOutline as BookIcon,
-  PersonOutline as PersonIcon,
-  WineOutline as WineIcon,
-} from '@vicons/ionicons5'
 import LayoutLogo from '@/layouts/components/logo/layout-logo.vue'
 import LayoutMenu from '@/layouts/components/menu/layout-menu.vue'
+import LayoutHeader from '@/layouts/components/header/layout-header.vue'
 
-const { getWebsiteSetting, getProjectSetting, getDesignSetting } = useApp()
-const { menu, navMode, navTheme, showLogo } = getProjectSetting.value
+const { getProjectSetting } = useApp()
+const { header, menu, navMode, navTheme, showLogo } = getProjectSetting.value
 
 // 展开收缩菜单
-const collapsed = unref(menu.collapsed)
+const collapsed = ref(menu.collapsed)
 // 收缩后样式
 const minMenuWidth = unref(menu.minMenuWidth)
 // 展开后样式
 const menuWidth = unref(menu.menuWidth)
 // 折叠菜单样式
-const showTrigger = menu.showTrigger
+const showTrigger = ref(menu.showTrigger)
 // 翻转样式
 const inverted = computed(() => {
   return ['dark', 'header-dark'].includes(unref(navTheme))
@@ -68,6 +62,11 @@ const inverted = computed(() => {
 // 固定菜单
 const fixedMenu = computed(() => {
   const { fixed } = unref(menu)
+  return fixed ? 'absolute' : 'static'
+})
+// 固定头部
+const fixedHeader = computed(() => {
+  const { fixed } = unref(header)
   return fixed ? 'absolute' : 'static'
 })
 
@@ -79,163 +78,10 @@ const flag = ref(true)
 // 隐藏尾部
 const showFooter = unref(getProjectSetting.value.showFooter)
 
-const fixedFooter = computed(() => {
-  const { fixed } = unref(getProjectSetting.value.header)
-  return fixed ? 'absolute' : 'static'
-})
-const fixedHeader = computed(() => {
-  const { fixed } = unref(getProjectSetting.value.header)
-  return fixed ? 'absolute' : 'static'
-})
-
-const menuOptions: MenuOption[] = [
-  {
-    label: '且听风吟',
-    key: 'hear-the-wind-sing',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '1973年的弹珠玩具',
-    key: 'pinball-1973',
-    icon: renderIcon(BookIcon),
-    children: [
-      {
-        label: '鼠',
-        key: 'rat',
-      },
-    ],
-  },
-  {
-    label: '寻羊冒险记',
-    key: 'a-wild-sheep-chase',
-    disabled: true,
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '舞，舞，舞',
-    key: 'dance-dance-dance',
-    icon: renderIcon(BookIcon),
-    children: [
-      {
-        type: 'group',
-        label: '人物',
-        key: 'people',
-        children: [
-          {
-            label: '叙事者',
-            key: 'narrator',
-            icon: renderIcon(PersonIcon),
-          },
-          {
-            label: '羊男',
-            key: 'sheep-man',
-            icon: renderIcon(PersonIcon),
-          },
-        ],
-      },
-      {
-        label: '饮品',
-        key: 'beverage',
-        icon: renderIcon(WineIcon),
-        children: [
-          {
-            label: '威士忌',
-            key: 'whisky',
-          },
-        ],
-      },
-      {
-        label: '食物',
-        key: 'food',
-        children: [
-          {
-            label: '三明治',
-            key: 'sandwich',
-          },
-        ],
-      },
-      {
-        label: '过去增多，未来减少',
-        key: 'the-past-increases-the-future-recedes',
-      },
-    ],
-  },
-  {
-    label: '寻羊冒险记2',
-    key: 'a-wild-sheep-chase2',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记3',
-    key: 'a-wild-sheep-chase3',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记4',
-    key: 'a-wild-sheep-chase4',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记5',
-    key: 'a-wild-sheep-chase5',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记6',
-    key: 'a-wild-sheep-chase6',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记7',
-    key: 'a-wild-sheep-chase7',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记8',
-    key: 'a-wild-sheep-chase8',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记9',
-    key: 'a-wild-sheep-chase9',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记10',
-    key: 'a-wild-sheep-chase10',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记11',
-    key: 'a-wild-sheep-chase11',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记12',
-    key: 'a-wild-sheep-chase12',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记13',
-    key: 'a-wild-sheep-chase13',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记14',
-    key: 'a-wild-sheep-chase14',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记15',
-    key: 'a-wild-sheep-chase15',
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '寻羊冒险记16',
-    key: 'a-wild-sheep-chase16',
-    icon: renderIcon(BookIcon),
-  },
-]
+// const fixedFooter = computed(() => {
+//   const { fixed } = unref(getProjectSetting.value.header)
+//   return fixed ? 'absolute' : 'static'
+// })
 
 //
 // const getHeaderInverted = computed(() => {

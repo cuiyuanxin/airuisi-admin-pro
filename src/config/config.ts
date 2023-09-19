@@ -57,7 +57,7 @@ export const projectSetting = Object.freeze({
     //背景色
     bgColor: '#fff',
     //固定顶部
-    fixed: false,
+    fixed: true,
     //显示重载按钮
     isReload: true,
   },
