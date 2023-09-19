@@ -1,5 +1,5 @@
 <template>
-  <n-layout class="ars-layout" has-sider>
+  <n-layout class="ars-layout" :position="fixedMenu" has-sider>
     <n-layout-sider
       class="ars-layout-sider"
       show-trigger="arrow-circle"
@@ -9,17 +9,18 @@
       :width="menuWidth"
       :native-scrollbar="false"
       :inverted="inverted"
+      :position="fixedMenu"
       @collapse="collapsed = true"
       @expand="collapsed = false"
     >
       <div class="ars-layout-left-logo">
-        <n-image width="40" preview-disabled :src="logo" />
-        <span v-if="!collapsed">{{ title }}</span>
+        <n-layout>
+          <n-image width="40" preview-disabled :src="logo" />
+          <span v-if="!collapsed">{{ title }}</span>
+        </n-layout>
       </div>
       <div class="ars-layout-menu">
-        <n-scrollbar>
-          <AsideMenu v-model:collapsed="collapsed" v-model:inverted="inverted" />
-        </n-scrollbar>
+        <AsideMenu v-model:collapsed="collapsed" v-model:inverted="inverted" />
       </div>
     </n-layout-sider>
 
