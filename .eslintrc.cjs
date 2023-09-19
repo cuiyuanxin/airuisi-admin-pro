@@ -21,7 +21,8 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:prettier/recommended',
         'prettier',
-        '@unocss'
+        '@unocss',
+        '.eslintrc-auto-import.json'
     ],
     plugins: ["vue", "@typescript-eslint", "prettier"],
     rules: {

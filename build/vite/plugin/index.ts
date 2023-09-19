@@ -2,6 +2,7 @@ import type { Plugin, PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import Components from 'unplugin-vue-components/vite'
+import AutoImport from 'unplugin-auto-import/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import UnoCSS from 'unocss/vite'
 import { configHtmlPlugin } from './html'
@@ -18,9 +19,19 @@ export const createVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
     vue(),
     // have to
     vueJsx(),
+    AutoImport({
+      imports: ['vue', 'vue-router'],
+      vueTemplate: true,
+      dts: true,
+      eslintrc: {
+        enabled: true,
+      },
+    }),
 
     // 按需引入NaiveUi且自动创建组件声明
     Components({
+      dirs: ['src/components', 'src/**/components'],
+      extensions: ['vue', 'ts'],
       dts: true,
       resolvers: [NaiveUiResolver()],
     }),

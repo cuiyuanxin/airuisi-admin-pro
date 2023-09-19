@@ -8,7 +8,8 @@ import { LANGUAGES } from '@/constants/constant'
 
 const { title, logo, loginImage, loginDesc } = websiteSetting
 const { appDarkTheme, appTheme, appThemeList, locale } = designSetting
-const { tokenExpire, permission, permissionMode, header, menu, navMode, navTheme } = projectSetting
+const { tokenExpire, permission, permissionMode, header, menu, navMode, navTheme, showFooter } =
+  projectSetting
 
 interface AppState {
   websiteSetting: {
@@ -42,6 +43,7 @@ interface AppState {
     menu: any
     navMode: string
     navTheme: string
+    showFooter: boolean
   }
 }
 
@@ -68,6 +70,7 @@ export const useAppStore = defineStore({
       menu,
       navMode,
       navTheme,
+      showFooter,
     },
   }),
   getters: {
