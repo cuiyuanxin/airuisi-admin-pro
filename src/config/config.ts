@@ -76,13 +76,16 @@ export const projectSetting = Object.freeze({
     // 折叠菜单
     collapsed: false,
     // 折叠菜单按钮 arrow-circle bar
-    showTrigger: 'arrow-circle',
+    showTrigger: 'bar',
   },
 
   //导航模式 vertical 左侧菜单垂直模式 horizontal 顶部菜单水平模式 vertical-mix 垂直混合模式 horizontal-mix 水平混合模式
   navMode: 'vertical',
   //导航风格 dark 暗色侧边栏 light 白色侧边栏 header-dark 暗色顶栏
   navTheme: 'dark',
+  // 隐藏/显示logo
+  showLogo: true,
+
   // 是否处于移动端模式
   isMobile: false,
 

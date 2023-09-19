@@ -21,22 +21,21 @@ import {
 import { renderIcon } from '@/utils'
 import { useApp } from '@/hooks/setting/useApp'
 
-const props = defineProps({
-  collapsed: Boolean,
-  inverted: Boolean,
-})
-
-const { collapsed, inverted } = toRefs(props)
+const {
+  mode,
+  collapsed = false,
+  inverted = false,
+} = defineProps<{
+  mode: 'vertical' | 'horizontal'
+  collapsed: boolean
+  inverted: boolean
+}>()
 
 const { getProjectSetting } = useApp()
 // 布局
-const { menu, navMode } = getProjectSetting.value
+const { menu } = getProjectSetting.value
 // 收缩后样式
 const minMenuWidth = unref(menu.minMenuWidth)
-
-const mode = computed(() => {
-  return navMode === 'horizontal' || navMode === 'horizontal-mix' ? 'horizontal' : 'vertical'
-})
 
 const activeKey = ref<string | null>(null)
 const menuOptions: MenuOption[] = [

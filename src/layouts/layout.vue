@@ -16,12 +16,9 @@
         @expand="collapsed = false"
       >
         <div>
-          <layout-logo v-model:collapsed="collapsed" />
-          <layout-menu v-model:inverted="inverted" />
+          <layout-logo v-model:collapsed="collapsed" v-show="showLogo" />
+          <layout-menu v-model:inverted="inverted" mode="vertical" />
         </div>
-
-        <!-- 左侧菜单内容 -->
-        <n-menu :options="menuOptions" />
       </n-layout-sider>
     </template>
     <template v-if="navMode === 'vertical' || navMode === 'vertical-mix'"> </template>
@@ -54,7 +51,7 @@ import LayoutLogo from '@/layouts/components/logo/layout-logo.vue'
 import LayoutMenu from '@/layouts/components/menu/layout-menu.vue'
 
 const { getWebsiteSetting, getProjectSetting, getDesignSetting } = useApp()
-const { menu, navMode, navTheme } = getProjectSetting.value
+const { menu, navMode, navTheme, showLogo } = getProjectSetting.value
 
 // 展开收缩菜单
 const collapsed = unref(menu.collapsed)
@@ -63,7 +60,7 @@ const minMenuWidth = unref(menu.minMenuWidth)
 // 展开后样式
 const menuWidth = unref(menu.menuWidth)
 // 折叠菜单样式
-const showTrigger = unref(menu.showTrigger)
+const showTrigger = menu.showTrigger
 // 翻转样式
 const inverted = computed(() => {
   return ['dark', 'header-dark'].includes(unref(navTheme))
