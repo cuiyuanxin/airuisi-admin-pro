@@ -1,6 +1,4 @@
 <script lang="tsx">
-import { defineComponent, onBeforeMount } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import { NEmpty } from 'naive-ui'
 
 export default defineComponent({
@@ -20,5 +18,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped></style>

@@ -139,9 +139,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
 import { FormInst, useMessage, useNotification } from 'naive-ui'
-import { useRoute, useRouter } from 'vue-router'
 import { useUser } from '@/store/modules/user'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useApp } from '@/hooks/setting/useApp'
@@ -167,7 +165,7 @@ const $notification = useNotification()
 const router = useRouter()
 const route = useRoute()
 
-document.body.style.overflow = 'auto'
+// document.body.style.overflow = 'auto'
 
 const loginImage = getWebsiteSetting.value?.loginImage
 const loginDesc = getWebsiteSetting.value?.loginDesc
@@ -329,7 +327,7 @@ watch(
 <style lang="less" scoped>
 .ars-login-container {
   @apply relative min-h-screen flex;
-  & > .ars-main {
+  & .ars-main {
     @apply flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-white;
     & > .ars-left {
       @apply sm:w-1/2 xl:w-3/5 h-full hidden md:flex flex-auto items-center justify-center px-10 overflow-hidden bg-purple-900 text-white bg-no-repeat bg-cover relative;

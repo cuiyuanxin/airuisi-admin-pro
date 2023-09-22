@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useApp } from '@/store/modules/app'
 import { lighten } from '@/utils'

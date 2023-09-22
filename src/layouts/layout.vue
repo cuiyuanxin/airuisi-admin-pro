@@ -6,7 +6,6 @@
         collapse-mode="width"
         v-model:collapsed="collapsed"
         :show-trigger="showTrigger"
-        :position="fixedMenu"
         :inverted="inverted"
         :collapsed-width="minMenuWidth"
         :width="menuWidth"
