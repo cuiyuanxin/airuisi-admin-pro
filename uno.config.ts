@@ -10,4 +10,18 @@ export default defineConfig({
   shortcuts: {},
   presets: [presetUno(), presetAttributify()],
   transformers: [transformerDirectives()],
+  theme: {
+    breakpoints: {
+      xs: '320px',
+      sm: '640px',
+      md: '1024px',
+      lg: '1280px',
+      xl: '1536px',
+      xxl: '1920px',
+    },
+    colors: {
+      'bg-white02': 'rgb(var(--error-color-active),0.2)',
+    },
+  },
+  rules: [],
 })

@@ -328,9 +328,9 @@ watch(
 .ars-login-container {
   @apply relative min-h-screen flex;
   & .ars-main {
-    @apply flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-white;
+    @apply h-screen overflow-auto flex flex-col flex-auto min-w-0 bg-white sm:flex-row items-center md:items-start sm:justify-center md:justify-start;
     & > .ars-left {
-      @apply sm:w-1/2 xl:w-3/5 h-full hidden md:flex flex-auto items-center justify-center px-10 overflow-hidden bg-purple-900 text-white bg-no-repeat bg-cover relative;
+      @apply h-full hidden sm:w-1/2 xl:w-3/5 md:flex flex-auto items-center justify-center px-10 overflow-hidden bg-purple-900 text-white bg-no-repeat bg-cover relative;
       & > .ars-left-mask {
         @apply absolute inset-0 z-0 from-indigo-600 to-blue-500 bg-gradient-to-b opacity-75;
       }
@@ -437,7 +437,7 @@ watch(
       }
     }
     & > .ars-right {
-      @apply w-2/5 w-full h-full bg-white pt-10 sm:w-auto md:w-full md:flex md:items-center md:justify-center xl:w-2/5 xl:p-14;
+      @apply w-2/5 h-full bg-white max-xs:w-full max-xs:mt-10 max-sm:w-full max-sm:mt-10 sm:mt-10 md:mt-0 md:w-full md:flex md:items-center md:justify-center lg:w-2/5;
       & > .ars-right-item {
         @apply md:max-w-md w-full space-y-8;
         & .ars-right-logo {
@@ -451,7 +451,7 @@ watch(
           }
         }
         & .ars-right-card {
-          @apply mt-8 space-y-6 w-72 m-auto sm:w-76 md:w-80 xl:w-90;
+          @apply mt-8 space-y-6 w-auto m-auto xs:w-78 sm:w-78 md:w-80 xl:w-90;
         }
         & .signinbtn {
           @apply w-full flex justify-center bg-gradient-to-r from-indigo-500 to-blue-600  hover:bg-gradient-to-l hover:from-blue-500 hover:to-indigo-600 text-gray-100 p-4  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500;

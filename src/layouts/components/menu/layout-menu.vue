@@ -1,6 +1,9 @@
 <template>
   <n-menu
     class="ars-menu"
+    :class="{
+      'ars-menu-horizontal': navMode === 'horizontal' || navMode === 'horizontal-mix',
+    }"
     :mode="mode"
     :inverted="inverted"
     :collapsed="collapsed"
@@ -30,7 +33,7 @@ const { mode, collapsed, inverted } = toRefs(props)
 
 const { getProjectSetting } = useApp()
 // 布局
-const { menu } = getProjectSetting.value
+const { menu, navMode } = getProjectSetting.value
 // 收缩后样式
 const minMenuWidth = unref(menu.minMenuWidth)
 
@@ -186,7 +189,12 @@ const menuOptions: MenuOption[] = [
 </script>
 
 <style lang="less" scoped>
-//.ars-menu {
-//height: calc(100vh - 64px);
-//}
+.ars-menu {
+  @apply h-16 flex items-center justify-items-center;
+  &.ars-menu-horizontal {
+    & :deep(.n-menu-item-content-header) {
+      @apply overflow-visible;
+    }
+  }
+}
 </style>

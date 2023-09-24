@@ -52,14 +52,18 @@ export const projectSetting = Object.freeze({
   // 权限使用方式,菜单权限模式 static 前端固定路由 dynamic 动态获取
   permissionMode: 'dynamic',
 
-  //顶部
+  // 顶部
   header: {
-    //背景色
-    bgColor: '#fff',
-    //固定顶部
+    // 背景色
+    // bgColor: '#fff',
+    // 固定顶部
     fixed: true,
-    //显示重载按钮
+    // 显示重载按钮
     isReload: true,
+    // 显示折叠菜单按钮
+    isMenu: true,
+    // 显示面包屑
+    isBreadcrumb: true,
   },
   //菜单
   menu: {
@@ -80,27 +84,29 @@ export const projectSetting = Object.freeze({
   },
 
   //导航模式 vertical 左侧菜单垂直模式 horizontal 顶部菜单水平模式 vertical-mix 垂直混合模式 horizontal-mix 水平混合模式
-  navMode: 'vertical',
+  navMode: 'horizontal',
   //导航风格 dark 暗色侧边栏 light 白色侧边栏 header-dark 暗色顶栏
   navTheme: 'dark',
+  // 隐藏/显示顶栏
+  showHeader: true,
   // 隐藏/显示logo
-  showLogo: true,
+  showLogo: false,
+  //页脚
+  showFooter: true,
 
   // 是否处于移动端模式
   isMobile: false,
 
-  //页脚
-  showFooter: true,
   //多标签
-  multiTabsSetting: {
+  multiTabs: {
     //背景色
-    bgColor: '#fff',
+    // bgColor: '#fff',
     //是否显示
-    show: true,
+    // show: true,
     //固定多标签
-    fixed: true,
+    // fixed: true,
   },
 
   //路由动画类型
-  pageAnimateType: 'zoom-fade',
+  // pageAnimateType: 'zoom-fade',
 })

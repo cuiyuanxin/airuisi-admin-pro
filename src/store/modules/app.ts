@@ -14,8 +14,10 @@ const {
   permissionMode,
   header,
   menu,
+  multiTabs,
   navMode,
   navTheme,
+  showHeader,
   showFooter,
   showLogo,
 } = projectSetting
@@ -50,8 +52,10 @@ interface AppState {
     permissionMode: string
     header: any
     menu: any
+    multiTabs: any
     navMode: string
     navTheme: string
+    showHeader: boolean
     showFooter: boolean
     showLogo: boolean
   }
@@ -78,8 +82,10 @@ export const useAppStore = defineStore({
       permissionMode,
       header,
       menu,
+      multiTabs,
       navMode,
       navTheme,
+      showHeader,
       showFooter,
       showLogo,
     },

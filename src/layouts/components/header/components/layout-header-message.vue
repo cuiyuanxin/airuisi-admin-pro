@@ -24,7 +24,9 @@
                 <n-thing :title="item2.title" :description="item2.time" />
               </n-list-item>
               <template #footer>
-                <n-icon size="20" :component="TrashOutline" />清空{{ item.title }}
+                <div class="flex items-center justify-center">
+                  <n-icon size="20" :component="TrashOutline" />清空{{ item.title }}
+                </div>
               </template>
             </n-list>
           </template>
