@@ -510,7 +510,7 @@ provide('reloadPage', reloadPage)
       background: var(--color);
 
       &-btn {
-        @apply h-full flex items items-center justify-center;
+        @apply h-full flex items-center justify-center;
         color: var(--color);
       }
     }

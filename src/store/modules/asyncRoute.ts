@@ -85,9 +85,9 @@ export const useAsyncRouteStore = defineStore({
     isDynamicRouteAdded: false,
   }),
   getters: {
-    // getMenus(): RouteRecordRaw[] {
-    //   return this.menus
-    // },
+    getMenus(): RouteRecordRaw[] {
+      return this.routers
+    },
     getIsDynamicRouteAdded(): boolean {
       return this.isDynamicRouteAdded
     },
