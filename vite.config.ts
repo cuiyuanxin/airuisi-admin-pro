@@ -1,5 +1,5 @@
 import { defineConfig, loadEnv } from 'vite'
-import { resolve } from 'path'
+import { resolve } from 'node:path'
 import * as process from 'process'
 import { wrapperEnv } from './build/utils'
 import { createVitePlugins } from './build/vite/plugin'
@@ -19,11 +19,6 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     base: VITE_PUBLIC_PATH || '/',
-    define: {
-      // __VUE_I18N_FULL_INSTALL__: true,
-      // __VUE_I18N_LEGACY_API__: true,
-      // __INTLIFY_PROD_DEVTOOLS__: false,
-    },
     resolve: {
       alias: [
         {
@@ -42,7 +37,6 @@ export default defineConfig(({ command, mode }) => {
         less: {
           modifyVars: {},
           javascriptEnabled: true,
-          // additionalData: `@import "src/styles/var.less";`,
         },
       },
     },
@@ -63,12 +57,6 @@ export default defineConfig(({ command, mode }) => {
       target: 'es2015',
       cssTarget: 'chrome80',
       outDir: OUTPUT_DIR,
-      // terserOptions: {
-      //   compress: {
-      //     keep_infinity: true,
-      //     drop_console: VITE_DROP_CONSOLE,
-      //   },
-      // },
       brotliSize: false,
       chunkSizeWarningLimit: 2000,
     },
