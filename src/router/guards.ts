@@ -8,6 +8,7 @@ import { useApp } from '@/hooks/setting/useApp'
 import { isDef, isNullOrUnDef, isUnDef } from '@/utils/is'
 import { ResultEnum } from '@/constants/httpEnum'
 import { ErrorPageRoute } from '@/router'
+import { Result } from '/#/axios'
 
 const { getProjectSetting } = useApp()
 
@@ -37,7 +38,7 @@ export const createRouterGuards = (router: Router) => {
         ) {
           const res = await getUserInfo()
 
-          const { code, result } = res
+          const { code, result } = res as Result
           if (code === ResultEnum.SUCCESS) {
             userInfo = result
           } else {

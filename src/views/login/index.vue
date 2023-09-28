@@ -156,6 +156,7 @@ import {
   PhonePortraitOutline,
   ShieldCheckmarkOutline,
 } from '@vicons/ionicons5'
+import { Result } from '/#/axios'
 
 const { t } = useI18n()
 const { getWebsiteSetting } = useApp()
@@ -246,7 +247,7 @@ const handleGetSmsCaptcha = () => {
   getSmsCaptcha({
     mobile: formMobileValue.value.mobile,
   }).then((res) => {
-    const { code, result } = res
+    const { code, result } = res as Result
     if (code === ResultEnum.SUCCESS) {
       initgetCodeTimer()
       // 对接正式程序可删除该程序
@@ -292,7 +293,7 @@ const handleSubmit = (e: MouseEvent) => {
         tagDefaultValue.value === 'accountSignin' ? formAccountValue.value : formMobileValue.value
 
       login(params).then((res) => {
-        const { code, message } = res
+        const { code, message } = res as Result
         if (code === ResultEnum.SUCCESS) {
           const toPath = decodeURIComponent((route.query?.redirect || '/') as string)
           $message.success(t('login.loginSuccess'))

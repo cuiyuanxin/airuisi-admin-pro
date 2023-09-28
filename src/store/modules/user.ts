@@ -6,6 +6,7 @@ import LocalStorage from '@/utils/storage'
 import { useApp } from '@/hooks/setting/useApp'
 import { changeLocale } from '@/hooks/web/useI18n'
 import { getUserInfo, login } from '@/api/system/user'
+import { Result } from '/#/axios'
 
 const { getProjectSetting } = useApp()
 
@@ -73,15 +74,11 @@ export const useUserStore = defineStore({
         console.log(err)
       })
       console.log('login data:', res)
-      const { result, code } = res
+      const { result, code } = res as Result
       if (code === ResultEnum.SUCCESS) {
         const ex = getProjectSetting.value.tokenExpire
         LocalStorage.set(ACCESS_TOKEN, result.token, ex)
         this.setToken(result.token)
-
-        if (result?.locale) {
-          changeLocale(result?.locale)
-        }
       }
 
       return res
@@ -94,11 +91,15 @@ export const useUserStore = defineStore({
         console.log(err)
       })
       console.log('getUserInfo data:', res)
-      const { result, code } = res
+      const { result, code } = res as Result
       if (code === ResultEnum.SUCCESS) {
         const ex = getProjectSetting.value.tokenExpire
         LocalStorage.set(CURRENT_USER, result, ex)
         this.setUserInfo(result)
+
+        if (result?.setting?.locale) {
+          changeLocale(result?.setting?.locale)
+        }
       }
 
       return res

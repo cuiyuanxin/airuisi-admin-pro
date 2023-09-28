@@ -1,5 +1,6 @@
 import { h } from 'vue'
 import { NIcon } from 'naive-ui'
+import { useI18n } from '@/hooks/web/useI18n'
 import { isObject } from '@/utils/is'
 import { cloneDeep } from 'lodash-es'
 import { PageEnum } from '@/constants/pageEnum'
@@ -122,16 +123,20 @@ export function isRootRouter(item) {
  * 递归组装菜单格式
  */
 export function generatorMenu(routerMap: Array<any>) {
+  const { t } = useI18n()
+
   return filterRouter(routerMap).map((item) => {
     const isRoot = isRootRouter(item)
     const info = isRoot ? item.children[0] : item
     const currentMenu = {
       ...info,
       ...info.meta,
-      label: info.meta?.title,
+      label: t(info.meta?.title),
       key: info.name,
       icon: isRoot ? item.meta?.icon : info.meta?.icon,
     }
+
+    console.log(currentMenu)
     // 是否有子菜单，并递归处理
     if (info.children && info.children.length > 0) {
       // Recursion
@@ -145,13 +150,15 @@ export function generatorMenu(routerMap: Array<any>) {
  * 递归组装子菜单
  * */
 export function getChildrenRouter(routerMap: Array<any>) {
+  const { t } = useI18n()
+
   return filterRouter(routerMap).map((item) => {
     const isRoot = isRootRouter(item)
     const info = isRoot ? item.children[0] : item
     const currentMenu = {
       ...info,
       ...info.meta,
-      label: info.meta?.title,
+      label: t(info.meta?.title),
       key: info.name,
     }
     // 是否有子菜单，并递归处理
@@ -167,6 +174,8 @@ export function getChildrenRouter(routerMap: Array<any>) {
  * 混合菜单
  * */
 export function generatorMenuMix(routerMap: Array<any>, routerName: string, location: string) {
+  const { t } = useI18n()
+
   const cloneRouterMap = cloneDeep(routerMap)
   const newRouter = filterRouter(cloneRouterMap)
   if (location === 'header') {
@@ -178,7 +187,7 @@ export function generatorMenuMix(routerMap: Array<any>, routerName: string, loca
       const currentMenu = {
         ...info,
         ...info.meta,
-        label: info.meta?.title,
+        label: t(info.meta?.title),
         key: info.name,
       }
       firstRouter.push(currentMenu)

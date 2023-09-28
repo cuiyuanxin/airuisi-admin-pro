@@ -3,6 +3,7 @@ import { ResultEnum } from '@/constants/httpEnum'
 import { renderIcon } from '@/utils'
 import { rootRoutes } from '@/router'
 import { AppRouteRecordRaw } from '/#/route'
+import { Result } from '/#/axios'
 
 enum layoutEnum {
   BasicLayout = 'layout',
@@ -21,7 +22,7 @@ export const generatorDynamicRouter = async () => {
   })
 
   console.log('generatorDynamicRouter data:', res)
-  const { code, result } = res
+  const { code, result } = res as Result
   if (code === ResultEnum.SUCCESS) {
     const menus: any = []
     const childrenMenu = []

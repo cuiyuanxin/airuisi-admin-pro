@@ -42,7 +42,7 @@ const minMenuWidth = unref(menu.minMenuWidth)
 const router = useRouter()
 
 // let menuOptions: MenuOption[] = reactive([])
-let menuOptions: Array[] = reactive([])
+const menuOptions: any = ref([])
 const selectedKeys = ref<string>(currentRoute.name as string)
 const getSelectedKeys = computed(() => {
   // let location = props.location
@@ -73,11 +73,11 @@ const updateSelectedKeys = () => {
 
 const updateMenu = () => {
   if (!menu.mixMenu) {
-    menuOptions = generatorMenu(asyncRouteStore.getMenus)
+    menuOptions.value = generatorMenu(asyncRouteStore.getMenus)
   } else {
     //混合菜单
     // const firstRouteName: string = (currentRoute.matched[0].name as string) || ''
-    // menuOptions = generatorMenuMix(asyncRouteStore.getMenus, firstRouteName, props.location)
+    // menuOptions.value = generatorMenuMix(asyncRouteStore.getMenus, firstRouteName, props.location)
     // const activeMenu: string = currentRoute?.matched[0].meta?.activeMenu as string
     // headerMenuSelectKey.value = (activeMenu ? activeMenu : firstRouteName) || ''
   }
