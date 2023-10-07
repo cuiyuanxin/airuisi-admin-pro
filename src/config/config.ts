@@ -42,6 +42,8 @@ export const designSetting = Object.freeze({
   appThemeList,
   //国际语言
   locale: 'zh-CN',
+  // 水印
+  watermark: false,
 })
 
 export const projectSetting = Object.freeze({

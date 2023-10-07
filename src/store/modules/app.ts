@@ -7,7 +7,7 @@ import { LANGUAGES } from '@/constants/constant'
 import { LocaleEnum } from '@/constants/localeEnum'
 
 const { title, logo, loginImage, loginDesc } = unref(websiteSetting)
-const { appDarkTheme, appTheme, appThemeList, locale } = unref(designSetting)
+const { appDarkTheme, appTheme, appThemeList, locale, watermark } = unref(designSetting)
 const {
   tokenExpire,
   permission,
@@ -44,6 +44,8 @@ interface AppState {
     appThemeList: string[]
     // 国际语言
     locale: string
+    // 水印
+    watermark: boolean
   }
   projectSetting: {
     // token有效期
@@ -79,6 +81,7 @@ export const useAppStore = defineStore({
       appTheme,
       appThemeList,
       locale: LocalStorage.get(LANGUAGES) ?? locale,
+      watermark,
     },
     projectSetting: {
       tokenExpire,

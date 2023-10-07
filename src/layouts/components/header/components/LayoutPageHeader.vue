@@ -57,7 +57,7 @@
     </div>
   </div>
   <!--项目配置-->
-  <layout-header-setting ref="drawerSetting" />
+  <layout-header-setting ref="drawerSettingRef" />
 </template>
 
 <script setup lang="ts">
@@ -66,16 +66,20 @@ import { useApp } from '@/hooks/setting/useApp'
 const props = defineProps({
   collapsed: Boolean,
   isRouterAlive: Boolean,
-  inverted: Boolean,
 })
-
+// 数据更新监控
 const emit = defineEmits(['update:collapsed', 'update:isRouterAlive'])
-
+// 收缩菜单
 const { collapsed } = toRefs(props)
-
+// 项目配置
 const { getProjectSetting } = useApp()
 const { header, menu, navMode } = unref(getProjectSetting)
-
+// 顶栏布局下隐藏工具
+if (navMode === 'horizontal' || navMode === 'horizontal-mix') {
+  header.isMenu = false
+  header.isReload = false
+  header.isBreadcrumb = false
+}
 // 收缩后宽度
 const minMenuWidth = computed(() => {
   const { minMenuWidth } = menu
@@ -86,15 +90,8 @@ const menuWidth = computed(() => {
   const { menuWidth } = menu
   return `${menuWidth}px`
 })
-
-if (navMode === 'horizontal' || navMode === 'horizontal-mix') {
-  header.isMenu = false
-  header.isReload = false
-  header.isBreadcrumb = false
-}
-
 // 项目设置
-const drawerSetting = ref<any>()
+const drawerSettingRef = ref<any>()
 
 // 收缩/展开菜单
 const handleMenuCollapse = () => {
@@ -109,21 +106,15 @@ const reloadPage = () => {
 }
 // 项目设置
 const handleOpenSetting = () => {
-  const { openDrawer } = drawerSetting.value
+  const { openDrawer } = drawerSettingRef.value
   openDrawer()
 }
-
-// watch(
-//   () => props.collapsed,
-//   (newVal) => {
-//     collapsed.value = newVal
-//   },
-// )
 </script>
 
 <style scoped lang="less">
 .ars-layout-page-header {
-  @apply w-full h-14 flex  items-center justify-items-center;
+  @apply w-full h-14 flex items-center justify-items-center;
+  transition: left 0.3s;
   &-vertical-fixed {
     @apply fixed top-0 bottom-0 z-10;
     left: v-bind(menuWidth);

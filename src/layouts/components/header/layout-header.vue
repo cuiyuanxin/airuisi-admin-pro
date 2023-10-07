@@ -4,7 +4,6 @@
       <n-grid-item span="20">
         <div class="ars-layout-header-left">
           <layout-logo
-            v-model:collapsed="collapsed"
             v-show="showLogo"
             :style="{ width: `${menu.menuWidth}px` }"
             v-if="navMode === 'horizontal' || navMode === 'horizontal-mix'"
@@ -20,7 +19,7 @@
               x-scrollable
               v-if="navMode === 'horizontal' || navMode === 'horizontal-mix'"
             >
-              <layout-menu v-model:inverted="inverted" mode="horizontal" />
+              <layout-menu mode="horizontal" />
             </n-scrollbar>
             <div class="px-1" v-if="!isScrollToRight" @click="handleScrollbar('right')">
               <n-icon size="22">
@@ -42,33 +41,24 @@
 <script setup lang="ts">
 import { useApp } from '@/hooks/setting/useApp'
 
-const props = defineProps({
-  collapsed: Boolean,
-  isRouterAlive: Boolean,
-  inverted: Boolean,
-})
-const emit = defineEmits(['update:collapsed', 'update:isRouterAlive'])
-
-const { collapsed, isRouterAlive, inverted } = toRefs(props)
-
-provide('handleMenuCollapse', (val) => {
-  emit('update:collapsed', val)
-})
-
+// 项目配置
 const { getProjectSetting } = useApp()
 const { menu, navMode, showHeader, showLogo } = unref(getProjectSetting)
-
+// 收缩菜单
+const collapsed = inject('collapsed', false)
 // 控制菜单宽度
 const horizontalMenu = computed(() => {
   const { menuWidth } = menu
   return showLogo ? `width: calc(100% - ${menuWidth}px)` : ''
 })
-
 // 控制菜单滚动条
 const scrollbar: any = ref(null)
 const left = ref(0)
 const isScrollToLeft = ref(false)
 const isScrollToRight = ref(false)
+
+// 刷新组件
+const isRouterAlive = inject('isRouterAlive', true)
 
 onMounted(() => {
   const scrollLeft = scrollbar.value.scrollbarInstRef.containerRef.scrollLeft
@@ -79,6 +69,8 @@ onMounted(() => {
     isScrollToRight.value = true
   }
 })
+
+// 控制菜单向左向右滚动
 const handleScrollbar = (position: string) => {
   const scrollLeft = scrollbar.value.scrollbarInstRef.containerRef.scrollLeft
   const scrollWidth = scrollbar.value.scrollbarInstRef.containerRef.scrollWidth

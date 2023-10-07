@@ -12,12 +12,9 @@
 import { useAsyncRouteStore } from '@/store/modules/asyncRoute'
 import { useApp } from '@/hooks/setting/useApp'
 
-const props = defineProps({
-  isRouterAlive: Boolean,
-})
+const isRouterAlive = inject('isRouterAlive', true)
 
-const { isRouterAlive } = toRefs(props)
-
+// 项目配置
 const { getProjectSetting } = useApp()
 const { pageAnimateType } = unref(getProjectSetting)
 
@@ -25,5 +22,3 @@ const asyncRouteStore = useAsyncRouteStore()
 // 需要缓存的路由组件
 const keepAliveComponents = computed(() => asyncRouteStore.keepAliveComponents)
 </script>
-
-<style scoped lang="less"></style>

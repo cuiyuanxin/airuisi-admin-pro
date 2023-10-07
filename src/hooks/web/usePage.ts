@@ -1,6 +1,6 @@
 import type { RouteLocationRaw, Router } from 'vue-router'
 import { useRouter } from 'vue-router'
-import { isString } from '@/utils/is'
+import { isObject, isString } from '@/utils/is'
 
 import { PageEnum } from '@/constants/pageEnum'
 // import { RedirectName } from '@/router/constant'
@@ -20,11 +20,16 @@ export const useGo = (_router?: Router) => {
     router = useRouter()
   }
   const { push, replace } = _router || router
-  function go(opt: PageEnum | RouteLocationRawEx | string = PageEnum.BASE_HOME, isReplace = false) {
+  function go(
+    opt: object | PageEnum | RouteLocationRawEx | string = PageEnum.BASE_HOME,
+    isReplace = false,
+  ) {
     if (!opt) {
       return
     }
     if (isString(opt)) {
+      isReplace ? replace(opt).catch(handleError) : push(opt).catch(handleError)
+    } else if (isObject(opt)) {
       isReplace ? replace(opt).catch(handleError) : push(opt).catch(handleError)
     } else {
       const o = opt as RouteLocationRaw

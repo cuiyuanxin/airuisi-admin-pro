@@ -1,11 +1,7 @@
 <template>
   <n-layout class="ars-layout" :position="fixed" :has-sider="hasSider">
-    <n-layout-header
-      bordered
-      :inverted="getHeaderInverted"
-      v-if="navMode === 'horizontal' || navMode === 'horizontal-mix'"
-    >
-      <layout-header v-model:collapsed="collapsed" v-model:inverted="inverted" />
+    <n-layout-header bordered :inverted="inverted" v-if="!hasSider">
+      <layout-header />
     </n-layout-header>
     <n-layout-sider
       bordered
@@ -14,57 +10,45 @@
       :width="menuWidth"
       :collapsed-width="minMenuWidth"
       :collapsed="collapsed"
-      :inverted="inverted"
+      :inverted="getMenuInverted"
       :show-trigger="showTrigger"
       @collapse="collapsed = true"
       @expand="collapsed = false"
-      v-if="navMode === 'vertical' || navMode === 'vertical-mix'"
+      v-if="hasSider"
     >
       <div>
-        <div><layout-logo v-model:collapsed="collapsed" v-show="showLogo" /></div>
-        <div><layout-menu v-model:collapsed="collapsed" mode="vertical" /></div>
+        <div><layout-logo v-show="showLogo" /></div>
+        <div><layout-menu mode="vertical" /></div>
       </div>
     </n-layout-sider>
-
     <n-layout
       class="ars-layout-main"
       :class="{
-        'ars-layout-main-horizontal-fixed':
-          (navMode === 'horizontal' || navMode === 'horizontal-mix') && header.fixed,
-        'ars-layout-main-horizontal-fixed-full': !showHeader,
+        'ars-layout-main-horizontal-fixed': !hasSider && header.fixed,
+        'ars-layout-main-hideheader': !showHeader,
       }"
       :native-scrollbar="false"
-      :style="mainVerticalFull"
     >
-      <n-layout-header
-        class="ars-layout-header"
-        :native-scrollbar="false"
-        v-if="navMode === 'vertical' || navMode === 'vertical-mix'"
-      >
+      <n-layout-header class="ars-layout-header" :native-scrollbar="false" v-if="hasSider">
         <layout-page-header v-model:collapsed="collapsed" v-model:isRouterAlive="isRouterAlive" />
       </n-layout-header>
       <n-layout-content
         class="ars-layout-content"
         :class="{
-          'ars-layout-content-vertical-fixed':
-            (navMode === 'vertical' || navMode === 'vertical-mix') && header.fixed,
+          'ars-layout-content-vertical-fixed': hasSider && header.fixed,
         }"
         bordered
         :native-scrollbar="false"
       >
         <div class="ars-layout-content-main">
-          <tags-view
-            v-model:collapsed="collapsed"
-            v-model:isRouterAlive="isRouterAlive"
-            v-if="showMultiTabs"
-          />
+          <tags-view v-model:isRouterAlive="isRouterAlive" v-if="showMultiTabs" />
           <div
             :class="{
               'ars-layout-content-main-notabs': !showMultiTabs,
               'ars-layout-content-main-tabs': showMultiTabs && multiTabs.fixed,
             }"
           >
-            <layout-main v-model:isRouterAlive="isRouterAlive" />
+            <layout-main />
           </div>
         </div>
       </n-layout-content>
@@ -78,67 +62,52 @@
 <script setup lang="ts">
 import { useApp } from '@/hooks/setting/useApp'
 
-const { getProjectSetting } = useApp()
-const {
-  header,
-  menu,
-  multiTabs,
-  navMode,
-  navTheme,
-  showHeader,
-  showLogo,
-  showMultiTabs,
-  showFooter,
-} = unref(getProjectSetting)
+const { getProjectSetting, getDesignSetting } = useApp()
+const { header, menu, multiTabs, navMode, showHeader, showLogo, showMultiTabs, showFooter } =
+  unref(getProjectSetting)
 
-// 展开收缩菜单
-const collapsed = ref(menu.collapsed)
-
-// 收缩后宽度
-const minMenuWidth = unref(menu.minMenuWidth)
-// 宽度
-const menuWidth = unref(menu.menuWidth)
-
-// 刷新组件
-const isRouterAlive = ref(true)
-
-const hasSider = computed(() => {
-  return navMode === 'vertical' || navMode === 'vertical-min'
-})
-
-const mainVerticalFull = computed(() => {
-  if (hasSider) {
-    return collapsed
-      ? `width: calc(100% - ${menuWidth}px)`
-      : `width: calc(100% - ${minMenuWidth}px)`
-  }
-  return ''
-})
-
-const showTrigger = computed((): boolean | 'bar' | 'arrow-circle' => {
-  const { fixed, showTrigger } = unref(menu)
-  return fixed ? false : (showTrigger as 'bar' | 'arrow-circle')
-})
-
-// 布局位置
+/* 布局位置 */
+// 头部固定
 const headerFixed = computed(() => {
   const { fixed } = unref(header)
   return fixed ? 'static' : 'absolute'
 })
-
+// 菜单固定
 const menuFixed = computed(() => {
   const { fixed } = unref(menu)
   return fixed ? 'static' : 'absolute'
 })
+// 判断布局模式
+const hasSider = computed(() => {
+  return navMode === 'vertical' || navMode === 'vertical-min'
+})
 
 const fixed = hasSider ? menuFixed : headerFixed
 
+// 主题
 const inverted = computed(() => {
-  return ['dark'].includes(unref(navTheme))
+  const { appDarkTheme } = unref(getDesignSetting)
+  return appDarkTheme
 })
-
-const getHeaderInverted = computed(() => {
-  return ['light', 'dark'].includes(unref(navTheme)) ? unref(inverted) : !unref(inverted)
+provide('inverted', inverted)
+// 导航风格
+const getMenuInverted = computed(() => {
+  return inverted.value ? false : true
+})
+// 展开收缩菜单
+const collapsed = ref(menu.collapsed)
+provide('collapsed', collapsed)
+// 刷新组件
+const isRouterAlive = ref(true)
+provide('isRouterAlive', isRouterAlive)
+// 收缩后宽度
+const minMenuWidth = unref(menu.minMenuWidth)
+// 宽度
+const menuWidth = unref(menu.menuWidth)
+// 菜单bar
+const showTrigger = computed((): boolean | 'bar' | 'arrow-circle' => {
+  const { fixed, showTrigger } = unref(menu)
+  return fixed ? false : (showTrigger as 'bar' | 'arrow-circle')
 })
 </script>
 
@@ -150,9 +119,9 @@ const getHeaderInverted = computed(() => {
   &-main {
     &-horizontal-fixed {
       @apply w-full fixed top-14 left-0 bottom-0;
-      &-full {
-        @apply top-0;
-      }
+    }
+    &-hideheader {
+      @apply top-0;
     }
   }
   &-content {

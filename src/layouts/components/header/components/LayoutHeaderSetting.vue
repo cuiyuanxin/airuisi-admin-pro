@@ -41,49 +41,49 @@
         </div>
 
         <n-divider title-placement="center">导航栏模式</n-divider>
-        <div class="drawer-setting-item align-items-top">
-          <div class="align-items-top drawer-setting-item-style">
-            <n-tooltip placement="top">
-              <template #trigger>
-                <!--                <img-->
-                <!--                  src="~@/assets/images/nav-theme-dark.svg"-->
-                <!--                  @click="togNavMode('vertical')"-->
-                <!--                  alt="左侧菜单模式"-->
-                <!--                />-->
-              </template>
-              <span>左侧菜单模式</span>
-            </n-tooltip>
-            <n-badge dot color="#19be6b" v-show="navMode === 'vertical'" />
-          </div>
+        <!--        <div class="drawer-setting-item align-items-top">-->
+        <!--          <div class="align-items-top drawer-setting-item-style">-->
+        <!--            <n-tooltip placement="top">-->
+        <!--              <template #trigger>-->
+        <!--                <img-->
+        <!--                  src="~@/assets/images/nav-theme-dark.svg"-->
+        <!--                  @click="togNavMode('vertical')"-->
+        <!--                  alt="左侧菜单模式"-->
+        <!--                />-->
+        <!--              </template>-->
+        <!--              <span>左侧菜单模式</span>-->
+        <!--            </n-tooltip>-->
+        <!--            <n-badge dot color="#19be6b" v-show="navMode === 'vertical'" />-->
+        <!--          </div>-->
 
-          <!--          <div class="drawer-setting-item-style">-->
-          <!--            <n-tooltip placement="top">-->
-          <!--              <template #trigger>-->
-          <!--                <img-->
-          <!--                  src="~@/assets/images/nav-horizontal.svg"-->
-          <!--                  alt="顶部菜单模式"-->
-          <!--                  @click="togNavMode('horizontal')"-->
-          <!--                />-->
-          <!--              </template>-->
-          <!--              <span>顶部菜单模式</span>-->
-          <!--            </n-tooltip>-->
-          <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal'" />-->
-          <!--          </div>-->
+        <!--          <div class="drawer-setting-item-style">-->
+        <!--            <n-tooltip placement="top">-->
+        <!--              <template #trigger>-->
+        <!--                <img-->
+        <!--                  src="~@/assets/images/nav-horizontal.svg"-->
+        <!--                  alt="顶部菜单模式"-->
+        <!--                  @click="togNavMode('horizontal')"-->
+        <!--                />-->
+        <!--              </template>-->
+        <!--              <span>顶部菜单模式</span>-->
+        <!--            </n-tooltip>-->
+        <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal'" />-->
+        <!--          </div>-->
 
-          <!--          <div class="drawer-setting-item-style">-->
-          <!--            <n-tooltip placement="top">-->
-          <!--              <template #trigger>-->
-          <!--                <img-->
-          <!--                  src="~@/assets/images/nav-horizontal-mix.svg"-->
-          <!--                  @click="togNavMode('horizontal-mix')"-->
-          <!--                  alt="顶部菜单混合模式"-->
-          <!--                />-->
-          <!--              </template>-->
-          <!--              <span>顶部菜单混合模式</span>-->
-          <!--            </n-tooltip>-->
-          <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal-mix'" />-->
-          <!--          </div>-->
-        </div>
+        <!--          <div class="drawer-setting-item-style">-->
+        <!--            <n-tooltip placement="top">-->
+        <!--              <template #trigger>-->
+        <!--                <img-->
+        <!--                  src="~@/assets/images/nav-horizontal-mix.svg"-->
+        <!--                  @click="togNavMode('horizontal-mix')"-->
+        <!--                  alt="顶部菜单混合模式"-->
+        <!--                />-->
+        <!--              </template>-->
+        <!--              <span>顶部菜单混合模式</span>-->
+        <!--            </n-tooltip>-->
+        <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal-mix'" />-->
+        <!--          </div>-->
+        <!--        </div>-->
 
         <!--        <n-divider title-placement="center">导航栏风格</n-divider>-->
 

@@ -20,45 +20,86 @@
 
 <script setup lang="ts">
 import { RouteLocationMatched } from 'vue-router'
-
 import { useAsyncRouteStore } from '@/store/modules/asyncRoute'
 import { useApp } from '@/hooks/setting/useApp'
+import { useGo } from '@/hooks/web/usePage'
 import { generatorMenu } from '@/utils'
 
 const props = defineProps({
   mode: String as PropType<'horizontal' | 'vertical'>,
-  collapsed: Boolean,
 })
-const { mode, collapsed } = toRefs(props)
+const { mode } = toRefs(props)
 
+// 项目/系统配置
 const { getProjectSetting, getDesignSetting } = useApp()
-// 当前路由
-const currentRoute = useRoute()
-// 布局
 const { menu, navMode } = unref(getProjectSetting)
+
+// 收缩菜单
+const collapsed = inject('collapsed', false)
+// 主题
+const inverted = computed(() => {
+  if (navMode === 'horizontal' || navMode === 'horizontal-mix') {
+    return false
+  }
+  const { appDarkTheme } = toRefs(getDesignSetting.value)
+  return !appDarkTheme.value
+})
 // 收缩后样式
 const minMenuWidth = unref(menu.minMenuWidth)
 // 菜单
 const menuOptions: any = ref([])
 
-const inverted = computed(() => {
-  const { navTheme } = toRefs(getProjectSetting.value)
-  const { appDarkTheme } = toRefs(getDesignSetting.value)
-  const isDark = ['dark'].includes(navTheme.value)
-
-  return appDarkTheme.value ? false : isDark
-})
-
+// 当前路由
+const currentRoute = useRoute()
 // 获取当前打开的子菜单
 const matched: RouteLocationMatched[] = currentRoute.matched
 const getRouteName = matched && matched.length ? matched.map((item) => item.name) : []
 const openKeys: any = unref(getRouteName)
+// 选中菜单
+const selectedKeys = ref<string>(currentRoute.name as string)
+const getSelectedKeys = computed(() => {
+  // let location = props.location
+  // return location === 'left' || (location === 'header' && unref(navMode) === 'horizontal')
+  //   ? unref(selectedKeys)
+  //   : unref(headerMenuSelectKey)
 
-const asyncRouteStore = useAsyncRouteStore()
+  return unref(selectedKeys)
+})
 
 onMounted(() => {
   updateMenu()
 })
+
+const go = useGo()
+
+// 点击菜单跳转
+const clickMenuItem = (key: string) => {
+  if (/http(s)?:/.test(key)) {
+    window.open(key)
+  } else {
+    go({ name: key })
+  }
+}
+
+//查找是否存在子路由
+const findChildrenLen = (key: string) => {
+  if (!key) return false
+  const subRouteChildren: string[] = []
+  for (const { children, key } of unref(menuOptions)) {
+    if (children && children.length) {
+      subRouteChildren.push(key as string)
+    }
+  }
+  return subRouteChildren.includes(key)
+}
+
+//展开菜单
+const menuExpanded = (openKeys: string[]) => {
+  if (!openKeys) return
+  const latestOpenKey = openKeys.find((key) => openKeys.indexOf(key) === -1)
+  const isExistChildren = findChildrenLen(latestOpenKey as string)
+  openKeys = isExistChildren ? (latestOpenKey ? [latestOpenKey] : []) : openKeys
+}
 
 // 更新展开菜单key
 const updateSelectedKeys = () => {
@@ -68,6 +109,7 @@ const updateSelectedKeys = () => {
 }
 
 // 更新菜单数据
+const asyncRouteStore = useAsyncRouteStore()
 const updateMenu = () => {
   const { getMenus } = storeToRefs(asyncRouteStore)
 
@@ -83,48 +125,6 @@ const updateMenu = () => {
   updateSelectedKeys()
 }
 
-const router = useRouter()
-
-const selectedKeys = ref<string>(currentRoute.name as string)
-const getSelectedKeys = computed(() => {
-  // let location = props.location
-  // return location === 'left' || (location === 'header' && unref(navMode) === 'horizontal')
-  //   ? unref(selectedKeys)
-  //   : unref(headerMenuSelectKey)
-
-  return unref(selectedKeys)
-})
-
-// 点击菜单
-function clickMenuItem(key: string) {
-  if (/http(s)?:/.test(key)) {
-    window.open(key)
-  } else {
-    router.push({ name: key })
-  }
-  // emit('clickMenuItem' as any, key)
-}
-
-//查找是否存在子路由
-function findChildrenLen(key: string) {
-  if (!key) return false
-  const subRouteChildren: string[] = []
-  for (const { children, key } of unref(menuOptions)) {
-    if (children && children.length) {
-      subRouteChildren.push(key as string)
-    }
-  }
-  return subRouteChildren.includes(key)
-}
-
-//展开菜单
-function menuExpanded(openKeys: string[]) {
-  if (!openKeys) return
-  const latestOpenKey = openKeys.find((key) => openKeys.indexOf(key) === -1)
-  const isExistChildren = findChildrenLen(latestOpenKey as string)
-  openKeys = isExistChildren ? (latestOpenKey ? [latestOpenKey] : []) : openKeys
-}
-
 // 监听分割菜单
 // watch(
 //     () => settingStore.menuSetting.mixMenu,
@@ -134,13 +134,6 @@ function menuExpanded(openKeys: string[]) {
 //         emit('update:collapsed', !props.collapsed);
 //       }
 //     }
-// );
-
-// 监听菜单收缩状态
-// watch(
-//   () => props.collapsed,
-//   (newVal) => {
-//   }
 // );
 
 // 跟随页面路由变化，切换菜单选中状态

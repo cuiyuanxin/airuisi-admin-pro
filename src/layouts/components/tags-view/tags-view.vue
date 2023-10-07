@@ -3,9 +3,7 @@
     class="ars-tabs-view"
     :class="{
       'ars-tabs-view-fix': multiTabs.fixed,
-      'ars-tabs-view-vertical-fixed': navMode === 'vertical' || navMode === 'vertical-mix',
-      'ars-tabs-view-vertical-min-fixed':
-        (navMode === 'vertical' || navMode === 'vertical-mix') && collapsed,
+      'ars-tabs-view-fix-min': collapsed && multiTabs.fixed,
       'ars-tabs-view-default-background': appDarkTheme === false,
       'ars-tabs-view-dark-background': appDarkTheme === true,
     }"
@@ -77,56 +75,27 @@ import {
   ReloadOutlined,
 } from '@vicons/antd'
 
-const props = defineProps({
-  collapsed: Boolean,
-  isRouterAlive: Boolean,
-})
+// 项目/系统配置
+const { getDesignSetting, getProjectSetting } = useApp()
+const { appDarkTheme, appTheme } = toRefs(getDesignSetting.value)
+const { multiTabs, menu } = unref(getProjectSetting)
 
-const { collapsed } = toRefs(props)
+// 收缩菜单
+const collapsed = inject('collapsed', false)
 
 // 路由
 const router = useRouter()
 const route = useRoute()
-// tags
-const tabsViewStore = useTabsViewStore()
 const go = useGo()
-
-const $message = useMessage()
-
-// 主题
-const themeVars = useThemeVars()
-const getBaseColor = computed(() => {
-  return themeVars.value.textColor1
-})
-const getCardColor = computed(() => {
-  return themeVars.value.cardColor
-})
-
-const { getDesignSetting, getProjectSetting } = useApp()
-const { appDarkTheme, appTheme } = toRefs(getDesignSetting.value)
-const { multiTabs, menu, navMode } = unref(getProjectSetting)
-
-// 全屏
-const isFullScreen = ref(true)
-
-// 收缩后宽度
-const minMenuWidth = computed(() => {
-  const { minMenuWidth } = menu
-  return `${minMenuWidth}px`
-})
-// 宽度
-const menuWidth = computed(() => {
-  const { menuWidth } = menu
-  return `${menuWidth}px`
-})
-
+const asyncRouteStore = useAsyncRouteStore()
 // 当前路由name
 const activeKey = ref(route.fullPath as string)
-
 // 标签页列表
+const tabsViewStore = useTabsViewStore()
 const tabsList: any = computed(() => tabsViewStore.tabsList)
-
-//tags 右侧下拉菜单
+// 全屏
+const isFullScreen = ref(true)
+// tags 右侧下拉菜单
 const isCurrent = ref(false)
 const isLeft = ref(false)
 const isRight = ref(false)
@@ -171,12 +140,24 @@ const TabsMenuOptions = computed(() => {
     },
   ]
 })
-
-// 获取路由对象
-const getSimpleRoute = (route): RouteItem => {
-  const { fullPath, hash, meta, name, params, path, query } = route
-  return { fullPath, hash, meta, name, params, path, query }
-}
+// 主题颜色
+const themeVars = useThemeVars()
+const getBaseColor = computed(() => {
+  return themeVars.value.textColor1
+})
+const getCardColor = computed(() => {
+  return themeVars.value.cardColor
+})
+// 收缩后宽度
+const minMenuWidth = computed(() => {
+  const { minMenuWidth } = menu
+  return `${minMenuWidth}px`
+})
+// 宽度
+const menuWidth = computed(() => {
+  const { menuWidth } = menu
+  return `${menuWidth}px`
+})
 
 onMounted(() => {
   tabsViewStore.addTab(getSimpleRoute(route))
@@ -185,6 +166,11 @@ onMounted(() => {
   isRight.value = tabsViewStore.hasTabsOnRight(getSimpleRoute(route))
 })
 
+// 获取路由对象
+const getSimpleRoute = (route): RouteItem => {
+  const { fullPath, hash, meta, name, params, path, query } = route
+  return { fullPath, hash, meta, name, params, path, query }
+}
 // 全屏切换
 const toggleFullScreen = () => {
   // const ele = document.getElementById('log') //指定全屏区域元素
@@ -192,8 +178,7 @@ const toggleFullScreen = () => {
   //   screenfull.request(ele)
   // }
 }
-
-// tag切换
+// tag切换跳转
 const handleBeforeLeave = (tabName: string): boolean => {
   //tags 跳转页面
   const fullPath = route.fullPath as string
@@ -204,9 +189,12 @@ const handleBeforeLeave = (tabName: string): boolean => {
 
   return true
 }
-
+// tag关闭
+const handleClose = (fullPath: string) => {
+  const routeInfo = tabsList.value.find((item) => item.fullPath === fullPath)
+  removeTab(routeInfo)
+}
 // 移除缓存组件名称
-const asyncRouteStore = useAsyncRouteStore()
 const delKeepAliveCompName = () => {
   if (route.meta.keepAlive) {
     const name = router.currentRoute.value.matched.find((item) => item.name === route.name)
@@ -218,63 +206,6 @@ const delKeepAliveCompName = () => {
     }
   }
 }
-
-// tag关闭
-const handleClose = (fullPath: string) => {
-  const routeInfo = tabsList.value.find((item) => item.fullPath === fullPath)
-  removeTab(routeInfo)
-}
-
-// 刷新页面
-const emit = defineEmits(['update:isRouterAlive'])
-const reloadPage = () => {
-  delKeepAliveCompName()
-  emit('update:isRouterAlive', false)
-  nextTick(() => {
-    emit('update:isRouterAlive', true)
-  })
-}
-
-// 关闭当前页面
-const removeTab = (route) => {
-  if (tabsList.value.length === 1) {
-    return $message.warning('这已经是最后一页，不能再关闭了！')
-  }
-  delKeepAliveCompName()
-  tabsViewStore.closeCurrentTab(route)
-  // 如果关闭的是当前页
-  if (activeKey.value === route.fullPath) {
-    const currentRoute = tabsList.value[Math.max(0, tabsList.value.length - 1)]
-    activeKey.value = currentRoute.fullPath
-
-    go(currentRoute, true)
-  }
-}
-
-// 关闭左侧标签页
-const closeLeftTabs = (route) => {
-  tabsViewStore.closeLeftTabs(route)
-}
-
-// 关闭右侧标签页
-const closeRightTabs = (route) => {
-  tabsViewStore.closeRightTabs(route)
-}
-
-// 关闭其他
-const closeOther = (route) => {
-  tabsViewStore.closeOtherTabs(route)
-  activeKey.value = route.fullPath
-  go(route.fullPath, true)
-}
-
-// 关闭全部
-const closeAll = () => {
-  tabsViewStore.closeAllTabs()
-  delKeepAliveCompName()
-  go(PageEnum.BASE_HOME, true)
-}
-
 //tab 操作
 const closeHandleSelect = (key) => {
   switch (key) {
@@ -301,6 +232,51 @@ const closeHandleSelect = (key) => {
       closeAll()
       break
   }
+}
+// 关闭当前页面
+const removeTab = (route) => {
+  const $message = useMessage()
+  if (tabsList.value.length === 1) {
+    return $message.warning('这已经是最后一页，不能再关闭了！')
+  }
+  delKeepAliveCompName()
+  tabsViewStore.closeCurrentTab(route)
+  // 如果关闭的是当前页
+  if (activeKey.value === route.fullPath) {
+    const currentRoute = tabsList.value[Math.max(0, tabsList.value.length - 1)]
+    activeKey.value = currentRoute.fullPath
+
+    go(currentRoute, true)
+  }
+}
+// 刷新页面
+const emit = defineEmits(['update:isRouterAlive'])
+const reloadPage = () => {
+  delKeepAliveCompName()
+  emit('update:isRouterAlive', false)
+  nextTick(() => {
+    emit('update:isRouterAlive', true)
+  })
+}
+// 关闭左侧标签页
+const closeLeftTabs = (route) => {
+  tabsViewStore.closeLeftTabs(route)
+}
+// 关闭右侧标签页
+const closeRightTabs = (route) => {
+  tabsViewStore.closeRightTabs(route)
+}
+// 关闭其他
+const closeOther = (route) => {
+  tabsViewStore.closeOtherTabs(route)
+  activeKey.value = route.fullPath
+  go(route.fullPath, true)
+}
+// 关闭全部
+const closeAll = () => {
+  tabsViewStore.closeAllTabs()
+  delKeepAliveCompName()
+  go(PageEnum.BASE_HOME, true)
 }
 
 watch(
@@ -329,15 +305,14 @@ watch(
 <style lang="less" scoped>
 .ars-tabs-view {
   &-fix {
-    @apply w-full absolute left-0 z-10;
-  }
-  &-vertical-fixed {
-    //  left: v-bind(menuWidth);
-    //width: calc(100% - v-bind(menuWidth));
-  }
-  &-vertical-min-fixed {
-    //  left: v-bind(minMenuWidth);
-    //width: calc(100% - v-bind(minMenuWidth));
+    @apply w-full fixed left-0 z-10;
+    transition: left 0.3s;
+    left: v-bind(menuWidth);
+    width: calc(100% - v-bind(menuWidth));
+    &-min {
+      left: v-bind(minMenuWidth);
+      width: calc(100% - v-bind(minMenuWidth));
+    }
   }
   &-default-background {
     @apply bg-[#f5f7f9];
