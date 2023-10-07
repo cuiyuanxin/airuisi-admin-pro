@@ -1,10 +1,9 @@
-import { unref } from 'vue'
 import type { RouteLocationRaw, Router } from 'vue-router'
 import { useRouter } from 'vue-router'
+import { isString } from '@/utils/is'
 
 import { PageEnum } from '@/constants/pageEnum'
 // import { RedirectName } from '@/router/constant'
-import { isString } from '@/utils/is'
 
 export type RouteLocationRawEx = Omit<RouteLocationRaw, 'path'> & { path: PageEnum }
 
@@ -15,7 +14,7 @@ function handleError(e: Error) {
 /**
  * 页面切换
  */
-export function useGo(_router?: Router) {
+export const useGo = (_router?: Router) => {
   let router
   if (!_router) {
     router = useRouter()
@@ -38,25 +37,25 @@ export function useGo(_router?: Router) {
 /**
  * 重做当前页面
  */
-export const useRedo = (_router?: Router) => {
-  const { push, currentRoute } = _router || useRouter()
-  const { query, params = {}, name, fullPath } = unref(currentRoute.value)
-  function redo(): Promise<boolean> {
-    return new Promise((resolve) => {
-      // if (name === RedirectName) {
-      //   resolve(false)
-      //   return
-      // }
-      if (name && Object.keys(params).length > 0) {
-        params['_redirect_type'] = 'name'
-        params['path'] = String(name)
-      } else {
-        params['_redirect_type'] = 'path'
-        params['path'] = fullPath
-      }
-      const RedirectName = ''
-      push({ name: RedirectName, params, query }).then(() => resolve(true))
-    })
-  }
-  return redo
-}
+// export const useRedo = (_router?: Router) => {
+//   const { push, currentRoute } = _router || useRouter()
+//   const { query, params = {}, name, fullPath } = unref(currentRoute.value)
+//   function redo(): Promise<boolean> {
+//     return new Promise((resolve) => {
+//       // if (name === RedirectName) {
+//       //   resolve(false)
+//       //   return
+//       // }
+//       if (name && Object.keys(params).length > 0) {
+//         params['_redirect_type'] = 'name'
+//         params['path'] = String(name)
+//       } else {
+//         params['_redirect_type'] = 'path'
+//         params['path'] = fullPath
+//       }
+//       const RedirectName = ''
+//       push({ name: RedirectName, params, query }).then(() => resolve(true))
+//     })
+//   }
+//   return redo
+// }

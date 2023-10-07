@@ -1,5 +1,6 @@
 import { i18n, setI18nLanguage } from '@/locales'
 import { useApp } from '@/store/modules/app'
+import { VueI18n } from 'vue-i18n'
 
 type I18nGlobalTranslation = {
   (key: string): string
@@ -35,7 +36,7 @@ export function useI18n(namespace?: string): {
     return normalFn
   }
 
-  const { t, ...methods } = i18n.global
+  const { t, ...methods } = i18n.global as VueI18n
   const tFn: I18nGlobalTranslation = (key: string, ...arg: any[]) => {
     if (!key) return ''
     if (!key.includes('.') && !namespace) return key

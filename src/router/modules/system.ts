@@ -1,7 +1,7 @@
 import { RouteRecordRaw } from 'vue-router'
 import { BasicLayout } from '@/router/constant'
-// import { DashboardOutlined } from '@vicons/antd'
-// import { renderIcon } from '@/utils/index'
+import { renderIcon } from '@/utils/index'
+import { SettingsOutline } from '@vicons/ionicons5'
 
 const routeName = 'system'
 
@@ -21,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
     component: BasicLayout,
     meta: {
       title: 'system.title',
-      // icons: renderIcon(DashboardOutlined),
+      icons: renderIcon(SettingsOutline),
       permissions: ['super', 'admin'],
     },
     children: [

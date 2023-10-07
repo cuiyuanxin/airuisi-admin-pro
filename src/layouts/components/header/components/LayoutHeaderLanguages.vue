@@ -5,7 +5,9 @@
     :show-arrow="true"
     @select="handleLanguageSelect"
   >
-    <n-icon size="20" :component="LanguageOutline" />
+    <n-icon size="20">
+      <LanguageOutline />
+    </n-icon>
   </n-dropdown>
 </template>
 
@@ -13,7 +15,6 @@
 import { useApp } from '@/hooks/setting/useApp'
 import { changeLocale } from '@/hooks/web/useI18n'
 import { Languages } from '@/constants/localeEnum'
-import { LanguageOutline } from '@vicons/ionicons5'
 // 国际化语言
 const languages = reactive([] as any)
 

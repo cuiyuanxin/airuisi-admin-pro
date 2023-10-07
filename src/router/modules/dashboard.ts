@@ -1,8 +1,8 @@
 import { RouteRecordRaw } from 'vue-router'
 import { BasicLayout } from '@/router/constant'
 import { PageEnum } from '@/constants/pageEnum'
-// import { DashboardOutlined } from '@vicons/antd'
-// import { renderIcon } from '@/utils/index'
+import { renderIcon } from '@/utils'
+import { DashboardOutlined } from '@vicons/antd'
 
 const routeName = 'dashboard'
 
@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     component: BasicLayout,
     meta: {
       title: 'dashboard.title',
-      // icons: renderIcon(DashboardOutlined),
+      icons: renderIcon(DashboardOutlined),
       permissions: ['super', 'admin', 'editor'],
     },
     children: [

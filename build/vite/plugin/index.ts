@@ -4,6 +4,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import { ViconsResolver } from './viconsResolver'
 import UnoCSS from 'unocss/vite'
 import { configHtmlPlugin } from './html'
 import { configCompressPlugin } from './compress'
@@ -15,12 +16,10 @@ export const createVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
   const prodMock: boolean = VITE_USE_MOCK
 
   const vitePlugins: (Plugin | Plugin[] | PluginOption)[] = [
-    // have to
     vue(),
-    // have to
     vueJsx(),
     AutoImport({
-      imports: ['vue', 'vue-router'],
+      imports: ['vue', 'vue-router', 'pinia'],
       vueTemplate: true,
       dts: true,
       eslintrc: {
@@ -33,7 +32,7 @@ export const createVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
       dirs: ['src/components', 'src/**/components'],
       extensions: ['vue', 'ts'],
       dts: true,
-      resolvers: [NaiveUiResolver()],
+      resolvers: [NaiveUiResolver(), ViconsResolver()],
     }),
     UnoCSS({
       configFile: 'uno.config.ts',

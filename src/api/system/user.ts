@@ -1,5 +1,5 @@
-import { http } from '@/utils/http/axios'
 import { Result } from '/#/axios'
+import { http } from '@/utils/http/axios'
 import { RequestEnum } from '@/constants/httpEnum'
 
 enum Api {

@@ -54,8 +54,12 @@ export const projectSetting = Object.freeze({
 
   // 顶部
   header: {
+    // 最小高度
+    // minHeight: 56,
+    // 高度
+    // height: 56,
     // 背景色
-    // bgColor: '#fff',
+    bgColor: '#fff',
     // 固定顶部
     fixed: true,
     // 显示重载按钮
@@ -70,13 +74,13 @@ export const projectSetting = Object.freeze({
     // 最小宽度
     minMenuWidth: 64,
     // 菜单宽度
-    menuWidth: 240,
+    menuWidth: 200,
     // 固定菜单
-    fixed: true,
+    fixed: false,
     // 分割菜单
-    mixMenu: false,
+    // mixMenu: false,
     // 触发移动端侧边栏的宽度
-    mobileWidth: 800,
+    // mobileWidth: 800,
     // 折叠菜单
     collapsed: false,
     // 折叠菜单按钮 arrow-circle bar
@@ -84,29 +88,29 @@ export const projectSetting = Object.freeze({
   },
 
   //导航模式 vertical 左侧菜单垂直模式 horizontal 顶部菜单水平模式 vertical-mix 垂直混合模式 horizontal-mix 水平混合模式
-  navMode: 'horizontal',
+  navMode: 'vertical',
   //导航风格 dark 暗色侧边栏 light 白色侧边栏 header-dark 暗色顶栏
   navTheme: 'dark',
   // 隐藏/显示顶栏
   showHeader: true,
   // 隐藏/显示logo
-  showLogo: false,
+  showLogo: true,
+  // 隐藏/显示多标签
+  showMultiTabs: true,
   //页脚
   showFooter: true,
 
   // 是否处于移动端模式
-  isMobile: false,
+  // isMobile: false,
 
   //多标签
   multiTabs: {
     //背景色
     // bgColor: '#fff',
-    //是否显示
-    // show: true,
-    //固定多标签
-    // fixed: true,
+    // 固定多标签
+    fixed: true,
   },
 
-  //路由动画类型
-  // pageAnimateType: 'zoom-fade',
+  //路由动画类型 zoom-out zoom-fade slide slide-fade fade bounce
+  pageAnimateType: 'bounce',
 })

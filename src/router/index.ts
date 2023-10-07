@@ -22,41 +22,6 @@ const sortRoute = (a, b) => {
 
 routeModuleList.sort(sortRoute)
 
-const exceptionRoute: RouteRecordRaw = {
-  path: '/exception',
-  name: 'exception',
-  component: BasicLayout,
-  meta: {
-    title: 'error.title',
-  },
-  children: [
-    {
-      path: '/404',
-      name: 'ErrorPage404',
-      component: () => import('@/views/exception/404.vue'),
-      meta: {
-        title: 'error.errorPage404',
-      },
-    },
-    {
-      path: '/403',
-      name: 'ErrorPage403',
-      component: () => import('@/views/exception/403.vue'),
-      meta: {
-        title: 'error.errorPage403',
-      },
-    },
-    {
-      path: '/502',
-      name: 'ErrorPage502',
-      component: () => import('@/views/exception/502.vue'),
-      meta: {
-        title: 'error.errorPage502',
-      },
-    },
-  ],
-}
-
 export const ErrorPageRoute: RouteRecordRaw = {
   path: '/:pathMatch(.*)*',
   redirect: '/404',
@@ -78,11 +43,11 @@ export const asyncRoutes: RouteRecordRaw[] = routeModuleList
 
 export const rootRoutes: RouteRecordRaw = {
   path: '/',
-  name: 'Root',
+  name: 'index',
   redirect: PageEnum.BASE_HOME,
   meta: {
     hidden: true,
-    title: 'Root',
+    title: '首页',
   },
 }
 
@@ -119,12 +84,7 @@ const loginRoutes: RouteRecordRaw = {
 }
 
 //普通路由 无需验证权限
-export const constantRoutes: RouteRecordRaw[] = [
-  loginRoutes,
-  rootRoutes,
-  redirectRoutes,
-  exceptionRoute,
-]
+export const constantRoutes: RouteRecordRaw[] = [loginRoutes, rootRoutes, redirectRoutes]
 
 // 异步路由
 const router = createRouter({

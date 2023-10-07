@@ -49,7 +49,9 @@
                       :placeholder="$t('login.usernamePlaceholder')"
                     >
                       <template #prefix>
-                        <n-icon :component="PersonOutline" />
+                        <n-icon>
+                          <PersonOutline />
+                        </n-icon>
                       </template>
                     </n-input>
                   </n-form-item>
@@ -61,7 +63,9 @@
                       show-password-on="click"
                     >
                       <template #prefix>
-                        <n-icon :component="LockClosedOutline" />
+                        <n-icon>
+                          <LockClosedOutline />
+                        </n-icon>
                       </template>
                     </n-input>
                   </n-form-item-row>
@@ -80,7 +84,9 @@
                       :placeholder="$t('login.mobilePlaceholder')"
                     >
                       <template #prefix>
-                        <n-icon :component="PhonePortraitOutline" />
+                        <n-icon>
+                          <PhonePortraitOutline />
+                        </n-icon>
                       </template>
                     </n-input>
                   </n-form-item>
@@ -90,7 +96,9 @@
                       :placeholder="$t('login.verificationPlaceholder')"
                     >
                       <template #prefix>
-                        <n-icon :component="ShieldCheckmarkOutline" />
+                        <n-icon>
+                          <ShieldCheckmarkOutline />
+                        </n-icon>
                       </template>
                       <template #suffix>
                         <n-button
@@ -124,10 +132,14 @@
               <n-divider>{{ $t('login.otherSignIn') }}</n-divider>
               <n-space justify="space-around" size="large">
                 <n-button text style="font-size: 32px">
-                  <n-icon :component="LogoWechat" color="#0DA052" />
+                  <n-icon olor="#0DA052">
+                    <LogoWechat />
+                  </n-icon>
                 </n-button>
                 <n-button text style="font-size: 32px">
-                  <n-icon :component="LogoAlipay" color="#089EE3" />
+                  <n-icon color="#089EE3">
+                    <LogoAlipay />
+                  </n-icon>
                 </n-button>
               </n-space>
             </div>
@@ -140,34 +152,24 @@
 
 <script setup lang="ts">
 import { FormInst, useMessage, useNotification } from 'naive-ui'
+import { GetCodeBtn } from '/#/config'
+import { Result } from '/#/axios'
 import { useUser } from '@/store/modules/user'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useApp } from '@/hooks/setting/useApp'
 import { getSmsCaptcha } from '@/api/system/user'
-import { GetCodeBtn } from '/#/config'
 import { isChinesePhoneNumber } from '@/utils/is'
 import { ResultEnum } from '@/constants/httpEnum'
 import { PageEnum } from '@/constants/pageEnum'
-import {
-  LockClosedOutline,
-  LogoAlipay,
-  LogoWechat,
-  PersonOutline,
-  PhonePortraitOutline,
-  ShieldCheckmarkOutline,
-} from '@vicons/ionicons5'
-import { Result } from '/#/axios'
 
 const { t } = useI18n()
-const { getWebsiteSetting } = useApp()
 const { login } = useUser()
 const $message = useMessage()
 const $notification = useNotification()
 const router = useRouter()
 const route = useRoute()
 
-// document.body.style.overflow = 'auto'
-
+const { getWebsiteSetting } = useApp()
 const loginImage = getWebsiteSetting.value?.loginImage
 const loginDesc = getWebsiteSetting.value?.loginDesc
 const logo = getWebsiteSetting.value?.logo

@@ -7,8 +7,8 @@ import { ACCESS_TOKEN } from '@/constants/constant'
 import { useApp } from '@/hooks/setting/useApp'
 import { isDef, isNullOrUnDef, isUnDef } from '@/utils/is'
 import { ResultEnum } from '@/constants/httpEnum'
-import { ErrorPageRoute } from '@/router'
 import { Result } from '/#/axios'
+import { ErrorPageRoute } from '@/router'
 
 const { getProjectSetting } = useApp()
 
@@ -70,14 +70,13 @@ export const createRouterGuards = (router: Router) => {
         // 开启权限管控
         if (getProjectSetting.value.permission) {
           const routes = await generateRoutes(userInfo)
-          if (routes.length > 0) {
+          if (routes.value.length > 0) {
             // 动态添加可访问路由表
-            routes.forEach((item) => {
+            routes.value.forEach((item) => {
               router.addRoute(item as unknown as RouteRecordRaw)
             })
           }
         }
-
         //添加404
         const isErrorPage = router
           .getRoutes()
@@ -119,7 +118,21 @@ export const createRouterGuards = (router: Router) => {
   })
   router.afterEach((to) => {
     document.title = (to?.meta?.title as string) || document.title
-
+    const asyncRouteStore = useAsyncRoute()
+    // 在这里设置需要缓存的组件名称
+    const keepAliveComponents = asyncRouteStore.keepAliveComponents
+    const currentComName: any = to.matched.find((item) => item.name === to.name)?.name
+    if (currentComName && !keepAliveComponents.includes(currentComName) && to.meta?.keepAlive) {
+      // 需要缓存的组件
+      keepAliveComponents.push(currentComName)
+    } else if (!to.meta?.keepAlive || to.name === PageEnum.REDIRECT_NAME) {
+      // 不需要缓存的组件
+      const index = asyncRouteStore.keepAliveComponents.findIndex((name) => name === currentComName)
+      if (index !== -1) {
+        keepAliveComponents.splice(index, 1)
+      }
+    }
+    asyncRouteStore.setKeepAliveComponents(keepAliveComponents)
     LoadingBar && LoadingBar.finish()
   })
 

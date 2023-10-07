@@ -1,7 +1,7 @@
 <template>
   <div class="ars-layout-left-logo">
     <n-image width="40" preview-disabled :src="logo" />
-    <span v-if="!collapsed">{{ title }}</span>
+    <span v-show="!collapsed">{{ title }}</span>
   </div>
 </template>
 
@@ -15,12 +15,12 @@ const props = defineProps({
 const { collapsed } = toRefs(props)
 
 const { getWebsiteSetting } = useApp()
-const { logo, title } = getWebsiteSetting.value
+const { logo, title } = unref(getWebsiteSetting)
 </script>
 
 <style lang="less" scoped>
 .ars-layout-left-logo {
-  @apply h-16 w-full flex items-center justify-center;
+  @apply h-14 w-full flex items-center justify-center;
   & > span {
     @apply ml-2 text-lg;
   }

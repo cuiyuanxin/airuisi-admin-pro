@@ -1,13 +1,13 @@
+import { dateEnUS, dateZhCN, enUS, zhCN } from 'naive-ui'
 import { defineStore } from 'pinia'
 import { store } from '@/store'
 import { designSetting, projectSetting, websiteSetting } from '@/config/config'
-import { darkTheme, dateEnUS, dateZhCN, enUS, zhCN } from 'naive-ui'
-import { LocaleEnum } from '@/constants/localeEnum'
 import LocalStorage from '@/utils/storage'
 import { LANGUAGES } from '@/constants/constant'
+import { LocaleEnum } from '@/constants/localeEnum'
 
-const { title, logo, loginImage, loginDesc } = websiteSetting
-const { appDarkTheme, appTheme, appThemeList, locale } = designSetting
+const { title, logo, loginImage, loginDesc } = unref(websiteSetting)
+const { appDarkTheme, appTheme, appThemeList, locale } = unref(designSetting)
 const {
   tokenExpire,
   permission,
@@ -18,9 +18,11 @@ const {
   navMode,
   navTheme,
   showHeader,
+  showMultiTabs,
   showFooter,
   showLogo,
-} = projectSetting
+  pageAnimateType,
+} = unref(projectSetting)
 
 interface AppState {
   websiteSetting: {
@@ -56,8 +58,10 @@ interface AppState {
     navMode: string
     navTheme: string
     showHeader: boolean
+    showMultiTabs: boolean
     showFooter: boolean
     showLogo: boolean
+    pageAnimateType: string
   }
 }
 
@@ -86,14 +90,16 @@ export const useAppStore = defineStore({
       navMode,
       navTheme,
       showHeader,
+      showMultiTabs,
       showFooter,
       showLogo,
+      pageAnimateType,
     },
   }),
   getters: {
-    getDarkTheme(state) {
-      return state.designSetting.appDarkTheme ? darkTheme : undefined
-    },
+    // getDarkTheme(state) {
+    //   return state.designSetting.appDarkTheme ? darkTheme : undefined
+    // },
     getDateLocale(state) {
       switch (state.designSetting.locale) {
         case LocaleEnum.EN:

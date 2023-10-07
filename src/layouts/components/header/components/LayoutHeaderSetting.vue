@@ -1,6 +1,6 @@
 <template>
   <n-drawer v-model:show="isDrawer" width="280" placement="right">
-    <n-drawer-content title="项目配置" :native-scrollbar="false">
+    <n-drawer-content title="项目配置" :native-scrollbar="false" closable>
       <div class="drawer">
         <n-divider title-placement="center">主题</n-divider>
 
@@ -40,50 +40,50 @@
           </span>
         </div>
 
-        <!--        <n-divider title-placement="center">导航栏模式</n-divider>-->
-        <!--        <div class="drawer-setting-item align-items-top">-->
-        <!--                  <div class="drawer-setting-item-style align-items-top">-->
-        <!--                    <n-tooltip placement="top">-->
-        <!--                      <template #trigger>-->
-        <!--                        <img-->
-        <!--                          src="~@/assets/images/nav-theme-dark.svg"-->
-        <!--                          @click="togNavMode('vertical')"-->
-        <!--                          alt="左侧菜单模式"-->
-        <!--                        />-->
-        <!--                      </template>-->
-        <!--                      <span>左侧菜单模式</span>-->
-        <!--                    </n-tooltip>-->
-        <!--                    <n-badge dot color="#19be6b" v-show="navMode === 'vertical'" />-->
-        <!--                  </div>-->
+        <n-divider title-placement="center">导航栏模式</n-divider>
+        <div class="drawer-setting-item align-items-top">
+          <div class="align-items-top drawer-setting-item-style">
+            <n-tooltip placement="top">
+              <template #trigger>
+                <!--                <img-->
+                <!--                  src="~@/assets/images/nav-theme-dark.svg"-->
+                <!--                  @click="togNavMode('vertical')"-->
+                <!--                  alt="左侧菜单模式"-->
+                <!--                />-->
+              </template>
+              <span>左侧菜单模式</span>
+            </n-tooltip>
+            <n-badge dot color="#19be6b" v-show="navMode === 'vertical'" />
+          </div>
 
-        <!--          <div class="drawer-setting-item-style">-->
-        <!--            <n-tooltip placement="top">-->
-        <!--              <template #trigger>-->
-        <!--                <img-->
-        <!--                  src="~@/assets/images/nav-horizontal.svg"-->
-        <!--                  alt="顶部菜单模式"-->
-        <!--                  @click="togNavMode('horizontal')"-->
-        <!--                />-->
-        <!--              </template>-->
-        <!--              <span>顶部菜单模式</span>-->
-        <!--            </n-tooltip>-->
-        <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal'" />-->
-        <!--          </div>-->
+          <!--          <div class="drawer-setting-item-style">-->
+          <!--            <n-tooltip placement="top">-->
+          <!--              <template #trigger>-->
+          <!--                <img-->
+          <!--                  src="~@/assets/images/nav-horizontal.svg"-->
+          <!--                  alt="顶部菜单模式"-->
+          <!--                  @click="togNavMode('horizontal')"-->
+          <!--                />-->
+          <!--              </template>-->
+          <!--              <span>顶部菜单模式</span>-->
+          <!--            </n-tooltip>-->
+          <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal'" />-->
+          <!--          </div>-->
 
-        <!--          <div class="drawer-setting-item-style">-->
-        <!--            <n-tooltip placement="top">-->
-        <!--              <template #trigger>-->
-        <!--                <img-->
-        <!--                  src="~@/assets/images/nav-horizontal-mix.svg"-->
-        <!--                  @click="togNavMode('horizontal-mix')"-->
-        <!--                  alt="顶部菜单混合模式"-->
-        <!--                />-->
-        <!--              </template>-->
-        <!--              <span>顶部菜单混合模式</span>-->
-        <!--            </n-tooltip>-->
-        <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal-mix'" />-->
-        <!--          </div>-->
-        <!--        </div>-->
+          <!--          <div class="drawer-setting-item-style">-->
+          <!--            <n-tooltip placement="top">-->
+          <!--              <template #trigger>-->
+          <!--                <img-->
+          <!--                  src="~@/assets/images/nav-horizontal-mix.svg"-->
+          <!--                  @click="togNavMode('horizontal-mix')"-->
+          <!--                  alt="顶部菜单混合模式"-->
+          <!--                />-->
+          <!--              </template>-->
+          <!--              <span>顶部菜单混合模式</span>-->
+          <!--            </n-tooltip>-->
+          <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal-mix'" />-->
+          <!--          </div>-->
+        </div>
 
         <!--        <n-divider title-placement="center">导航栏风格</n-divider>-->
 
@@ -233,8 +233,6 @@ import { ref } from 'vue'
 import { useApp } from '@/store/modules/app'
 // import { useProjectSettingStore } from '@/store/modules/projectSetting'
 // import { useDesignSettingStore } from '@/store/modules/designSetting'
-import { CheckOutlined } from '@vicons/antd'
-import { Moon, SunnySharp } from '@vicons/ionicons5'
 // import { darkTheme } from 'naive-ui'
 // import { animates as animateOptions } from '@/settings/animateSetting'
 
@@ -244,23 +242,23 @@ const useAppStore = useApp()
 
 const { designSetting, projectSetting } = useAppStore
 
-const appDarkTheme = designSetting.appDarkTheme
-const appThemeList = designSetting.appThemeList
-const appTheme = designSetting.appTheme
-const navMode = projectSetting.navMode
+const { appDarkTheme, appThemeList, appTheme } = toRefs(designSetting)
+const { navMode } = toRefs(projectSetting)
+
+// const navMode = projectSetting.navMode
 
 const openDrawer = () => {
   isDrawer.value = true
 }
 
 const togTheme = (color) => {
-  designSetting.appTheme = color
+  appTheme.value = color
 }
 
-const togNavMode = (mode) => {
-  projectSetting.navMode = mode
-  projectSetting.menu.mixMenu = false
-}
+// const togNavMode = (mode) => {
+//   projectSetting.navMode = mode
+//   projectSetting.menu.mixMenu = false
+// }
 
 defineExpose({ openDrawer })
 
@@ -376,7 +374,7 @@ defineExpose({ openDrawer })
       border-radius: 2px;
       margin: 0 5px 5px 0;
       text-align: center;
-      line-height: 14px;
+      line-height: 20px;
 
       .n-icon {
         color: #fff;

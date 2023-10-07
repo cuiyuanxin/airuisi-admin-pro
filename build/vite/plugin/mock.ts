@@ -7,7 +7,6 @@ export function configMockPlugin(isBuild: boolean, prodMock: boolean) {
     watchFiles: true,
     localEnabled: !isBuild,
     prodEnabled: isBuild && prodMock,
-    // enable: isBuild && prodMock,
     injectCode: `
       import { setupProdMockServer } from '../mock/createProdMockServer'
       setupProdMockServer()

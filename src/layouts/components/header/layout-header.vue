@@ -10,8 +10,10 @@
             v-if="navMode === 'horizontal' || navMode === 'horizontal-mix'"
           />
           <div class="ars-layout-header-left-horizontal-menu" :style="horizontalMenu">
-            <div class="px-1" @click="handleScrollbar('left')">
-              <n-icon size="22" :component="ChevronBackOutline" />
+            <div class="px-1" v-if="!isScrollToLeft" @click="handleScrollbar('left')">
+              <n-icon size="22">
+                <ChevronBackOutline />
+              </n-icon>
             </div>
             <n-scrollbar
               ref="scrollbar"
@@ -20,44 +22,41 @@
             >
               <layout-menu v-model:inverted="inverted" mode="horizontal" />
             </n-scrollbar>
-            <div class="px-1" @click="handleScrollbar('right')">
-              <n-icon size="22" :component="ChevronForwardOutline" />
+            <div class="px-1" v-if="!isScrollToRight" @click="handleScrollbar('right')">
+              <n-icon size="22">
+                <ChevronForwardOutline />
+              </n-icon>
             </div>
           </div>
         </div>
       </n-grid-item>
       <n-grid-item span="4">
         <div class="ars-layout-header-right">
-          <layout-page-header v-model:collapsed="collapsed" />
+          <layout-page-header v-model:collapsed="collapsed" v-model:isRouterAlive="isRouterAlive" />
         </div>
       </n-grid-item>
     </n-grid>
   </div>
-  <!--项目配置-->
-  <!--  <ArsSetting ref="drawerSetting" />-->
 </template>
 
 <script setup lang="ts">
-import { useApp } from '@/hooks/setting/useApp' // import ArsSetting from './components/ArsSetting.vue'
-import { ChevronBackOutline, ChevronForwardOutline } from '@vicons/ionicons5'
+import { useApp } from '@/hooks/setting/useApp'
 
 const props = defineProps({
   collapsed: Boolean,
-  flag: Boolean,
+  isRouterAlive: Boolean,
   inverted: Boolean,
 })
-const emit = defineEmits(['update:collapsed', 'update:flag'])
+const emit = defineEmits(['update:collapsed', 'update:isRouterAlive'])
 
-const { collapsed, inverted } = toRefs(props)
+const { collapsed, isRouterAlive, inverted } = toRefs(props)
 
 provide('handleMenuCollapse', (val) => {
   emit('update:collapsed', val)
 })
-// 项目设置
-// const drawerSetting = ref<InstanceType<typeof ArsSetting>>()
 
 const { getProjectSetting } = useApp()
-const { menu, navMode, showHeader, showLogo } = getProjectSetting.value
+const { menu, navMode, showHeader, showLogo } = unref(getProjectSetting)
 
 // 控制菜单宽度
 const horizontalMenu = computed(() => {
@@ -70,6 +69,16 @@ const scrollbar: any = ref(null)
 const left = ref(0)
 const isScrollToLeft = ref(false)
 const isScrollToRight = ref(false)
+
+onMounted(() => {
+  const scrollLeft = scrollbar.value.scrollbarInstRef.containerRef.scrollLeft
+  const scrollWidth = scrollbar.value.scrollbarInstRef.containerRef.scrollWidth
+  const clientWidth = scrollbar.value.scrollbarInstRef.containerRef.clientWidth
+  if (scrollLeft + clientWidth === scrollWidth) {
+    isScrollToLeft.value = true
+    isScrollToRight.value = true
+  }
+})
 const handleScrollbar = (position: string) => {
   const scrollLeft = scrollbar.value.scrollbarInstRef.containerRef.scrollLeft
   const scrollWidth = scrollbar.value.scrollbarInstRef.containerRef.scrollWidth
@@ -99,10 +108,10 @@ const handleScrollbar = (position: string) => {
 
 <style lang="less" scoped>
 .ars-layout-header {
-  @apply w-full h-16;
+  @apply w-full h-14;
   &-left,
   &-right {
-    @apply h-16 flex;
+    @apply h-14 flex;
   }
   &-left {
     &-horizontal-menu {

@@ -2,9 +2,13 @@
   <n-popover trigger="click">
     <template #trigger>
       <n-badge :value="messageTotal" :max="50" v-if="messageTotal > 0">
-        <n-icon size="20" :component="Alert28Regular" />
+        <n-icon size="20">
+          <Alert28Regular />
+        </n-icon>
       </n-badge>
-      <n-icon size="20" :component="Alert28Regular" v-else />
+      <n-icon size="20" v-else>
+        <Alert28Regular />
+      </n-icon>
     </template>
     <n-card placement="bottom-start" :bordered="false" content-style="padding: 0;">
       <n-tabs type="line">
@@ -25,7 +29,7 @@
               </n-list-item>
               <template #footer>
                 <div class="flex items-center justify-center">
-                  <n-icon size="20" :component="TrashOutline" />清空{{ item.title }}
+                  <n-icon size="20"><TrashOutline /></n-icon>清空{{ item.title }}
                 </div>
               </template>
             </n-list>
@@ -38,9 +42,6 @@
 </template>
 
 <script setup lang="ts">
-import { Alert28Regular } from '@vicons/fluent'
-import { TrashOutline } from '@vicons/ionicons5'
-
 // 消息通知总数
 const messageTotal = ref(0)
 // 消息通知数据列表

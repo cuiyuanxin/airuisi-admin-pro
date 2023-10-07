@@ -7,29 +7,13 @@ import { generatorDynamicRouter } from '@/router/generator'
 import { cloneDeep } from 'lodash-es'
 import { useApp } from '@/hooks/setting/useApp'
 import { isNullOrUnDef } from '@/utils/is'
-
-// asyncRoutes
-
-// interface TreeHelperConfig {
-//   id: string
-//   children: string
-//   pid: string
-// }
-
-// const DEFAULT_CONFIG: TreeHelperConfig = {
-//   id: 'id',
-//   children: 'children',
-//   pid: 'pid',
-// }
-
-// const getConfig = (config: Partial<TreeHelperConfig>) => Object.assign({}, DEFAULT_CONFIG, config)
+import LocalStorage from '@/utils/storage'
+import { ASYNC_ROUTE } from '@/constants/constant'
 
 export interface IAsyncRouteState {
-  // menus: RouteRecordRaw[]
   routers: RouteRecordRaw[]
   addRouters: RouteRecordRaw[]
-  // routersAdded: any[]
-  // keepAliveComponents: string[]
+  keepAliveComponents: string[]
   isDynamicRouteAdded: boolean
 }
 
@@ -61,7 +45,7 @@ function hasPermission(role: string[], route: any): boolean {
 }
 
 function filterAsyncRouter(routerMap: any[], role: string[]): any[] {
-  const accessedRouters = routerMap.filter((route) => {
+  return routerMap.filter((route) => {
     if (hasPermission(role, route)) {
       if (route.children && route.children.length) {
         route.children = filterAsyncRouter(route.children, role)
@@ -70,18 +54,14 @@ function filterAsyncRouter(routerMap: any[], role: string[]): any[] {
     }
     return false
   })
-  return accessedRouters
 }
 
 export const useAsyncRouteStore = defineStore({
   id: 'app-async-route',
   state: (): IAsyncRouteState => ({
-    // menus: [],
     routers: constantRoutes,
     addRouters: [],
-    // routersAdded: [],
-    // keepAliveComponents: [],
-    // Whether the route has been dynamically added
+    keepAliveComponents: [],
     isDynamicRouteAdded: false,
   }),
   getters: {
@@ -93,9 +73,6 @@ export const useAsyncRouteStore = defineStore({
     },
   },
   actions: {
-    // getRouters() {
-    //   return toRaw(this.routersAdded)
-    // },
     setDynamicRouteAdded(added: boolean) {
       this.isDynamicRouteAdded = added
     },
@@ -104,38 +81,29 @@ export const useAsyncRouteStore = defineStore({
       this.addRouters = routers
       this.routers = constantRoutes.concat(routers)
     },
-    // setMenus(menus: RouteRecordRaw[]) {
-    //   // 设置动态路由
-    //   this.menus = menus
-    // },
-    // setKeepAliveComponents(compNames: string[]) {
-    //   // 设置需要缓存的组件
-    //   this.keepAliveComponents = compNames
-    // },
+    setKeepAliveComponents(compNames: string[]) {
+      // 设置需要缓存的组件
+      this.keepAliveComponents = compNames
+    },
     async generateRoutes(data) {
-      let accessedRouters
-      // const permissionsList = data.permissions ?? []
-
-      // const routeFilter = (route) => {
-      //   const { meta } = route
-      //   const { permissions } = meta || {}
-      //   if (!permissions) return true
-      //   return permissionsList.some((item) => permissions.includes(item.value))
-      // }
+      const accessedRouters = ref<any[]>([])
       const { getProjectSetting } = useApp()
       if (unref(getProjectSetting.value.permissionMode) === 'dynamic') {
         // 动态获取菜单
         const res = await generatorDynamicRouter()
 
         console.log('generateRoutes->generatorDynamicRouter data:', res)
-        accessedRouters = res
+        accessedRouters.value = unref(res)
+        LocalStorage.set(ASYNC_ROUTE, accessedRouters.value)
       } else {
         const { role } = data
         const routerMap = cloneDeep(asyncRoutes)
-        accessedRouters = filterAsyncRouter(routerMap, role)
+        accessedRouters.value = filterAsyncRouter(routerMap, role)
       }
 
-      accessedRouters.length > 0 && this.setRouters(accessedRouters)
+      if (accessedRouters.value.length > 0) {
+        this.setRouters(accessedRouters.value)
+      }
       return toRaw(accessedRouters)
     },
   },

@@ -11,7 +11,7 @@
     :collapsed-icon-size="22"
     :indent="24"
     :options="menuOptions"
-    :expanded-keys="openKeys"
+    :default-expanded-keys="openKeys"
     :value="getSelectedKeys"
     @update:value="clickMenuItem"
     @update:expanded-keys="menuExpanded"
@@ -19,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+import { RouteLocationMatched } from 'vue-router'
+
 import { useAsyncRouteStore } from '@/store/modules/asyncRoute'
 import { useApp } from '@/hooks/setting/useApp'
 import { generatorMenu } from '@/utils'
@@ -26,23 +28,63 @@ import { generatorMenu } from '@/utils'
 const props = defineProps({
   mode: String as PropType<'horizontal' | 'vertical'>,
   collapsed: Boolean,
-  inverted: Boolean,
 })
-const { mode, collapsed, inverted } = toRefs(props)
+const { mode, collapsed } = toRefs(props)
 
+const { getProjectSetting, getDesignSetting } = useApp()
 // 当前路由
 const currentRoute = useRoute()
-
-const { getProjectSetting } = useApp()
-const asyncRouteStore = useAsyncRouteStore()
 // 布局
-const { menu, navMode } = getProjectSetting.value
+const { menu, navMode } = unref(getProjectSetting)
 // 收缩后样式
 const minMenuWidth = unref(menu.minMenuWidth)
+// 菜单
+const menuOptions: any = ref([])
+
+const inverted = computed(() => {
+  const { navTheme } = toRefs(getProjectSetting.value)
+  const { appDarkTheme } = toRefs(getDesignSetting.value)
+  const isDark = ['dark'].includes(navTheme.value)
+
+  return appDarkTheme.value ? false : isDark
+})
+
+// 获取当前打开的子菜单
+const matched: RouteLocationMatched[] = currentRoute.matched
+const getRouteName = matched && matched.length ? matched.map((item) => item.name) : []
+const openKeys: any = unref(getRouteName)
+
+const asyncRouteStore = useAsyncRouteStore()
+
+onMounted(() => {
+  updateMenu()
+})
+
+// 更新展开菜单key
+const updateSelectedKeys = () => {
+  openKeys.value = matched.map((item) => item.name)
+  const activeMenu: string = (currentRoute.meta?.activeMenu as string) || ''
+  selectedKeys.value = activeMenu ? (activeMenu as string) : (currentRoute.name as string)
+}
+
+// 更新菜单数据
+const updateMenu = () => {
+  const { getMenus } = storeToRefs(asyncRouteStore)
+
+  if (!menu.mixMenu) {
+    menuOptions.value = generatorMenu(getMenus.value)
+  } else {
+    //混合菜单
+    // const firstRouteName: string = (currentRoute.matched[0].name as string) || ''
+    // menuOptions.value = generatorMenuMix(getMenus, firstRouteName, props.location)
+    // const activeMenu: string = currentRoute?.matched[0].meta?.activeMenu as string
+    // headerMenuSelectKey.value = (activeMenu ? activeMenu : firstRouteName) || ''
+  }
+  updateSelectedKeys()
+}
+
 const router = useRouter()
 
-// let menuOptions: MenuOption[] = reactive([])
-const menuOptions: any = ref([])
 const selectedKeys = ref<string>(currentRoute.name as string)
 const getSelectedKeys = computed(() => {
   // let location = props.location
@@ -52,37 +94,6 @@ const getSelectedKeys = computed(() => {
 
   return unref(selectedKeys)
 })
-
-onMounted(() => {
-  updateMenu()
-
-  console.log(menuOptions)
-})
-
-// 获取当前打开的子菜单
-const matched = currentRoute.matched
-const getOpenKeys = matched && matched.length ? matched.map((item) => item.name) : []
-let openKeys: any = getOpenKeys
-
-const updateSelectedKeys = () => {
-  const matched = currentRoute.matched
-  openKeys = matched.map((item) => item.name)
-  const activeMenu: string = (currentRoute.meta?.activeMenu as string) || ''
-  selectedKeys.value = activeMenu ? (activeMenu as string) : (currentRoute.name as string)
-}
-
-const updateMenu = () => {
-  if (!menu.mixMenu) {
-    menuOptions.value = generatorMenu(asyncRouteStore.getMenus)
-  } else {
-    //混合菜单
-    // const firstRouteName: string = (currentRoute.matched[0].name as string) || ''
-    // menuOptions.value = generatorMenuMix(asyncRouteStore.getMenus, firstRouteName, props.location)
-    // const activeMenu: string = currentRoute?.matched[0].meta?.activeMenu as string
-    // headerMenuSelectKey.value = (activeMenu ? activeMenu : firstRouteName) || ''
-  }
-  updateSelectedKeys()
-}
 
 // 点击菜单
 function clickMenuItem(key: string) {
@@ -133,18 +144,18 @@ function menuExpanded(openKeys: string[]) {
 // );
 
 // 跟随页面路由变化，切换菜单选中状态
-// watch(
-//     () => currentRoute.fullPath,
-//     () => {
-//       updateMenu();
-//     }
-// );
+watch(
+  () => currentRoute.fullPath,
+  () => {
+    updateMenu()
+  },
+)
 </script>
 
 <style lang="less" scoped>
 .ars-menu {
-  @apply h-16 flex items-center justify-items-center;
   &.ars-menu-horizontal {
+    @apply h-14 flex items-center justify-items-center;
     & :deep(.n-menu-item-content-header) {
       @apply overflow-visible;
     }

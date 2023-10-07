@@ -1,8 +1,8 @@
 import type { MockMethod } from 'vite-plugin-mock'
-import { resultError, resultSuccess } from '../_utils'
-import { isChinesePhoneNumber } from '@/utils/is'
 import Mock from 'mockjs'
 import { UserInfoType } from '@/store/modules/user'
+import { resultError, resultSuccess } from '../_utils'
+import { isChinesePhoneNumber } from '@/utils/is'
 
 const userList: UserInfoType[] = [
   {
@@ -76,7 +76,7 @@ const menusList = {
       name: 'system',
       component: 'BasicLayout',
       meta: {
-        icon: 'DashboardOutlined',
+        icon: 'SettingsOutline',
         title: 'system.title',
       },
     },
@@ -89,6 +89,54 @@ const menusList = {
       component: '/system/setting',
       meta: {
         title: 'system.setting.title',
+        keepAlive: true,
+      },
+    },
+    {
+      key: 5,
+      id: 5,
+      parentId: 0,
+      path: '/exception',
+      name: 'exception',
+      component: 'BasicLayout',
+      meta: {
+        icon: 'AlertCircleOutline',
+        title: 'error.title',
+      },
+    },
+    {
+      key: 6,
+      id: 6,
+      parentId: 5,
+      path: '/404',
+      name: 'ErrorPage404',
+      component: '/exception/404',
+      meta: {
+        title: 'error.errorPage404',
+        keepAlive: true,
+      },
+    },
+    {
+      key: 7,
+      id: 7,
+      parentId: 5,
+      path: '/403',
+      name: 'ErrorPage403',
+      component: '/exception/403',
+      meta: {
+        title: 'error.errorPage403',
+        keepAlive: true,
+      },
+    },
+    {
+      key: 8,
+      id: 8,
+      parentId: 5,
+      path: '/502',
+      name: 'ErrorPage502',
+      component: '/exception/502',
+      meta: {
+        title: 'error.errorPage502',
         keepAlive: true,
       },
     },
@@ -127,7 +175,7 @@ const menusList = {
       name: 'system',
       component: 'BasicLayout',
       meta: {
-        icon: 'DashboardOutlined',
+        icon: 'SettingsOutline',
         title: 'system.title',
       },
     },
@@ -140,6 +188,54 @@ const menusList = {
       component: '/system/setting',
       meta: {
         title: 'system.setting.title',
+        keepAlive: true,
+      },
+    },
+    {
+      key: 5,
+      id: 5,
+      parentId: 0,
+      path: '/exception',
+      name: 'exception',
+      component: 'BasicLayout',
+      meta: {
+        icon: 'AlertCircleOutline',
+        title: 'error.title',
+      },
+    },
+    {
+      key: 6,
+      id: 6,
+      parentId: 5,
+      path: '/404',
+      name: 'ErrorPage404',
+      component: '/exception/404',
+      meta: {
+        title: 'error.errorPage404',
+        keepAlive: true,
+      },
+    },
+    {
+      key: 7,
+      id: 7,
+      parentId: 5,
+      path: '/403',
+      name: 'ErrorPage403',
+      component: '/exception/403',
+      meta: {
+        title: 'error.errorPage403',
+        keepAlive: true,
+      },
+    },
+    {
+      key: 8,
+      id: 8,
+      parentId: 5,
+      path: '/502',
+      name: 'ErrorPage502',
+      component: '/exception/502',
+      meta: {
+        title: 'error.errorPage502',
         keepAlive: true,
       },
     },
@@ -167,6 +263,54 @@ const menusList = {
       component: '/dashboard/workplace',
       meta: {
         title: 'dashboard.workplace.title',
+        keepAlive: true,
+      },
+    },
+    {
+      key: 3,
+      id: 3,
+      parentId: 0,
+      path: '/exception',
+      name: 'exception',
+      component: 'BasicLayout',
+      meta: {
+        icon: 'AlertCircleOutline',
+        title: 'error.title',
+      },
+    },
+    {
+      key: 4,
+      id: 4,
+      parentId: 3,
+      path: '/404',
+      name: 'ErrorPage404',
+      component: '/exception/404',
+      meta: {
+        title: 'error.errorPage404',
+        keepAlive: true,
+      },
+    },
+    {
+      key: 5,
+      id: 5,
+      parentId: 3,
+      path: '/403',
+      name: 'ErrorPage403',
+      component: '/exception/403',
+      meta: {
+        title: 'error.errorPage403',
+        keepAlive: true,
+      },
+    },
+    {
+      key: 6,
+      id: 6,
+      parentId: 3,
+      path: '/502',
+      name: 'ErrorPage502',
+      component: '/exception/502',
+      meta: {
+        title: 'error.errorPage502',
         keepAlive: true,
       },
     },

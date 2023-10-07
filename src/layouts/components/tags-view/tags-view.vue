@@ -1,296 +1,278 @@
 <template>
   <div
-    class="tabs-view"
+    class="ars-tabs-view"
     :class="{
-      'tabs-view-fix': multiTabs.fixed,
-      // 'tabs-view-fixed-header': isMultiHeaderFixed,
-      'tabs-view-default-background': appDarkTheme === false,
-      'tabs-view-dark-background': appDarkTheme === true,
+      'ars-tabs-view-fix': multiTabs.fixed,
+      'ars-tabs-view-vertical-fixed': navMode === 'vertical' || navMode === 'vertical-mix',
+      'ars-tabs-view-vertical-min-fixed':
+        (navMode === 'vertical' || navMode === 'vertical-mix') && collapsed,
+      'ars-tabs-view-default-background': appDarkTheme === false,
+      'ars-tabs-view-dark-background': appDarkTheme === true,
     }"
-    :style="getChangeStyle"
   >
-    <div class="tabs-view-main">
-      <div ref="navWrap" class="tabs-card" :class="{ 'tabs-card-scrollable': scrollable }">
-        <span
-          class="tabs-card-prev"
-          :class="{ 'tabs-card-prev-hide': !scrollable }"
-          @click="scrollPrev"
+    <div class="ars-tabs-view-main">
+      <div class="ars-tabs-view-main-tabs">
+        <n-tabs
+          type="card"
+          size="small"
+          class="ars-tabs-card"
+          :animated="true"
+          closable
+          v-model:value="activeKey"
+          @before-leave="handleBeforeLeave"
+          @close="handleClose"
         >
-          <n-icon size="16" color="#515a6e" :component="ChevronBackOutline" />
-        </span>
-        <span
-          class="tabs-card-next"
-          :class="{ 'tabs-card-next-hide': !scrollable }"
-          @click="scrollNext"
-        >
-          <n-icon size="16" color="#515a6e" :component="ChevronForwardOutline" />
-        </span>
-        <div ref="navScroll" class="tabs-card-scroll">
-          <draggable :list="tabsList" animation="300" item-key="fullPath" class="flex">
-            <template #item="{ element }">
-              <div
-                :id="`tag${element.fullPath.split('/').join('\/')}`"
-                class="tabs-card-scroll-item"
-                :class="{ 'active-item': activeKey === element.path }"
-                @click.stop="goPage(element)"
-                @contextmenu="handleContextMenu($event, element)"
-              >
-                <span>{{ $t(element.meta.title) }}</span>
-                <n-icon
-                  size="14"
-                  @click.stop="closeTabItem(element)"
-                  v-if="!element.meta.affix"
-                  :component="CloseOutline"
-                />
-              </div>
-            </template>
-          </draggable>
+          <n-tab
+            v-for="(item, index) in tabsList"
+            :key="index"
+            :name="item.fullPath"
+            :closable="item.path !== PageEnum.BASE_HOME_REDIRECT"
+          >
+            {{ $t(item.meta.title) }}
+          </n-tab>
+        </n-tabs>
+      </div>
+      <div class="ars-tabs-view-main-tabs-tool">
+        <div class="ars-tabs-screenfull" @click="toggleFullScreen" v-if="false">
+          <div class="ars-tabs-screenfull-btn">
+            <n-icon size="16" color="#515a6e">
+              <ExpandOutline v-if="isFullScreen" />
+              <ContractOutline v-else />
+            </n-icon>
+          </div>
+        </div>
+        <div class="ars-tabs-close">
+          <n-dropdown
+            trigger="hover"
+            @select="closeHandleSelect"
+            placement="bottom-end"
+            :options="TabsMenuOptions"
+          >
+            <div class="ars-tabs-close-btn">
+              <n-icon size="16" color="#515a6e">
+                <DownOutlined />
+              </n-icon>
+            </div>
+          </n-dropdown>
         </div>
       </div>
-      <div class="tabs-close">
-        <n-dropdown
-          trigger="hover"
-          @select="closeHandleSelect"
-          placement="bottom-end"
-          :options="TabsMenuOptions"
-        >
-          <div class="tabs-close-btn">
-            <n-icon size="16" color="#515a6e" :component="DownOutlined" />
-          </div>
-        </n-dropdown>
-      </div>
-      <n-dropdown
-        :show="showDropdown"
-        :x="dropdownX"
-        :y="dropdownY"
-        @clickoutside="onClickOutside"
-        placement="bottom-start"
-        @select="closeHandleSelect"
-        :options="TabsMenuOptions"
-      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useMessage, useThemeVars } from 'naive-ui'
-import { RouteItem, useTabsViewStore } from '@/store/modules/tabsView'
+import { RouteItem, useTabsViewStore, whiteList } from '@/store/modules/tabsView'
+import { useAsyncRouteStore } from '@/store/modules/asyncRoute'
 import { useApp } from '@/hooks/setting/useApp'
 import { useGo } from '@/hooks/web/usePage'
-import { PageEnum } from '@/constants/pageEnum'
-import draggable from 'vuedraggable'
 import { renderIcon } from '@/utils'
-import { ChevronBackOutline, ChevronForwardOutline, CloseOutline } from '@vicons/ionicons5'
+import { PageEnum } from '@/constants/pageEnum'
 import {
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
   CloseOutlined,
   ColumnWidthOutlined,
-  DownOutlined,
   MinusOutlined,
   ReloadOutlined,
 } from '@vicons/antd'
 
 const props = defineProps({
   collapsed: Boolean,
+  isRouterAlive: Boolean,
 })
 
-const { getDesignSetting, getProjectSetting } = useApp()
-const { appDarkTheme, appTheme } = getDesignSetting.value
-const { multiTabs, menu, navMode } = getProjectSetting.value
+const { collapsed } = toRefs(props)
 
-const scrollable = ref(false)
-const navScroll: any = ref(null)
-const navWrap: any = ref(null)
-
-const route = useRoute()
+// 路由
 const router = useRouter()
-
-let activeKey = route.fullPath
-const isCurrent = ref(false)
-const showDropdown = ref(false)
-const dropdownX = ref(0)
-const dropdownY = ref(0)
-// const isMultiHeaderFixed = ref(false)
-
-//动态组装样式 菜单缩进
-const getChangeStyle = computed(() => {
-  const { collapsed } = toRefs(props)
-  const { minMenuWidth, menuWidth } = menu
-  const { fixed } = multiTabs
-  let lenNum =
-    // navMode === 'horizontal' || !isMixMenuNoneSub.value
-    //   ? '0px'
-    //   : collapsed
-    //   ? `${minMenuWidth}px`
-    //   : `${menuWidth}px`
-    navMode === 'horizontal' ? '0px' : collapsed ? `${minMenuWidth}px` : `${menuWidth}px`
-
-  // if (isMobile.value) {
-  //   return {
-  //     left: '0px',
-  //     width: '100%',
-  //   }
-  // }
-  return {
-    left: lenNum,
-    width: `calc(100% - ${!fixed ? '0px' : lenNum})`,
-  }
-})
-
-const scrollPrev = () => {
-  const containerWidth = navScroll.value.offsetWidth
-  const currentScroll = navScroll.value.scrollLeft
-
-  if (!currentScroll) return
-  const scrollLeft = currentScroll > containerWidth ? currentScroll - containerWidth : 0
-  scrollTo(scrollLeft, (scrollLeft - currentScroll) / 20)
-}
-
-const scrollNext = () => {
-  const containerWidth = navScroll.value.offsetWidth
-  const navWidth = navScroll.value.scrollWidth
-  const currentScroll = navScroll.value.scrollLeft
-
-  if (navWidth - currentScroll <= containerWidth) return
-  const scrollLeft =
-    navWidth - currentScroll > containerWidth * 2
-      ? currentScroll + containerWidth
-      : navWidth - containerWidth
-  scrollTo(scrollLeft, (scrollLeft - currentScroll) / 20)
-}
-
-/**
- * @param value 要滚动到的位置
- * @param amplitude 每次滚动的长度
- */
-function scrollTo(value: number, amplitude: number) {
-  const currentScroll = navScroll.value.scrollLeft
-  const scrollWidth =
-    (amplitude > 0 && currentScroll + amplitude >= value) ||
-    (amplitude < 0 && currentScroll + amplitude <= value)
-      ? value
-      : currentScroll + amplitude
-  navScroll.value && navScroll.value.scrollTo(scrollWidth, 0)
-  if (scrollWidth === value) return
-  return window.requestAnimationFrame(() => scrollTo(value, amplitude))
-}
-
+const route = useRoute()
+// tags
 const tabsViewStore = useTabsViewStore()
+const go = useGo()
 
-// 标签页列表
-const tabsList: any = computed(() => tabsViewStore.tabsList)
-const whiteList: string[] = [
-  PageEnum.BASE_LOGIN_NAME,
-  PageEnum.REDIRECT_NAME,
-  PageEnum.ERROR_PAGE_NAME,
-]
+const $message = useMessage()
 
+// 主题
 const themeVars = useThemeVars()
-
 const getBaseColor = computed(() => {
   return themeVars.value.textColor1
 })
-
 const getCardColor = computed(() => {
   return themeVars.value.cardColor
 })
 
+const { getDesignSetting, getProjectSetting } = useApp()
+const { appDarkTheme, appTheme } = toRefs(getDesignSetting.value)
+const { multiTabs, menu, navMode } = unref(getProjectSetting)
+
+// 全屏
+const isFullScreen = ref(true)
+
+// 收缩后宽度
+const minMenuWidth = computed(() => {
+  const { minMenuWidth } = menu
+  return `${minMenuWidth}px`
+})
+// 宽度
+const menuWidth = computed(() => {
+  const { menuWidth } = menu
+  return `${menuWidth}px`
+})
+
+// 当前路由name
+const activeKey = ref(route.fullPath as string)
+
+// 标签页列表
+const tabsList: any = computed(() => tabsViewStore.tabsList)
+
 //tags 右侧下拉菜单
+const isCurrent = ref(false)
+const isLeft = ref(false)
+const isRight = ref(false)
 const TabsMenuOptions = computed(() => {
   const isDisabled = tabsList.value.length <= 1
+  const isOther = tabsList.value.length <= 2
   return [
     {
-      label: '刷新当前',
+      label: '重新加载',
       key: '1',
       icon: renderIcon(ReloadOutlined),
     },
     {
-      label: `关闭当前`,
+      label: `关闭当前标签页`,
       key: '2',
       disabled: isCurrent.value || isDisabled,
       icon: renderIcon(CloseOutlined),
     },
     {
-      label: '关闭其他',
+      label: '关闭左侧标签页',
       key: '3',
-      disabled: isDisabled,
+      disabled: isDisabled || isLeft.value,
+      icon: renderIcon(ArrowLeftOutlined),
+    },
+    {
+      label: '关闭右侧标签页',
+      key: '4',
+      disabled: isDisabled || isRight.value,
+      icon: renderIcon(ArrowRightOutlined),
+    },
+    {
+      label: '关闭其他标签页',
+      key: '5',
+      disabled: isDisabled || isOther,
       icon: renderIcon(ColumnWidthOutlined),
     },
     {
-      label: '关闭全部',
-      key: '4',
+      label: '关闭全部标签页',
+      key: '6',
       disabled: isDisabled,
       icon: renderIcon(MinusOutlined),
     },
   ]
 })
 
-//tags 跳转页面
-const go = useGo()
-const goPage = (e) => {
-  const { fullPath } = e
-  if (fullPath === route.fullPath) return
-  activeKey = fullPath
-  go(e, true)
+// 获取路由对象
+const getSimpleRoute = (route): RouteItem => {
+  const { fullPath, hash, meta, name, params, path, query } = route
+  return { fullPath, hash, meta, name, params, path, query }
 }
 
-const handleContextMenu = (e, item) => {
-  e.preventDefault()
-  isCurrent.value = PageEnum.BASE_HOME_REDIRECT === item.path
-  showDropdown.value = false
-  nextTick().then(() => {
-    showDropdown.value = true
-    dropdownX.value = e.clientX
-    dropdownY.value = e.clientY
-  })
+onMounted(() => {
+  tabsViewStore.addTab(getSimpleRoute(route))
+  isCurrent.value = PageEnum.BASE_HOME_REDIRECT === route.path
+  isLeft.value = tabsViewStore.hasTabsOnLeft(getSimpleRoute(route))
+  isRight.value = tabsViewStore.hasTabsOnRight(getSimpleRoute(route))
+})
+
+// 全屏切换
+const toggleFullScreen = () => {
+  // const ele = document.getElementById('log') //指定全屏区域元素
+  // if (screenfull.isEnabled) {
+  //   screenfull.request(ele)
+  // }
 }
 
-//删除tab
-const closeTabItem = (e) => {
-  const { fullPath } = e
+// tag切换
+const handleBeforeLeave = (tabName: string): boolean => {
+  //tags 跳转页面
+  const fullPath = route.fullPath as string
+
+  if (fullPath === tabName) return false
+  activeKey.value = tabName
+  go(tabName, true)
+
+  return true
+}
+
+// 移除缓存组件名称
+const asyncRouteStore = useAsyncRouteStore()
+const delKeepAliveCompName = () => {
+  if (route.meta.keepAlive) {
+    const name = router.currentRoute.value.matched.find((item) => item.name === route.name)
+      ?.components?.default.name
+    if (name) {
+      asyncRouteStore.keepAliveComponents = asyncRouteStore.keepAliveComponents.filter(
+        (item) => item !== name,
+      )
+    }
+  }
+}
+
+// tag关闭
+const handleClose = (fullPath: string) => {
   const routeInfo = tabsList.value.find((item) => item.fullPath === fullPath)
   removeTab(routeInfo)
 }
 
+// 刷新页面
+const emit = defineEmits(['update:isRouterAlive'])
+const reloadPage = () => {
+  delKeepAliveCompName()
+  emit('update:isRouterAlive', false)
+  nextTick(() => {
+    emit('update:isRouterAlive', true)
+  })
+}
+
 // 关闭当前页面
-const $message = useMessage()
 const removeTab = (route) => {
   if (tabsList.value.length === 1) {
     return $message.warning('这已经是最后一页，不能再关闭了！')
   }
-  // delKeepAliveCompName()
+  delKeepAliveCompName()
   tabsViewStore.closeCurrentTab(route)
   // 如果关闭的是当前页
-  if (activeKey === route.fullPath) {
+  if (activeKey.value === route.fullPath) {
     const currentRoute = tabsList.value[Math.max(0, tabsList.value.length - 1)]
-    activeKey = currentRoute.fullPath
-    router.push(currentRoute)
+    activeKey.value = currentRoute.fullPath
+
+    go(currentRoute, true)
   }
-  updateNavScroll()
 }
 
-/**
- * @param autoScroll 是否开启自动滚动功能
- */
-async function updateNavScroll(autoScroll?: boolean) {
-  await nextTick()
-  if (!navScroll.value) return
-  const containerWidth = navScroll.value.offsetWidth
-  const navWidth = navScroll.value.scrollWidth
+// 关闭左侧标签页
+const closeLeftTabs = (route) => {
+  tabsViewStore.closeLeftTabs(route)
+}
 
-  if (containerWidth < navWidth) {
-    scrollable.value = true
-    if (autoScroll) {
-      let tagList = navScroll.value.querySelectorAll('.tabs-card-scroll-item') || []
-      ;[...tagList].forEach((tag: HTMLElement) => {
-        // fix SyntaxError
-        if (tag.id === `tag${activeKey.split('/').join('/')}`) {
-          tag.scrollIntoView && tag.scrollIntoView()
-        }
-      })
-    }
-  } else {
-    scrollable.value = false
-  }
+// 关闭右侧标签页
+const closeRightTabs = (route) => {
+  tabsViewStore.closeRightTabs(route)
+}
+
+// 关闭其他
+const closeOther = (route) => {
+  tabsViewStore.closeOtherTabs(route)
+  activeKey.value = route.fullPath
+  go(route.fullPath, true)
+}
+
+// 关闭全部
+const closeAll = () => {
+  tabsViewStore.closeAllTabs()
+  delKeepAliveCompName()
+  go(PageEnum.BASE_HOME, true)
 }
 
 //tab 操作
@@ -304,123 +286,58 @@ const closeHandleSelect = (key) => {
     case '2':
       removeTab(route)
       break
-    //关闭其他
     case '3':
+      closeLeftTabs(route)
+      break
+    case '4':
+      closeRightTabs(route)
+      break
+    //关闭其他
+    case '5':
       closeOther(route)
       break
     //关闭所有
-    case '4':
+    case '6':
       closeAll()
       break
   }
-  updateNavScroll()
-  showDropdown.value = false
-}
-
-// 刷新页面
-const reloadPage = () => {
-  // delKeepAliveCompName()
-  router.push({
-    path: '/redirect' + route.fullPath,
-  })
-}
-
-// 关闭其他
-const closeOther = (route) => {
-  tabsViewStore.closeOtherTabs(route)
-  activeKey = route.fullPath
-  router.replace(route.fullPath)
-  updateNavScroll()
-}
-
-// 关闭全部
-const closeAll = () => {
-  tabsViewStore.closeAllTabs()
-  router.replace(PageEnum.BASE_HOME)
-  updateNavScroll()
-}
-
-const onClickOutside = () => {
-  showDropdown.value = false
-}
-
-// 移除缓存组件名称
-// const asyncRouteStore = useAsyncRouteStore()
-// const delKeepAliveCompName = () => {
-//   if (route.meta.keepAlive) {
-//     const name = router.currentRoute.value.matched.find((item) => item.name == route.name)
-//       ?.components?.default.name
-//     if (name) {
-//       asyncRouteStore.keepAliveComponents = asyncRouteStore.keepAliveComponents.filter(
-//         (item) => item != name,
-//       )
-//     }
-//   }
-// }
-
-// const isMixMenuNoneSub = computed(() => {
-//   const mixMenu = settingStore.menuSetting.mixMenu
-//   const currentRoute = useRoute()
-//   if (navMode.value != 'horizontal-mix') return true
-//   return !(navMode.value === 'horizontal-mix' && mixMenu && currentRoute.meta.isRoot)
-// })
-
-// 初始化标签页
-let cacheRoutes: RouteItem[] = []
-// 将最新的路由信息同步到 localStorage 中
-const routes = router.getRoutes()
-cacheRoutes.forEach((cacheRoute) => {
-  const route = routes.find((route) => route.path === cacheRoute.path)
-  if (route) {
-    cacheRoute.meta = route.meta || cacheRoute.meta
-    cacheRoute.name = (route.name || cacheRoute.name) as string
-  }
-})
-
-tabsViewStore.initTabs(cacheRoutes)
-// 获取简易的路由对象
-const getSimpleRoute = (route): RouteItem => {
-  const { fullPath, hash, meta, name, params, path, query } = route
-  return { fullPath, hash, meta, name, params, path, query }
 }
 
 watch(
   () => route.fullPath,
   (to) => {
-    if (whiteList.includes(route.name as string)) return
-    activeKey = to
+    if (whiteList.includes(route.fullPath as string)) return
+    activeKey.value = to as string
     tabsViewStore.addTab(getSimpleRoute(route))
-    updateNavScroll(true)
+    isCurrent.value = PageEnum.BASE_HOME_REDIRECT === route.path
+    isLeft.value = tabsViewStore.hasTabsOnLeft(getSimpleRoute(route))
+    isRight.value = tabsViewStore.hasTabsOnRight(getSimpleRoute(route))
   },
   { immediate: true },
 )
-// 注入刷新页面方法
-provide('reloadPage', reloadPage)
-
-// 关闭左侧
-// const closeLeft = (route) => {
-//   tabsViewStore.closeLeftTabs(route)
-//   activeKey = route.fullPath
-//   router.replace(route.fullPath)
-//   updateNavScroll()
-// }
-
-// 关闭右侧
-// const closeRight = (route) => {
-//   tabsViewStore.closeRightTabs(route)
-//   activeKey = route.fullPath
-//   router.replace(route.fullPath)
-//   updateNavScroll()
-// }
+watch(
+  () => tabsList,
+  () => {
+    isCurrent.value = PageEnum.BASE_HOME_REDIRECT === route.path
+    isLeft.value = tabsViewStore.hasTabsOnLeft(getSimpleRoute(route))
+    isRight.value = tabsViewStore.hasTabsOnRight(getSimpleRoute(route))
+  },
+  { deep: true },
+)
 </script>
 
 <style lang="less" scoped>
-.tabs-view {
-  @apply w-full flex box-border;
-  padding: 6px 0;
-  transition: all 0.2s ease-in-out;
+.ars-tabs-view {
   &-fix {
-    @apply fixed z-[5] py-1.5 px-1.5 left-[200px];
+    @apply w-full absolute left-0 z-10;
+  }
+  &-vertical-fixed {
+    //  left: v-bind(menuWidth);
+    //width: calc(100% - v-bind(menuWidth));
+  }
+  &-vertical-min-fixed {
+    //  left: v-bind(minMenuWidth);
+    //width: calc(100% - v-bind(minMenuWidth));
   }
   &-default-background {
     @apply bg-[#f5f7f9];
@@ -430,95 +347,44 @@ provide('reloadPage', reloadPage)
   }
 
   &-main {
-    @apply h-8 flex min-w-full max-w-full;
-    & .tabs-card {
-      @apply grow shrink overflow-hidden relative;
-      -webkit-box-flex: 1;
-      &-scrollable {
-        @apply py-0 px-8 overflow-hidden;
-      }
-      &-prev,
-      &-next {
-        @apply w-8 text-center absolute leading-8 cursor-pointer;
-
-        //
-        //      .n-icon {
-        //        display: flex;
-        //        align-items: center;
-        //        justify-content: center;
-        //        height: 32px;
-        //        width: 32px;
-        //      }
-      }
-      &-next-hide,
-      &-prev-hide {
-        @apply hidden;
-      }
-      //
-      //    .tabs-card-prev {
-      //      left: 0;
-      //    }
-      //
-      //    .tabs-card-next {
-      //      right: 0;
-      //    }
-      //
-
-      &-scroll {
-        @apply whitespace-nowrap overflow-hidden;
-        &-item {
-          @arscolor: v-bind(getBaseColor);
-          @arsbackground: v-bind(getCardColor);
-          @apply h-8 pt-1.5 px-4 pb-1 rounded-sm mr-1.5
-            cursor-pointer inline-block relative flex-[0_0_auto] text-[ @arscolor] bg-[
-            @arsbackground];
-
-          //        span {
-          //          float: left;
-          //          vertical-align: middle;
-          //        }
-          //
-          //        &:hover {
-          //          color: #515a6e;
-          //        }
-          //
-          //        .n-icon {
-          //          height: 22px;
-          //          width: 21px;
-          //          margin-right: -6px;
-          //          position: relative;
-          //          vertical-align: middle;
-          //          text-align: center;
-          //          color: #808695;
-          //
-          //          &:hover {
-          //            color: #515a6e !important;
-          //          }
-          //
-          //          svg {
-          //            height: 21px;
-          //            display: inline-block;
-          //          }
-        }
-        & .active-item {
-          color: v-bind(appTheme);
+    @apply w-full h-10 flex items-center justify-between;
+    &-tabs {
+      @apply h-10;
+    }
+    &-tabs-tool {
+      @apply min-w-8 w-8 h-10 flex items-center justify-center py-1;
+      & .ars-tabs-screenfull,
+      & .ars-tabs-close {
+        background: v-bind(getCardColor);
+        @apply w-full h-full cursor-pointer;
+        &-btn {
+          @apply w-full h-full flex items-center justify-center;
         }
       }
     }
-    & .tabs-close {
-      @apply min-w-8 w-8 h-8 leading-8 text-center rounded-sm cursor-pointer;
-      background: var(--color);
-
-      &-btn {
-        @apply h-full flex items-center justify-center;
-        color: var(--color);
+    & .ars-tabs-card {
+      @apply w-full h-10 flex justify-center;
+      & .n-tabs-tab-wrapper {
+        & :deep(.n-tabs-tab) {
+          border-bottom-left-radius: var(--n-tab-border-radius);
+          border-bottom-right-radius: var(--n-tab-border-radius);
+          @apply flex-1 text-center border-none px-2.5 py-1.5 transition duration-200;
+          color: v-bind(getBaseColor);
+          background: v-bind(getCardColor);
+        }
+        & :deep(.n-tabs-tab--active) {
+          color: v-bind(appTheme) !important;
+          background: v-bind(getCardColor) !important;
+        }
+      }
+      & :deep(.n-tabs-tab-pad) {
+        @apply w-2.5;
+        border: none !important;
+      }
+      & :deep(.n-tabs-pad) {
+        border: none !important;
       }
     }
   }
 }
-
-//
-//.tabs-view-fixed-header {
-//  top: 0;
-//}
 </style>

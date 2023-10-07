@@ -25,5 +25,5 @@ const props = defineProps({
   menuOptions: Array<MenuOption>,
 })
 
-const { menuOptions } = props
+const { menuOptions } = toRefs(props)
 </script>
