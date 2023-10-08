@@ -32,20 +32,20 @@ const { mode } = toRefs(props)
 
 // 项目/系统配置
 const { getProjectSetting, getDesignSetting } = useApp()
-const { menu, navMode } = unref(getProjectSetting)
+const { menu, navMode } = toRefs(getProjectSetting.value)
 
 // 收缩菜单
 const collapsed = inject('collapsed', false)
 // 主题
 const inverted = computed(() => {
-  if (navMode === 'horizontal' || navMode === 'horizontal-mix') {
+  if (navMode.value === 'horizontal' || navMode.value === 'horizontal-mix') {
     return false
   }
   const { appDarkTheme } = toRefs(getDesignSetting.value)
   return !appDarkTheme.value
 })
 // 收缩后样式
-const minMenuWidth = unref(menu.minMenuWidth)
+const minMenuWidth = unref(menu.value.minMenuWidth)
 // 菜单
 const menuOptions: any = ref([])
 

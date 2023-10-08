@@ -29,7 +29,12 @@
       }"
       :native-scrollbar="false"
     >
-      <n-layout-header class="ars-layout-header" :native-scrollbar="false" v-if="hasSider">
+      <n-layout-header
+        class="ars-layout-header"
+        :position="headerFixed"
+        :native-scrollbar="false"
+        v-if="hasSider"
+      >
         <layout-page-header v-model:collapsed="collapsed" v-model:isRouterAlive="isRouterAlive" />
       </n-layout-header>
       <n-layout-content
@@ -40,8 +45,8 @@
         bordered
         :native-scrollbar="false"
       >
+        <tags-view v-model:isRouterAlive="isRouterAlive" v-if="showMultiTabs" />
         <div class="ars-layout-content-main">
-          <tags-view v-model:isRouterAlive="isRouterAlive" v-if="showMultiTabs" />
           <div
             :class="{
               'ars-layout-content-main-notabs': !showMultiTabs,
@@ -63,7 +68,7 @@
 import { useApp } from '@/hooks/setting/useApp'
 
 const { getProjectSetting, getDesignSetting } = useApp()
-const { header, menu, multiTabs, navMode, showHeader, showLogo, showMultiTabs, showFooter } =
+const { header, menu, multiTabs, showHeader, showLogo, showMultiTabs, showFooter } =
   unref(getProjectSetting)
 
 /* 布局位置 */
@@ -79,7 +84,8 @@ const menuFixed = computed(() => {
 })
 // 判断布局模式
 const hasSider = computed(() => {
-  return navMode === 'vertical' || navMode === 'vertical-min'
+  const { navMode } = toRefs(getProjectSetting.value)
+  return navMode.value === 'vertical' || navMode.value === 'vertical-min'
 })
 
 const fixed = hasSider ? menuFixed : headerFixed
@@ -114,7 +120,8 @@ const showTrigger = computed((): boolean | 'bar' | 'arrow-circle' => {
 <style scoped lang="less">
 .ars-layout {
   &-header {
-    @apply h-14 relative z-10;
+    //@apply h-14 relative z-10;
+    @apply h-14 z-1;
   }
   &-main {
     &-horizontal-fixed {
@@ -125,19 +132,20 @@ const showTrigger = computed((): boolean | 'bar' | 'arrow-circle' => {
     }
   }
   &-content {
-    &-main {
-      @apply mx-2.5;
-      &-tabs {
-        @apply pt-12;
-      }
-      &-notabs {
-        @apply pt-0;
-      }
-    }
-    &-vertical-fixed {
-      @apply w-full;
-      height: calc(100vh - 56px);
-    }
+    @apply mt-14;
+    //&-main {
+    //  @apply w-full mx-2.5 relative;
+    //  &-tabs {
+    //    @apply pt-12;
+    //  }
+    //  &-notabs {
+    //    @apply pt-0;
+    //  }
+    //}
+    //&-vertical-fixed {
+    //  @apply w-full;
+    //  //height: calc(100vh - 56px);
+    //}
   }
   &-footer {
     @apply h-12 leading-12 text-center;

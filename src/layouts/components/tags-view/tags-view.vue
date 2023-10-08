@@ -3,7 +3,10 @@
     class="ars-tabs-view"
     :class="{
       'ars-tabs-view-fix': multiTabs.fixed,
-      'ars-tabs-view-fix-min': collapsed && multiTabs.fixed,
+      'ars-tabs-view-vertical-fix':
+        (navMode === 'vertical' || navMode === 'vertical-mix') && multiTabs.fixed,
+      'ars-tabs-view-vertical-fix-min':
+        (navMode === 'vertical' || navMode === 'vertical-mix') && collapsed && multiTabs.fixed,
       'ars-tabs-view-default-background': appDarkTheme === false,
       'ars-tabs-view-dark-background': appDarkTheme === true,
     }"
@@ -28,6 +31,24 @@
           >
             {{ $t(item.meta.title) }}
           </n-tab>
+          <n-tab :name="1">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="2">222222222222222222222222222222222222222</n-tab>
+          <n-tab :name="3">33333333333333333333333333333333</n-tab>
+          <n-tab :name="4">44444444444444444444444444444</n-tab>
+          <n-tab :name="5">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="6">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="7">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="8">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="9">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="10">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="11">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="12">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="13">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="14">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="15">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="16">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="17">111111111111111111111111111111111111111111</n-tab>
+          <n-tab :name="18">111111111111111111111111111111111111111111</n-tab>
         </n-tabs>
       </div>
       <div class="ars-tabs-view-main-tabs-tool">
@@ -78,7 +99,7 @@ import {
 // 项目/系统配置
 const { getDesignSetting, getProjectSetting } = useApp()
 const { appDarkTheme, appTheme } = toRefs(getDesignSetting.value)
-const { multiTabs, menu } = unref(getProjectSetting)
+const { multiTabs, menu, navMode } = toRefs(getProjectSetting.value)
 
 // 收缩菜单
 const collapsed = inject('collapsed', false)
@@ -150,13 +171,13 @@ const getCardColor = computed(() => {
 })
 // 收缩后宽度
 const minMenuWidth = computed(() => {
-  const { minMenuWidth } = menu
-  return `${minMenuWidth}px`
+  const { minMenuWidth } = toRefs(menu.value)
+  return `${minMenuWidth.value}px`
 })
 // 宽度
 const menuWidth = computed(() => {
-  const { menuWidth } = menu
-  return `${menuWidth}px`
+  const { menuWidth } = toRefs(menu.value)
+  return `${menuWidth.value}px`
 })
 
 onMounted(() => {
@@ -304,15 +325,22 @@ watch(
 
 <style lang="less" scoped>
 .ars-tabs-view {
+  @apply w-full m-0;
   &-fix {
-    @apply w-full fixed left-0 z-10;
-    transition: left 0.3s;
-    left: v-bind(menuWidth);
-    width: calc(100% - v-bind(menuWidth));
-    &-min {
-      left: v-bind(minMenuWidth);
-      width: calc(100% - v-bind(minMenuWidth));
-    }
+    @apply fixed left-0;
+    //@apply fixed left-0 z-10;
+    transition: all 1s ease-in-out;
+    //transition: width 0.3s ease;
+  }
+  &-vertical-fix {
+    //width: calc(100% - v-bind(menuWidth));
+    //left: v-bind(menuWidth);
+    padding-left: v-bind(menuWidth);
+  }
+  &-vertical-fix-min {
+    //width: calc(100% - v-bind(minMenuWidth));
+    //left: v-bind(minMenuWidth);
+    padding-left: v-bind(minMenuWidth);
   }
   &-default-background {
     @apply bg-[#f5f7f9];

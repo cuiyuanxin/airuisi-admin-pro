@@ -73,22 +73,22 @@ const emit = defineEmits(['update:collapsed', 'update:isRouterAlive'])
 const { collapsed } = toRefs(props)
 // 项目配置
 const { getProjectSetting } = useApp()
-const { header, menu, navMode } = unref(getProjectSetting)
+const { header, menu, navMode } = toRefs(getProjectSetting.value)
 // 顶栏布局下隐藏工具
-if (navMode === 'horizontal' || navMode === 'horizontal-mix') {
-  header.isMenu = false
-  header.isReload = false
-  header.isBreadcrumb = false
+if (navMode.value === 'horizontal' || navMode.value === 'horizontal-mix') {
+  header.value.isMenu = false
+  header.value.isReload = false
+  header.value.isBreadcrumb = false
 }
 // 收缩后宽度
 const minMenuWidth = computed(() => {
-  const { minMenuWidth } = menu
-  return `${minMenuWidth}px`
+  const { minMenuWidth } = toRefs(menu.value)
+  return `${minMenuWidth.value}px`
 })
 // 宽度
 const menuWidth = computed(() => {
-  const { menuWidth } = menu
-  return `${menuWidth}px`
+  const { menuWidth } = toRefs(menu.value)
+  return `${menuWidth.value}px`
 })
 // 项目设置
 const drawerSettingRef = ref<any>()
@@ -116,13 +116,13 @@ const handleOpenSetting = () => {
   @apply w-full h-14 flex items-center justify-items-center;
   transition: left 0.3s;
   &-vertical-fixed {
-    @apply fixed top-0 bottom-0 z-10;
-    left: v-bind(menuWidth);
-    width: calc(100% - v-bind(menuWidth));
+    //@apply fixed top-0 bottom-0 z-10;
+    //left: v-bind(menuWidth);
+    //width: calc(100% - v-bind(menuWidth));
   }
   &-vertical-min-fixed {
-    left: v-bind(minMenuWidth);
-    width: calc(100% - v-bind(minMenuWidth));
+    //left: v-bind(minMenuWidth);
+    //width: calc(100% - v-bind(minMenuWidth));
   }
   &-left,
   &-right {

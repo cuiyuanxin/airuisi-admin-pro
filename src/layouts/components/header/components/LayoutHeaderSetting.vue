@@ -41,49 +41,56 @@
         </div>
 
         <n-divider title-placement="center">导航栏模式</n-divider>
-        <!--        <div class="drawer-setting-item align-items-top">-->
-        <!--          <div class="align-items-top drawer-setting-item-style">-->
-        <!--            <n-tooltip placement="top">-->
-        <!--              <template #trigger>-->
-        <!--                <img-->
-        <!--                  src="~@/assets/images/nav-theme-dark.svg"-->
-        <!--                  @click="togNavMode('vertical')"-->
-        <!--                  alt="左侧菜单模式"-->
-        <!--                />-->
-        <!--              </template>-->
-        <!--              <span>左侧菜单模式</span>-->
-        <!--            </n-tooltip>-->
-        <!--            <n-badge dot color="#19be6b" v-show="navMode === 'vertical'" />-->
-        <!--          </div>-->
+        <div class="drawer-setting-item align-items-top">
+          <div class="align-items-top drawer-setting-item-style">
+            <n-tooltip placement="top">
+              <template #trigger>
+                <img
+                  src="@/assets/images/nav-theme-dark.svg"
+                  @click="togNavMode('vertical')"
+                  alt="左侧菜单模式"
+                />
+              </template>
+              <span>左侧菜单模式</span>
+            </n-tooltip>
+            <n-icon-wrapper :size="18" :border-radius="10" v-show="navMode === 'vertical'">
+              <n-icon :size="18">
+                <Checkmark16Filled />
+              </n-icon>
+            </n-icon-wrapper>
+          </div>
+          <div class="drawer-setting-item-style">
+            <n-tooltip placement="top">
+              <template #trigger>
+                <img
+                  src="@/assets/images/nav-horizontal.svg"
+                  alt="顶部菜单模式"
+                  @click="togNavMode('horizontal')"
+                />
+              </template>
+              <span>顶部菜单模式</span>
+            </n-tooltip>
+            <n-icon-wrapper :size="18" :border-radius="10" v-show="navMode === 'horizontal'">
+              <n-icon :size="18">
+                <Checkmark16Filled />
+              </n-icon>
+            </n-icon-wrapper>
+          </div>
 
-        <!--          <div class="drawer-setting-item-style">-->
-        <!--            <n-tooltip placement="top">-->
-        <!--              <template #trigger>-->
-        <!--                <img-->
-        <!--                  src="~@/assets/images/nav-horizontal.svg"-->
-        <!--                  alt="顶部菜单模式"-->
-        <!--                  @click="togNavMode('horizontal')"-->
-        <!--                />-->
-        <!--              </template>-->
-        <!--              <span>顶部菜单模式</span>-->
-        <!--            </n-tooltip>-->
-        <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal'" />-->
-        <!--          </div>-->
-
-        <!--          <div class="drawer-setting-item-style">-->
-        <!--            <n-tooltip placement="top">-->
-        <!--              <template #trigger>-->
-        <!--                <img-->
-        <!--                  src="~@/assets/images/nav-horizontal-mix.svg"-->
-        <!--                  @click="togNavMode('horizontal-mix')"-->
-        <!--                  alt="顶部菜单混合模式"-->
-        <!--                />-->
-        <!--              </template>-->
-        <!--              <span>顶部菜单混合模式</span>-->
-        <!--            </n-tooltip>-->
-        <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal-mix'" />-->
-        <!--          </div>-->
-        <!--        </div>-->
+          <!--          <div class="drawer-setting-item-style">-->
+          <!--            <n-tooltip placement="top">-->
+          <!--              <template #trigger>-->
+          <!--                <img-->
+          <!--                  src="~@/assets/images/nav-horizontal-mix.svg"-->
+          <!--                  @click="togNavMode('horizontal-mix')"-->
+          <!--                  alt="顶部菜单混合模式"-->
+          <!--                />-->
+          <!--              </template>-->
+          <!--              <span>顶部菜单混合模式</span>-->
+          <!--            </n-tooltip>-->
+          <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal-mix'" />-->
+          <!--          </div>-->
+        </div>
 
         <!--        <n-divider title-placement="center">导航栏风格</n-divider>-->
 
@@ -129,7 +136,7 @@
         <!--            </n-tooltip>-->
         <!--            <n-badge dot color="#19be6b" v-if="settingStore.navTheme === 'header-dark'" />-->
         <!--          </div>-->
-        <!--        </div>-->
+        <!--                </div>-->
         <!--        <n-divider title-placement="center">界面功能</n-divider>-->
 
         <!--        <div class="drawer-setting-item">-->
@@ -230,7 +237,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useApp } from '@/store/modules/app'
+import { useApp } from '@/store/modules/app' // import { useProjectSettingStore } from '@/store/modules/projectSetting'
 // import { useProjectSettingStore } from '@/store/modules/projectSetting'
 // import { useDesignSettingStore } from '@/store/modules/designSetting'
 // import { darkTheme } from 'naive-ui'
@@ -245,21 +252,21 @@ const { designSetting, projectSetting } = useAppStore
 const { appDarkTheme, appThemeList, appTheme } = toRefs(designSetting)
 const { navMode } = toRefs(projectSetting)
 
-// const navMode = projectSetting.navMode
-
+// 展开抽屉
 const openDrawer = () => {
   isDrawer.value = true
 }
-
+// 更新颜色主题
 const togTheme = (color) => {
   appTheme.value = color
 }
+// 更新布局
+const togNavMode = (mode) => {
+  navMode.value = mode
+  // menu.mixMenu = false
+}
 
-// const togNavMode = (mode) => {
-//   projectSetting.navMode = mode
-//   projectSetting.menu.mixMenu = false
-// }
-
+// 导出展开方法
 defineExpose({ openDrawer })
 
 // export default defineComponent({

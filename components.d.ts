@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Alert28Regular: typeof import('@vicons/fluent')['Alert28Regular']
+    Checkmark16Filled: typeof import('@vicons/fluent')['Checkmark16Filled']
     CheckOutlined: typeof import('@vicons/material')['CheckOutlined']
     ChevronBackOutline: typeof import('@vicons/ionicons5')['ChevronBackOutline']
     ChevronForwardOutline: typeof import('@vicons/ionicons5')['ChevronForwardOutline']
@@ -49,9 +50,11 @@ declare module 'vue' {
     NForm: typeof import('naive-ui')['NForm']
     NFormItem: typeof import('naive-ui')['NFormItem']
     NFormItemRow: typeof import('naive-ui')['NFormItemRow']
+    NGi: typeof import('naive-ui')['NGi']
     NGrid: typeof import('naive-ui')['NGrid']
     NGridItem: typeof import('naive-ui')['NGridItem']
     NIcon: typeof import('naive-ui')['NIcon']
+    NIconWrapper: typeof import('naive-ui')['NIconWrapper']
     NImage: typeof import('naive-ui')['NImage']
     NInput: typeof import('naive-ui')['NInput']
     NLayout: typeof import('naive-ui')['NLayout']
@@ -66,6 +69,7 @@ declare module 'vue' {
     NNotificationProvider: typeof import('naive-ui')['NNotificationProvider']
     NPopover: typeof import('naive-ui')['NPopover']
     NScrollbar: typeof import('naive-ui')['NScrollbar']
+    NSkeleton: typeof import('naive-ui')['NSkeleton']
     NSpace: typeof import('naive-ui')['NSpace']
     NSwitch: typeof import('naive-ui')['NSwitch']
     NTab: typeof import('naive-ui')['NTab']

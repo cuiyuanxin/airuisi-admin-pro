@@ -63,7 +63,7 @@ export const projectSetting = Object.freeze({
     // 背景色
     bgColor: '#fff',
     // 固定顶部
-    fixed: true,
+    fixed: false,
     // 显示重载按钮
     isReload: true,
     // 显示折叠菜单按钮

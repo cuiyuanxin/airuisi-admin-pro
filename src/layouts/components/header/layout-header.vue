@@ -43,13 +43,13 @@ import { useApp } from '@/hooks/setting/useApp'
 
 // 项目配置
 const { getProjectSetting } = useApp()
-const { menu, navMode, showHeader, showLogo } = unref(getProjectSetting)
+const { menu, navMode, showHeader, showLogo } = toRefs(getProjectSetting.value)
 // 收缩菜单
 const collapsed = inject('collapsed', false)
 // 控制菜单宽度
 const horizontalMenu = computed(() => {
-  const { menuWidth } = menu
-  return showLogo ? `width: calc(100% - ${menuWidth}px)` : ''
+  const { menuWidth } = toRefs(menu.value)
+  return showLogo.value ? `width: calc(100% - ${menuWidth.value}px)` : ''
 })
 // 控制菜单滚动条
 const scrollbar: any = ref(null)
