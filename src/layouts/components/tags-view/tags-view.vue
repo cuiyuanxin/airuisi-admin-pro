@@ -325,22 +325,23 @@ watch(
 
 <style lang="less" scoped>
 .ars-tabs-view {
-  @apply w-full m-0;
+  @apply w-full;
   &-fix {
-    @apply fixed left-0;
+    @apply absolute;
+    //@apply fixed left-0;
     //@apply fixed left-0 z-10;
-    transition: all 1s ease-in-out;
+    //transition: all 1s ease-in-out;
     //transition: width 0.3s ease;
   }
   &-vertical-fix {
     //width: calc(100% - v-bind(menuWidth));
     //left: v-bind(menuWidth);
-    padding-left: v-bind(menuWidth);
+    //padding-left: v-bind(menuWidth);
   }
   &-vertical-fix-min {
     //width: calc(100% - v-bind(minMenuWidth));
     //left: v-bind(minMenuWidth);
-    padding-left: v-bind(minMenuWidth);
+    //padding-left: v-bind(minMenuWidth);
   }
   &-default-background {
     @apply bg-[#f5f7f9];
@@ -350,16 +351,16 @@ watch(
   }
 
   &-main {
-    @apply w-full h-10 flex items-center justify-between;
+    @apply w-full h-10 flex flex-row items-center justify-between space-x-2.5;
     &-tabs {
-      @apply h-10;
+      @apply h-10 w-11/12;
     }
     &-tabs-tool {
-      @apply min-w-8 w-8 h-10 flex items-center justify-center py-1;
+      @apply w-auto h-10 flex items-center justify-end py-1;
       & .ars-tabs-screenfull,
       & .ars-tabs-close {
         background: v-bind(getCardColor);
-        @apply w-full h-full cursor-pointer;
+        @apply w-8 h-full cursor-pointer;
         &-btn {
           @apply w-full h-full flex items-center justify-center;
         }

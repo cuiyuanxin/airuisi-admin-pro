@@ -63,7 +63,7 @@ export const projectSetting = Object.freeze({
     // 背景色
     bgColor: '#fff',
     // 固定顶部
-    fixed: false,
+    fixed: true,
     // 显示重载按钮
     isReload: true,
     // 显示折叠菜单按钮
@@ -78,7 +78,7 @@ export const projectSetting = Object.freeze({
     // 菜单宽度
     menuWidth: 200,
     // 固定菜单
-    fixed: false,
+    fixed: true,
     // 分割菜单
     // mixMenu: false,
     // 触发移动端侧边栏的宽度
@@ -90,7 +90,7 @@ export const projectSetting = Object.freeze({
   },
 
   //导航模式 vertical 左侧菜单垂直模式 horizontal 顶部菜单水平模式 vertical-mix 垂直混合模式 horizontal-mix 水平混合模式
-  navMode: 'vertical',
+  navMode: 'horizontal',
   //导航风格 dark 暗色侧边栏 light 白色侧边栏 header-dark 暗色顶栏
   navTheme: 'dark',
   // 隐藏/显示顶栏
