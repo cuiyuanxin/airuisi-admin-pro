@@ -110,7 +110,7 @@ export const projectSetting = Object.freeze({
     //背景色
     // bgColor: '#fff',
     // 固定多标签
-    fixed: true,
+    fixed: false,
   },
 
   //路由动画类型 zoom-out zoom-fade slide slide-fade fade bounce
