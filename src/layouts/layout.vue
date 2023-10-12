@@ -1,14 +1,5 @@
 <template>
-  <n-layout class="ars-layout" :position="menuFixed" :has-sider="hasSider">
-    <n-layout-header
-      class="ars-layout-header"
-      bordered
-      :inverted="inverted"
-      :position="headerFixed"
-      v-if="!hasSider"
-    >
-      <layout-header />
-    </n-layout-header>
+  <n-layout class="ars-layout" :position="fixed" :has-sider="hasSider">
     <!--    <n-layout-sider-->
     <!--      bordered-->
     <!--      collapse-mode="width"-->
@@ -27,28 +18,44 @@
     <!--        <div><layout-menu mode="vertical" /></div>-->
     <!--      </div>-->
     <!--    </n-layout-sider>-->
-    <n-layout class="ars-layout-main" :native-scrollbar="false">
-      <!--      <n-layout-header-->
-      <!--        class="ars-layout-header"-->
-      <!--        :position="headerFixed"-->
-      <!--        :native-scrollbar="false"-->
-      <!--        v-if="hasSider"-->
-      <!--      >-->
-      <!--        <layout-page-header v-model:collapsed="collapsed" v-model:isRouterAlive="isRouterAlive" />-->
-      <!--      </n-layout-header>-->
-      <!--      <n-layout-->
-      <!--        class="ars-layout-content-layout"-->
-      <!--        :class="{-->
-      <!--          'ars-layout-main-hideheader': !showHeader,-->
-      <!--          'ars-layout-content-main-notabs': !showMultiTabs,-->
-      <!--          'ars-layout-content-main-tabs': showMultiTabs && multiTabs.fixed,-->
-      <!--        }"-->
-      <!--      >-->
-      <!--        -->
-      <!--      </n-layout>-->
-      <tags-view v-model:isRouterAlive="isRouterAlive" v-if="showMultiTabs" />
-      <n-layout-content class="ars-layout-content" bordered :native-scrollbar="false">
+    <!--    <n-layout class="ars-layout-main">-->
+    <!--      <n-layout-header-->
+    <!--        class="ars-layout-header"-->
+    <!--        :position="headerFixed"-->
+    <!--        :native-scrollbar="false"-->
+    <!--        v-if="hasSider"-->
+    <!--      >-->
+    <!--        <layout-page-header v-model:collapsed="collapsed" v-model:isRouterAlive="isRouterAlive" />-->
+    <!--      </n-layout-header>-->
+    <!--      <n-layout-->
+    <!--        class="ars-layout-content-layout"-->
+    <!--        :class="{-->
+    <!--          'ars-layout-main-hideheader': !showHeader,-->
+    <!--          'ars-layout-content-main-notabs': !showMultiTabs,-->
+    <!--          'ars-layout-content-main-tabs': showMultiTabs && multiTabs.fixed,-->
+    <!--        }"-->
+    <!--      >-->
+    <!--        -->
+    <!--      </n-layout>-->
+
+    <n-layout :inverted="inverted" :native-scrollbar="false">
+      <n-layout-header
+        class="ars-layout-header"
+        bordered
+        :inverted="inverted"
+        :position="headerFixed"
+        v-if="!hasSider"
+      >
+        <layout-header />
+      </n-layout-header>
+      <n-layout-content
+        class="ars-layout-content"
+        :class="{ 'ars-layout-content-horizontal-fix': !hasSider && header.fixed }"
+        bordered
+        :native-scrollbar="false"
+      >
         <div class="ars-layout-content-main">
+          <tags-view v-model:isRouterAlive="isRouterAlive" v-if="showMultiTabs" />
           <div>
             <layout-main />
           </div>
@@ -85,6 +92,13 @@ const menuFixed = computed(() => {
   return hasSider.value && fixed.value ? 'absolute' : 'static'
 })
 
+const fixed = computed(() => {
+  // horizontal
+  return 'absolute'
+
+  // hasSider ? menuFixed.value : headerFixed.value
+})
+
 // 主题
 const inverted = computed(() => {
   const { appDarkTheme } = unref(getDesignSetting)
@@ -116,10 +130,10 @@ const showTrigger = computed((): boolean | 'bar' | 'arrow-circle' => {
 .ars-layout {
   &-header {
     //@apply h-14 relative z-10;
-    @apply h-14 z-1;
+    //@apply h-14 z-2;
   }
   &-main {
-    @apply top-14;
+    //@apply top-14;
     //&-horizontal-fixed {
     //  @apply w-full fixed top-14 left-0 bottom-0;
     //}
@@ -145,6 +159,9 @@ const showTrigger = computed((): boolean | 'bar' | 'arrow-circle' => {
     //  @apply w-full;
     //  //height: calc(100vh - 56px);
     //}
+    &-horizontal-fix {
+      @apply top-14;
+    }
   }
   &-footer {
     @apply h-12 leading-12 text-center;
