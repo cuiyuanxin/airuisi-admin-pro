@@ -34,6 +34,8 @@ declare module 'vue' {
     LogoAlipay: typeof import('@vicons/ionicons5')['LogoAlipay']
     LogoWechat: typeof import('@vicons/ionicons5')['LogoWechat']
     Moon: typeof import('@vicons/ionicons5')['Moon']
+    NAffix: typeof import('naive-ui')['NAffix']
+    NAnchor: typeof import('naive-ui')['NAnchor']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NBadge: typeof import('naive-ui')['NBadge']
     NBreadcrumb: typeof import('naive-ui')['NBreadcrumb']

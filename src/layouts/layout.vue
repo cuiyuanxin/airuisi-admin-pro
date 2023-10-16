@@ -1,61 +1,39 @@
 <template>
-  <n-layout class="ars-layout" :position="fixed" :has-sider="hasSider">
-    <!--    <n-layout-sider-->
-    <!--      bordered-->
-    <!--      collapse-mode="width"-->
-    <!--      :native-scrollbar="false"-->
-    <!--      :width="menuWidth"-->
-    <!--      :collapsed-width="minMenuWidth"-->
-    <!--      :collapsed="collapsed"-->
-    <!--      :inverted="getMenuInverted"-->
-    <!--      :show-trigger="showTrigger"-->
-    <!--      @collapse="collapsed = true"-->
-    <!--      @expand="collapsed = false"-->
-    <!--      v-if="hasSider"-->
-    <!--    >-->
-    <!--      <div>-->
-    <!--        <div><layout-logo v-show="showLogo" /></div>-->
-    <!--        <div><layout-menu mode="vertical" /></div>-->
-    <!--      </div>-->
-    <!--    </n-layout-sider>-->
-    <!--    <n-layout class="ars-layout-main">-->
-    <!--      <n-layout-header-->
-    <!--        class="ars-layout-header"-->
-    <!--        :position="headerFixed"-->
-    <!--        :native-scrollbar="false"-->
-    <!--        v-if="hasSider"-->
-    <!--      >-->
-    <!--        <layout-page-header v-model:collapsed="collapsed" v-model:isRouterAlive="isRouterAlive" />-->
-    <!--      </n-layout-header>-->
-    <!--      <n-layout-->
-    <!--        class="ars-layout-content-layout"-->
-    <!--        :class="{-->
-    <!--          'ars-layout-main-hideheader': !showHeader,-->
-    <!--          'ars-layout-content-main-notabs': !showMultiTabs,-->
-    <!--          'ars-layout-content-main-tabs': showMultiTabs && multiTabs.fixed,-->
-    <!--        }"-->
-    <!--      >-->
-    <!--        -->
-    <!--      </n-layout>-->
-
-    <n-layout :inverted="inverted" :native-scrollbar="false">
-      <n-layout-header
-        class="ars-layout-header"
-        bordered
-        :inverted="inverted"
-        :position="headerFixed"
-        v-if="!hasSider"
-      >
-        <layout-header />
+  <n-layout class="ars-layout" position="absolute" has-sider>
+    <n-layout-sider
+      bordered
+      collapse-mode="width"
+      :native-scrollbar="false"
+      :width="menuWidth"
+      :collapsed-width="minMenuWidth"
+      :collapsed="collapsed"
+      :inverted="getMenuInverted"
+      :show-trigger="showTrigger"
+      @collapse="collapsed = true"
+      @expand="collapsed = false"
+      v-if="hasSider"
+    >
+      <div>
+        <div><layout-logo v-show="showLogo" /></div>
+        <div><layout-menu mode="vertical" /></div>
+      </div>
+    </n-layout-sider>
+    <n-layout>
+      <n-layout-header class="ars-layout-header" :position="headerFixed">
+        <layout-page-header
+          v-if="hasSider"
+          v-model:collapsed="collapsed"
+          v-model:isRouterAlive="isRouterAlive"
+        />
+        <layout-header v-if="!hasSider" />
       </n-layout-header>
+
       <n-layout-content
         class="ars-layout-content"
-        :class="{ 'ars-layout-content-horizontal-fix': !hasSider && header.fixed }"
-        bordered
-        :native-scrollbar="false"
+        :class="{ 'ars-layout-content-fix': header.fixed }"
       >
+        <tags-view v-model:isRouterAlive="isRouterAlive" v-if="showMultiTabs" />
         <div class="ars-layout-content-main">
-          <tags-view v-model:isRouterAlive="isRouterAlive" v-if="showMultiTabs" />
           <div>
             <layout-main />
           </div>
@@ -72,8 +50,9 @@
 import { useApp } from '@/hooks/setting/useApp'
 
 const { getProjectSetting, getDesignSetting } = useApp()
-const { header, menu, multiTabs, showHeader, showLogo, showMultiTabs, showFooter } =
-  unref(getProjectSetting)
+const { header, menu, multiTabs, showHeader, showLogo, showMultiTabs, showFooter } = toRefs(
+  getProjectSetting.value,
+)
 
 /* 布局位置 */
 // 判断布局模式
@@ -83,22 +62,9 @@ const hasSider = computed(() => {
 })
 // 头部固定
 const headerFixed = computed(() => {
-  const { fixed } = toRefs(header)
+  const { fixed } = toRefs(header.value)
   return fixed.value ? 'absolute' : 'static'
 })
-// 菜单固定
-const menuFixed = computed(() => {
-  const { fixed } = toRefs(menu)
-  return hasSider.value && fixed.value ? 'absolute' : 'static'
-})
-
-const fixed = computed(() => {
-  // horizontal
-  return 'absolute'
-
-  // hasSider ? menuFixed.value : headerFixed.value
-})
-
 // 主题
 const inverted = computed(() => {
   const { appDarkTheme } = unref(getDesignSetting)
@@ -110,57 +76,29 @@ const getMenuInverted = computed(() => {
   return inverted.value ? false : true
 })
 // 展开收缩菜单
-const collapsed = ref(menu.collapsed)
+const collapsed = ref(menu.value.collapsed)
 provide('collapsed', collapsed)
 // 刷新组件
 const isRouterAlive = ref(true)
 provide('isRouterAlive', isRouterAlive)
 // 收缩后宽度
-const minMenuWidth = unref(menu.minMenuWidth)
+const minMenuWidth = ref(menu.value.minMenuWidth)
 // 宽度
-const menuWidth = unref(menu.menuWidth)
+const menuWidth = ref(menu.value.menuWidth)
 // 菜单bar
 const showTrigger = computed((): boolean | 'bar' | 'arrow-circle' => {
-  const { fixed, showTrigger } = unref(menu)
-  return fixed ? false : (showTrigger as 'bar' | 'arrow-circle')
+  const { fixed, showTrigger } = toRefs(menu.value)
+  return fixed.value ? false : (showTrigger.value as 'bar' | 'arrow-circle')
 })
 </script>
-
 <style scoped lang="less">
 .ars-layout {
   &-header {
-    //@apply h-14 relative z-10;
-    //@apply h-14 z-2;
-  }
-  &-main {
-    //@apply top-14;
-    //&-horizontal-fixed {
-    //  @apply w-full fixed top-14 left-0 bottom-0;
-    //}
-    //&-hideheader {
-    //  @apply top-0;
-    //}
-  }
-  &-content-layout {
-    //@apply top-14;
+    @apply h-14 z-10;
   }
   &-content {
-    //@apply mt-14;
-    &-main {
-      //  @apply w-full mx-2.5 relative;
-      //  &-tabs {
-      //    @apply pt-12;
-      //  }
-      &-notabs {
-        //    @apply pt-0;
-      }
-    }
-    //&-vertical-fixed {
-    //  @apply w-full;
-    //  //height: calc(100vh - 56px);
-    //}
-    &-horizontal-fix {
-      @apply top-14;
+    &-fix {
+      @apply mt-14;
     }
   }
   &-footer {

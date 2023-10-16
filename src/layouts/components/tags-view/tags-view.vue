@@ -10,6 +10,7 @@
       'ars-tabs-view-default-background': appDarkTheme === false,
       'ars-tabs-view-dark-background': appDarkTheme === true,
     }"
+    :style="menuCalcWidth"
   >
     <div class="ars-tabs-view-main">
       <div class="ars-tabs-view-main-tabs">
@@ -180,6 +181,19 @@ const menuWidth = computed(() => {
   return `${menuWidth.value}px`
 })
 
+const menuCalcWidth = computed(() => {
+  const { menuWidth, minMenuWidth } = toRefs(menu.value)
+  const { fixed } = toRefs(multiTabs.value)
+
+  if ((navMode.value === 'vertical' || navMode.value === 'vertical-mix') && fixed.value) {
+    if (collapsed.value) {
+      return { width: `calc(100% - ${minMenuWidth.value}px)` }
+    } else {
+      return { width: `calc(100% - ${menuWidth.value}px)` }
+    }
+  }
+})
+
 onMounted(() => {
   tabsViewStore.addTab(getSimpleRoute(route))
   isCurrent.value = PageEnum.BASE_HOME_REDIRECT === route.path
@@ -325,13 +339,10 @@ watch(
 
 <style lang="less" scoped>
 .ars-tabs-view {
-  @apply w-full;
+  @apply w-full h-10;
   &-fix {
-    @apply absolute;
-    //@apply fixed left-0;
-    //@apply fixed left-0 z-10;
-    //transition: all 1s ease-in-out;
-    //transition: width 0.3s ease;
+    @apply fixed top-14 z-8;
+    transition: all 0.3s;
   }
   &-vertical-fix {
     //width: calc(100% - v-bind(menuWidth));
