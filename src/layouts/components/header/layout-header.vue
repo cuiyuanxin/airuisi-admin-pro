@@ -1,6 +1,6 @@
 <template>
   <div class="ars-layout-header" v-if="showHeader">
-    <n-grid :x-gap="24">
+    <n-grid :x-gap="24" v-if="navMode === 'horizontal'">
       <n-grid-item span="20">
         <div class="ars-layout-header-left">
           <layout-logo
@@ -14,11 +14,7 @@
                 <ChevronBackOutline />
               </n-icon>
             </div>
-            <n-scrollbar
-              ref="scrollbar"
-              x-scrollable
-              v-if="navMode === 'horizontal' || navMode === 'horizontal-mix'"
-            >
+            <n-scrollbar ref="scrollbar" x-scrollable>
               <layout-menu mode="horizontal" />
             </n-scrollbar>
             <div class="px-1" v-if="!isScrollToRight" @click="handleScrollbar('right')">
@@ -35,11 +31,24 @@
         </div>
       </n-grid-item>
     </n-grid>
+    <div class="ars-layout-header-horizontal-mix" v-if="navMode === 'horizontal-mix'">
+      <div class="ars-layout-header-left">
+        <layout-logo v-show="showLogo" :style="{ width: `${menu.menuWidth}px` }" />
+      </div>
+      <div class="ars-layout-header-right ars-layout-header-right-horizontal-mix">
+        <layout-page-header v-model:collapsed="collapsed" v-model:isRouterAlive="isRouterAlive" />
+      </div>
+    </div>
+    <layout-page-header
+      v-if="navMode === 'vertical'"
+      v-model:collapsed="collapsed"
+      v-model:isRouterAlive="isRouterAlive"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useApp } from '@/hooks/setting/useApp'
+import { useApp } from '@/hooks/setting/useApp' // 项目配置
 
 // 项目配置
 const { getProjectSetting } = useApp()
@@ -61,12 +70,14 @@ const isScrollToRight = ref(false)
 const isRouterAlive = inject('isRouterAlive', true)
 
 onMounted(() => {
-  const scrollLeft = scrollbar.value.scrollbarInstRef.containerRef.scrollLeft
-  const scrollWidth = scrollbar.value.scrollbarInstRef.containerRef.scrollWidth
-  const clientWidth = scrollbar.value.scrollbarInstRef.containerRef.clientWidth
-  if (scrollLeft + clientWidth === scrollWidth) {
-    isScrollToLeft.value = true
-    isScrollToRight.value = true
+  if (scrollbar.value) {
+    const scrollLeft = scrollbar.value.scrollbarInstRef.containerRef.scrollLeft
+    const scrollWidth = scrollbar.value.scrollbarInstRef.containerRef.scrollWidth
+    const clientWidth = scrollbar.value.scrollbarInstRef.containerRef.clientWidth
+    if (scrollLeft + clientWidth === scrollWidth) {
+      isScrollToLeft.value = true
+      isScrollToRight.value = true
+    }
   }
 })
 
@@ -101,6 +112,9 @@ const handleScrollbar = (position: string) => {
 <style lang="less" scoped>
 .ars-layout-header {
   @apply w-full h-14;
+  &-horizontal-mix {
+    @apply flex items-center justify-center;
+  }
   &-left,
   &-right {
     @apply h-14 flex;
@@ -112,6 +126,9 @@ const handleScrollbar = (position: string) => {
   }
   &-right {
     @apply justify-end;
+    &-horizontal-mix {
+      @apply w-full;
+    }
   }
 }
 :deep(.n-scrollbar-content) {

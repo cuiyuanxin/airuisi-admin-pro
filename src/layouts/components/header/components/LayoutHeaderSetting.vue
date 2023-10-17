@@ -1,10 +1,10 @@
 <template>
   <n-drawer v-model:show="isDrawer" width="280" placement="right">
     <n-drawer-content title="项目配置" :native-scrollbar="false" closable>
-      <div class="drawer">
+      <div class="ars-drawer">
         <n-divider title-placement="center">主题</n-divider>
 
-        <div class="drawer-setting-item dark-switch justify-center">
+        <div class="ars-drawer-setting-item dark-switch">
           <n-tooltip placement="bottom">
             <template #trigger>
               <n-switch v-model:value="appDarkTheme" class="dark-theme-switch">
@@ -24,9 +24,9 @@
           </n-tooltip>
         </div>
 
-        <n-divider title-placement="center">系统主题</n-divider>
+        <n-divider title-placement="center">系统配色</n-divider>
 
-        <div class="drawer-setting-item align-items-top">
+        <div class="ars-drawer-setting-item align-items-top">
           <span
             class="theme-item"
             v-for="(item, index) in appThemeList"
@@ -41,12 +41,12 @@
         </div>
 
         <n-divider title-placement="center">导航栏模式</n-divider>
-        <div class="drawer-setting-item align-items-top">
-          <div class="align-items-top drawer-setting-item-style">
+        <div class="ars-drawer-setting-item align-items-top">
+          <div class="align-items-top ars-drawer-setting-item-style">
             <n-tooltip placement="top">
               <template #trigger>
                 <img
-                  src="@/assets/images/nav-theme-dark.svg"
+                  src="@/assets/images/nav-vertical.svg"
                   @click="togNavMode('vertical')"
                   alt="左侧菜单模式"
                 />
@@ -59,7 +59,7 @@
               </n-icon>
             </n-icon-wrapper>
           </div>
-          <div class="drawer-setting-item-style">
+          <div class="ars-drawer-setting-item-style">
             <n-tooltip placement="top">
               <template #trigger>
                 <img
@@ -76,26 +76,29 @@
               </n-icon>
             </n-icon-wrapper>
           </div>
-
-          <!--          <div class="drawer-setting-item-style">-->
-          <!--            <n-tooltip placement="top">-->
-          <!--              <template #trigger>-->
-          <!--                <img-->
-          <!--                  src="~@/assets/images/nav-horizontal-mix.svg"-->
-          <!--                  @click="togNavMode('horizontal-mix')"-->
-          <!--                  alt="顶部菜单混合模式"-->
-          <!--                />-->
-          <!--              </template>-->
-          <!--              <span>顶部菜单混合模式</span>-->
-          <!--            </n-tooltip>-->
-          <!--            <n-badge dot color="#19be6b" v-show="settingStore.navMode === 'horizontal-mix'" />-->
-          <!--          </div>-->
+          <div class="ars-drawer-setting-item-style">
+            <n-tooltip placement="top">
+              <template #trigger>
+                <img
+                  src="@/assets/images/nav-horizontal-mix.svg"
+                  @click="togNavMode('horizontal-mix')"
+                  alt="顶部菜单混合模式"
+                />
+              </template>
+              <span>顶部菜单混合模式</span>
+            </n-tooltip>
+            <n-icon-wrapper :size="18" :border-radius="10" v-show="navMode === 'horizontal-mix'">
+              <n-icon :size="18">
+                <Checkmark16Filled />
+              </n-icon>
+            </n-icon-wrapper>
+          </div>
         </div>
 
         <!--        <n-divider title-placement="center">导航栏风格</n-divider>-->
 
-        <!--        <div class="drawer-setting-item align-items-top">-->
-        <!--          <div class="drawer-setting-item-style align-items-top">-->
+        <!--        <div class="ars-drawer-setting-item align-items-top">-->
+        <!--          <div class="ars-drawer-setting-item-style align-items-top">-->
         <!--            <n-tooltip placement="top">-->
         <!--              <template #trigger>-->
         <!--                <img-->
@@ -109,7 +112,7 @@
         <!--            <n-badge dot color="#19be6b" v-if="settingStore.navTheme === 'dark'" />-->
         <!--          </div>-->
 
-        <!--          <div class="drawer-setting-item-style">-->
+        <!--          <div class="ars-drawer-setting-item-style">-->
         <!--            <n-tooltip placement="top">-->
         <!--              <template #trigger>-->
         <!--                <img-->
@@ -123,7 +126,7 @@
         <!--            <n-badge dot color="#19be6b" v-if="settingStore.navTheme === 'light'" />-->
         <!--          </div>-->
 
-        <!--          <div class="drawer-setting-item-style">-->
+        <!--          <div class="ars-drawer-setting-item-style">-->
         <!--            <n-tooltip placement="top">-->
         <!--              <template #trigger>-->
         <!--                <img-->
@@ -139,9 +142,9 @@
         <!--                </div>-->
         <!--        <n-divider title-placement="center">界面功能</n-divider>-->
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">分割菜单</div>-->
-        <!--          <div class="drawer-setting-item-action">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title">分割菜单</div>-->
+        <!--          <div class="ars-drawer-setting-item-action">-->
         <!--            <n-switch-->
         <!--              :disabled="settingStore.navMode !== 'horizontal-mix'"-->
         <!--              v-model:value="settingStore.menuSetting.mixMenu"-->
@@ -149,83 +152,83 @@
         <!--          </div>-->
         <!--        </div>-->
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">固定顶栏</div>-->
-        <!--          <div class="drawer-setting-item-action">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title">固定顶栏</div>-->
+        <!--          <div class="ars-drawer-setting-item-action">-->
         <!--            <n-switch v-model:value="settingStore.headerSetting.fixed" />-->
         <!--          </div>-->
         <!--        </div>-->
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title">-->
         <!--            固定侧边栏-->
         <!--          </div>-->
-        <!--          <div class="drawer-setting-item-action">-->
+        <!--          <div class="ars-drawer-setting-item-action">-->
         <!--            <n-switch v-model:value="settingStore.menuSetting.fixed" />-->
         <!--          </div>-->
         <!--        </div>-->
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">固定多页签</div>-->
-        <!--          <div class="drawer-setting-item-action">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title">固定多页签</div>-->
+        <!--          <div class="ars-drawer-setting-item-action">-->
         <!--            <n-switch v-model:value="settingStore.multiTabsSetting.fixed" />-->
         <!--          </div>-->
         <!--        </div>-->
 
         <!--        <n-divider title-placement="center">界面显示</n-divider>-->
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">显示重载页面按钮</div>-->
-        <!--          <div class="drawer-setting-item-action">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title">显示重载页面按钮</div>-->
+        <!--          <div class="ars-drawer-setting-item-action">-->
         <!--            <n-switch v-model:value="settingStore.headerSetting.isReload" />-->
         <!--          </div>-->
         <!--        </div>-->
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">显示面包屑导航</div>-->
-        <!--          <div class="drawer-setting-item-action">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title">显示面包屑导航</div>-->
+        <!--          <div class="ars-drawer-setting-item-action">-->
         <!--            <n-switch v-model:value="settingStore.crumbsSetting.show" />-->
         <!--          </div>-->
         <!--        </div>-->
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">显示面包屑显示图标</div>-->
-        <!--          <div class="drawer-setting-item-action">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title">显示面包屑显示图标</div>-->
+        <!--          <div class="ars-drawer-setting-item-action">-->
         <!--            <n-switch v-model:value="settingStore.crumbsSetting.showIcon" />-->
         <!--          </div>-->
         <!--        </div>-->
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">显示多页签</div>-->
-        <!--          <div class="drawer-setting-item-action">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title">显示多页签</div>-->
+        <!--          <div class="ars-drawer-setting-item-action">-->
         <!--            <n-switch v-model:value="settingStore.multiTabsSetting.show" />-->
         <!--          </div>-->
         <!--        </div>-->
         <!--1.15废弃，没啥用，占用操作空间-->
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title"> 显示页脚 </div>-->
-        <!--          <div class="drawer-setting-item-action">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title"> 显示页脚 </div>-->
+        <!--          <div class="ars-drawer-setting-item-action">-->
         <!--            <n-switch v-model:value="settingStore.showFooter" />-->
         <!--          </div>-->
         <!--        </div>-->
 
         <!--        <n-divider title-placement="center">动画</n-divider>-->
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">禁用动画</div>-->
-        <!--          <div class="drawer-setting-item-action">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title">禁用动画</div>-->
+        <!--          <div class="ars-drawer-setting-item-action">-->
         <!--            <n-switch v-model:value="settingStore.isPageAnimate" />-->
         <!--          </div>-->
         <!--        </div>-->
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">动画类型</div>-->
-        <!--          <div class="drawer-setting-item-select">-->
+        <!--        <div class="ars-drawer-setting-item">-->
+        <!--          <div class="ars-drawer-setting-item-title">动画类型</div>-->
+        <!--          <div class="ars-drawer-setting-item-select">-->
         <!--            <n-select v-model:value="settingStore.pageAnimateType" :options="animateOptions" />-->
         <!--          </div>-->
         <!--        </div>-->
 
-        <!--        <div class="drawer-setting-item">-->
+        <!--        <div class="ars-drawer-setting-item">-->
         <!--          <n-alert type="warning" :showIcon="false">-->
         <!--            <p>{{ alertText }}</p>-->
         <!--          </n-alert>-->
@@ -340,67 +343,35 @@ defineExpose({ openDrawer })
 </script>
 
 <style lang="less" scoped>
-.drawer {
+.ars-drawer {
   .n-divider:not(.n-divider--vertical) {
-    margin: 10px 0;
+    @apply my-2.5 mx-0;
   }
-
   &-setting-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 0;
-    flex-wrap: wrap;
-
+    @apply flex items-center justify-center py-2.5 px-0 flex-wrap;
     &-style {
-      display: inline-block;
-      position: relative;
-      margin-right: 16px;
-      cursor: pointer;
-      text-align: center;
+      @apply inline-block relative mr-3.5 cursor-pointer text-center;
     }
-
-    &-title {
-      flex: 1 1;
-      font-size: 14px;
-    }
-
-    &-action {
-      flex: 0 0 auto;
-    }
-
+    &-title,
     &-select {
-      flex: 1;
+      @apply flex-1;
     }
-
+    &-action {
+      @aapply flex-[0_0_auto];
+    }
     .theme-item {
-      width: 20px;
-      min-width: 20px;
-      height: 20px;
-      cursor: pointer;
-      border: 1px solid #eee;
-      border-radius: 2px;
-      margin: 0 5px 5px 0;
-      text-align: center;
-      line-height: 20px;
-
+      @apply w-5 min-w-5 h-5 cursor-pointer border border-slate-200 rounded-sm mt-0 ml-1 mb-1 mr-0 text-center leading-5;
       .n-icon {
-        color: #fff;
+        @apply text-white;
       }
     }
   }
-
   .align-items-top {
-    align-items: flex-start;
-    padding: 2px 0;
+    @apply items-start py-0.5 px-0;
   }
-
-  .justify-center {
-    justify-content: center;
-  }
-
   .dark-switch .n-switch {
     ::v-deep(.n-switch__rail) {
-      background-color: #000e1c;
+      @apply bg-[#000e1c];
     }
   }
 }

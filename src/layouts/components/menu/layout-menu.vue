@@ -2,7 +2,7 @@
   <n-menu
     class="ars-menu"
     :class="{
-      'ars-menu-horizontal': navMode === 'horizontal' || navMode === 'horizontal-mix',
+      'ars-menu-horizontal': navMode === 'horizontal',
     }"
     :mode="mode"
     :inverted="inverted"
@@ -38,7 +38,7 @@ const { menu, navMode } = toRefs(getProjectSetting.value)
 const collapsed = inject('collapsed', false)
 // 主题
 const inverted = computed(() => {
-  if (navMode.value === 'horizontal' || navMode.value === 'horizontal-mix') {
+  if (navMode.value === 'horizontal') {
     return false
   }
   const { appDarkTheme } = toRefs(getDesignSetting.value)

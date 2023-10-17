@@ -1,29 +1,21 @@
 <template>
-  <div
-    class="ars-layout-page-header"
-    :class="{
-      'ars-layout-page-header-vertical-fixed':
-        (navMode === 'vertical' || navMode === 'vertical-mix') && header.fixed,
-      'ars-layout-page-header-vertical-min-fixed':
-        (navMode === 'vertical' || navMode === 'vertical-mix') && collapsed && header.fixed,
-    }"
-  >
+  <div class="ars-layout-page-header">
     <div
       class="ars-layout-page-header-left"
-      v-if="navMode === 'vertical' || navMode === 'vertical-mix'"
+      v-if="navMode === 'vertical' || navMode === 'vertical-mix' || navMode === 'horizontal-mix'"
     >
       <n-space justify="center" align="center">
-        <div v-if="header.isMenu" @click="handleMenuCollapse">
+        <div class="ars-space-item" v-if="header.isMenu" @click="handleMenuCollapse">
           <n-icon size="20">
             <List />
           </n-icon>
         </div>
-        <div v-if="header.isReload" @click="reloadPage">
+        <div class="ars-space-item" v-if="header.isReload" @click="reloadPage">
           <n-icon size="20">
             <ReloadOutline />
           </n-icon>
         </div>
-        <div v-if="header.isBreadcrumb">
+        <div class="ars-space-item" v-if="header.isBreadcrumb">
           <layout-header-breadcrumb />
         </div>
       </n-space>
@@ -31,24 +23,24 @@
 
     <div class="ars-layout-page-header-right">
       <n-space justify="center" align="center">
-        <div v-if="false">
+        <div class="ars-space-item" v-if="false">
           <n-icon size="20">
             <SearchOutline />
           </n-icon>
         </div>
-        <div>
+        <div class="ars-space-item">
           <layout-header-screenfull />
         </div>
-        <div>
+        <div class="ars-space-item">
           <layout-header-languages />
         </div>
-        <div>
+        <div class="ars-space-item">
           <layout-header-message />
         </div>
-        <div>
+        <div class="ars-space-item">
           <layout-header-user />
         </div>
-        <div @click="handleOpenSetting">
+        <div class="ars-space-item" @click="handleOpenSetting">
           <n-icon size="20">
             <SettingsOutline />
           </n-icon>
@@ -73,23 +65,13 @@ const emit = defineEmits(['update:collapsed', 'update:isRouterAlive'])
 const { collapsed } = toRefs(props)
 // 项目配置
 const { getProjectSetting } = useApp()
-const { header, menu, navMode } = toRefs(getProjectSetting.value)
+const { header, navMode } = toRefs(getProjectSetting.value)
 // 顶栏布局下隐藏工具
-if (navMode.value === 'horizontal' || navMode.value === 'horizontal-mix') {
+if (navMode.value === 'horizontal') {
   header.value.isMenu = false
   header.value.isReload = false
   header.value.isBreadcrumb = false
 }
-// 收缩后宽度
-const minMenuWidth = computed(() => {
-  const { minMenuWidth } = toRefs(menu.value)
-  return `${minMenuWidth.value}px`
-})
-// 宽度
-const menuWidth = computed(() => {
-  const { menuWidth } = toRefs(menu.value)
-  return `${menuWidth.value}px`
-})
 // 项目设置
 const drawerSettingRef = ref<any>()
 
@@ -115,14 +97,9 @@ const handleOpenSetting = () => {
 .ars-layout-page-header {
   @apply w-full h-14 flex items-center justify-items-center;
   transition: left 0.3s;
-  &-vertical-fixed {
-    //@apply fixed top-0 bottom-0 z-10;
-    //left: v-bind(menuWidth);
-    //width: calc(100% - v-bind(menuWidth));
-  }
-  &-vertical-min-fixed {
-    //left: v-bind(minMenuWidth);
-    //width: calc(100% - v-bind(minMenuWidth));
+
+  & .ars-space-item {
+    @apply h-14 flex items-center;
   }
   &-left,
   &-right {
