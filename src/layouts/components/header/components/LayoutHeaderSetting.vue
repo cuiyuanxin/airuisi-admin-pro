@@ -43,6 +43,20 @@
         <n-divider title-placement="center">导航栏模式</n-divider>
         <div class="ars-drawer-setting-item align-items-top">
           <div class="align-items-top ars-drawer-setting-item-style">
+            <n-grid x-gap="10" y-gap="10" :cols="2">
+              <n-gi>
+                <div class="light-green">1</div>
+              </n-gi>
+              <n-gi>
+                <div class="green">2</div>
+              </n-gi>
+              <n-gi>
+                <div class="light-green">3</div>
+              </n-gi>
+              <n-gi>
+                <div class="green">4</div>
+              </n-gi>
+            </n-grid>
             <n-tooltip placement="top">
               <template #trigger>
                 <img
