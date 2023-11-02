@@ -9,7 +9,7 @@
             v-if="navMode === 'horizontal' || navMode === 'horizontal-mix'"
           />
           <div class="ars-layout-header-left-horizontal-menu" :style="horizontalMenu">
-            <div class="px-1" v-if="!isScrollToLeft" @click="handleScrollbar('left')">
+            <div class="ars-menu-left" v-if="!isScrollToLeft" @click="handleScrollbar('left')">
               <n-icon size="22">
                 <ChevronBackOutline />
               </n-icon>
@@ -17,7 +17,7 @@
             <n-scrollbar ref="scrollbar" x-scrollable>
               <layout-menu mode="horizontal" />
             </n-scrollbar>
-            <div class="px-1" v-if="!isScrollToRight" @click="handleScrollbar('right')">
+            <div class="ars-menu-right" v-if="!isScrollToRight" @click="handleScrollbar('right')">
               <n-icon size="22">
                 <ChevronForwardOutline />
               </n-icon>
@@ -122,6 +122,10 @@ const handleScrollbar = (position: string) => {
   &-left {
     &-horizontal-menu {
       @apply w-full flex items-center justify-center;
+      & .ars-menu-left,
+      & .ars-menu-right {
+        @apply h-14 flex items-center px-1;
+      }
     }
   }
   &-right {

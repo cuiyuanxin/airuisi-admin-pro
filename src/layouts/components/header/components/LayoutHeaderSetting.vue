@@ -42,71 +42,66 @@
 
         <n-divider title-placement="center">导航栏模式</n-divider>
         <div class="ars-drawer-setting-item align-items-top">
-          <div class="align-items-top ars-drawer-setting-item-style">
-            <n-grid x-gap="10" y-gap="10" :cols="2">
-              <n-gi>
-                <div class="light-green">1</div>
-              </n-gi>
-              <n-gi>
-                <div class="green">2</div>
-              </n-gi>
-              <n-gi>
-                <div class="light-green">3</div>
-              </n-gi>
-              <n-gi>
-                <div class="green">4</div>
-              </n-gi>
-            </n-grid>
-            <n-tooltip placement="top">
-              <template #trigger>
-                <img
-                  src="@/assets/images/nav-vertical.svg"
-                  @click="togNavMode('vertical')"
-                  alt="左侧菜单模式"
-                />
-              </template>
-              <span>左侧菜单模式</span>
-            </n-tooltip>
-            <n-icon-wrapper :size="18" :border-radius="10" v-show="navMode === 'vertical'">
-              <n-icon :size="18">
-                <Checkmark16Filled />
-              </n-icon>
-            </n-icon-wrapper>
-          </div>
-          <div class="ars-drawer-setting-item-style">
-            <n-tooltip placement="top">
-              <template #trigger>
-                <img
-                  src="@/assets/images/nav-horizontal.svg"
-                  alt="顶部菜单模式"
-                  @click="togNavMode('horizontal')"
-                />
-              </template>
-              <span>顶部菜单模式</span>
-            </n-tooltip>
-            <n-icon-wrapper :size="18" :border-radius="10" v-show="navMode === 'horizontal'">
-              <n-icon :size="18">
-                <Checkmark16Filled />
-              </n-icon>
-            </n-icon-wrapper>
-          </div>
-          <div class="ars-drawer-setting-item-style">
-            <n-tooltip placement="top">
-              <template #trigger>
-                <img
-                  src="@/assets/images/nav-horizontal-mix.svg"
-                  @click="togNavMode('horizontal-mix')"
-                  alt="顶部菜单混合模式"
-                />
-              </template>
-              <span>顶部菜单混合模式</span>
-            </n-tooltip>
-            <n-icon-wrapper :size="18" :border-radius="10" v-show="navMode === 'horizontal-mix'">
-              <n-icon :size="18">
-                <Checkmark16Filled />
-              </n-icon>
-            </n-icon-wrapper>
-          </div>
+          <n-grid x-gap="15" :cols="4">
+            <n-gi>
+              <n-tooltip placement="top">
+                <template #trigger>
+                  <div
+                    class="ars-nav-mode ars-nav-mode-vertical"
+                    :class="{
+                      'ars-nav-mode-active': navMode === 'vertical',
+                    }"
+                    @click="togNavMode('vertical')"
+                  ></div>
+                </template>
+                <span>左侧菜单模式</span>
+              </n-tooltip>
+            </n-gi>
+            <n-gi>
+              <n-tooltip placement="top">
+                <template #trigger>
+                  <div
+                    class="ars-nav-mode ars-nav-mode-horizontal"
+                    :class="{
+                      'ars-nav-mode-active': navMode === 'horizontal',
+                    }"
+                    @click="togNavMode('horizontal')"
+                  ></div>
+                </template>
+                <span>顶部菜单模式</span>
+              </n-tooltip>
+            </n-gi>
+            <n-gi>
+              <n-tooltip placement="top">
+                <template #trigger>
+                  <div
+                    class="ars-nav-mode ars-nav-mode-horizontal-mix"
+                    :class="{
+                      'ars-nav-mode-active': navMode === 'horizontal-mix',
+                    }"
+                    @click="togNavMode('horizontal-mix')"
+                  ></div>
+                </template>
+                <span>顶部菜单混合模式</span>
+              </n-tooltip>
+            </n-gi>
+            <n-gi>
+              <n-tooltip placement="top">
+                <template #trigger>
+                  <div
+                    class="ars-nav-mode ars-nav-mode-vertical-mix"
+                    :class="{
+                      'ars-nav-mode-active': navMode === 'vertical-mix',
+                    }"
+                    @click="togNavMode('vertical-mix')"
+                  >
+                    <div class="mix-sidebar"></div>
+                  </div>
+                </template>
+                <span>左侧菜单混合模式</span>
+              </n-tooltip>
+            </n-gi>
+          </n-grid>
         </div>
 
         <!--        <n-divider title-placement="center">导航栏风格</n-divider>-->
@@ -377,6 +372,62 @@ defineExpose({ openDrawer })
       @apply w-5 min-w-5 h-5 cursor-pointer border border-slate-200 rounded-sm mt-0 ml-1 mb-1 mr-0 text-center leading-5;
       .n-icon {
         @apply text-white;
+      }
+    }
+    .ars-nav-mode {
+      @apply relative overflow-hidden w-14 h-12 mr-4 rounded cursor-pointer;
+      background-color: #f0f2f5;
+      box-shadow: 0 1px 2.5px #0000002e;
+      &:before,
+      &:after {
+        content: '';
+        position: absolute;
+      }
+      &:before {
+        @apply w-1/3 h-full z-1 top-0 left-0;
+        border-radius: 4px 0 0 4px;
+      }
+      &:after {
+        @apply w-full h-1/4 top-0 left-0;
+      }
+      &-vertical {
+        &:before {
+          background-color: #273352;
+        }
+        &:after {
+          background-color: #fff;
+        }
+        &-mix {
+          &:before {
+            @apply w-1/5;
+            background-color: #273352;
+          }
+          &:after {
+            background-color: #fff;
+          }
+          & .mix-sidebar {
+            @apply absolute w-2/12 h-full left-1/4;
+            background-color: #fff;
+          }
+        }
+      }
+      &-horizontal {
+        &:before {
+          background-color: #fff;
+        }
+        &:after {
+          @apply z-1;
+          background-color: #273352;
+        }
+        &-mix {
+          &:after {
+            background-color: #273352;
+          }
+        }
+      }
+      &-active {
+        @apply p-3;
+        border: 2px solid #0960bd;
       }
     }
   }

@@ -15,7 +15,7 @@ const { logo, title } = unref(getWebsiteSetting)
 
 const isTitle = computed(() => {
   const { navMode } = toRefs(getProjectSetting.value)
-  if (navMode.value !== 'horizontal-mix' && !collapsed.value) {
+  if (navMode.value !== 'horizontal-mix' && collapsed.value) {
     return false
   }
 
